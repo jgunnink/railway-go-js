@@ -1,2 +1,4 @@
 package: github.com/jgunnink/railway
-import: []
+import:
+- package: github.com/jmoiron/sqlx
+- package: github.com/lib/pq
