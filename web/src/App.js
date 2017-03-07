@@ -1,21 +1,19 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { Button, Header } from 'semantic-ui-react'
+import '../assets/css/landing_page.css'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+const Home = () => (
+  <div className='vertical-center'>
+    <Header color='orange' as='h1'>
+      <Header.Content>
+        Railway
+      </Header.Content>
+    </Header>
+    <div>
+      <Button content='Sign Up' icon='pencil' labelPosition='left' />
+      <Button primary content='Log in' icon='right arrow' labelPosition='right' />
+    </div>
+  </div>
+)
 
-export default App;
+export default Home
