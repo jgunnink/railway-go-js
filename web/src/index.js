@@ -12,10 +12,10 @@ import {
 } from 'react-router-dom'
 
 const Routes = () => (
-  <Router history={history} forceRefresh={true}>
+  <Router history={history}>
     <div>
-      <Link to='/'>Home</Link>
-      <Link to='/signup'>Signup</Link>
+      <Link to='/'><Button content='Home' /></Link>
+      <Link to='/signup'><Button content='Signup' color='orange'/></Link>
 
       <Route exact path="/" component={App}/>
       <Route path="/signup" component={SignupForm}/>
