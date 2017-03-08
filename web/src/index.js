@@ -1,22 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import { Button } from 'semantic-ui-react'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import NavigationBar from './components/navBar'
 import SignupForm from './components/signupForm'
+import App from './App'
 import 'semantic-ui-css/semantic.min.css'
 
-import {
+import { 
   BrowserRouter as Router,
-  Link,
-  Route
+  Route 
 } from 'react-router-dom'
 
 const Routes = () => (
   <Router history={history}>
     <div>
-      <Link to='/'><Button content='Home' /></Link>
-      <Link to='/signup'><Button content='Signup' color='orange'/></Link>
-
+      <NavigationBar/>
       <Route exact path="/" component={App}/>
       <Route path="/signup" component={SignupForm}/>
     </div>
