@@ -25,6 +25,7 @@ _testmain.go
 *.prof
 
 /vendor
+./railway
 
 # React related ingores
 

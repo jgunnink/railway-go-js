@@ -11,7 +11,7 @@ const Home = () => (
     </Header>
     <div>
       <Button content='Sign Up' icon='pencil' labelPosition='left' />
-      <Button primary content='Log in' icon='right arrow' labelPosition='right' />
+      <Button color='orange' content='Log in' icon='right arrow' labelPosition='right' />
     </div>
   </div>
 )
