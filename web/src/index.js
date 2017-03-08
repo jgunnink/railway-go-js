@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import NavigationBar from './components/navBar'
-import SignupForm from './components/signupForm'
-import App from './App'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import SignupFormContainer from './containers/signup'
+import Home from './containers/home'
+import railway from './store/reducers'
 import 'semantic-ui-css/semantic.min.css'
 
 import { 
@@ -10,17 +12,19 @@ import {
   Route 
 } from 'react-router-dom'
 
+let store = createStore(railway)
+window.store = store
+
 const Routes = () => (
   <Router history={history}>
     <div>
-      <NavigationBar/>
-      <Route exact path="/" component={App}/>
-      <Route path="/signup" component={SignupForm}/>
+      <Route exact path="/" component={Home}/>
+      <Route path="/signup" component={SignupFormContainer}/>
     </div>
   </Router>
 )
 
 ReactDOM.render(
-  <Routes />,
+  <Provider store={store}><Routes /></Provider>,
   document.getElementById('root')
 );
