@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Header } from 'semantic-ui-react'
 import '../assets/css/landing_page.css'
+import { Link } from 'react-router-dom'
 
 const Home = () => (
   <div className='vertical-center'>
@@ -10,7 +11,7 @@ const Home = () => (
       </Header.Content>
     </Header>
     <div>
-      <Button content='Sign Up' icon='pencil' labelPosition='left' />
+      <Link to="/signup"><Button content='Sign Up' icon='pencil' labelPosition='left' /></Link>
       <Button color='orange' content='Log in' icon='right arrow' labelPosition='right' />
     </div>
   </div>

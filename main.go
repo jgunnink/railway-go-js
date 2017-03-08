@@ -10,6 +10,7 @@ import (
 	"github.com/jgunnink/railway/models"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var helptext = "Welcome to Railway. Server is running."
@@ -56,11 +57,18 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	lastName := r.FormValue("last")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	user := &models.User{
 		FirstName: firstName,
 		LastName:  lastName,
 		Email:     email,
-		Password:  password,
+		Password:  hashedPassword,
 	}
 
 	log.Println(user)

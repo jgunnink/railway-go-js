@@ -4,3 +4,6 @@ import:
 - package: github.com/lib/pq
 - package: github.com/rs/cors
 - package: github.com/rs/xhandler
+- package: golang.org/x/crypto
+  subpackages:
+  - bcrypt

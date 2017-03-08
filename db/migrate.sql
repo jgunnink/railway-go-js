@@ -30,7 +30,7 @@ CREATE TABLE users (
     first_name text NOT NULL,
     last_name text NOT NULL,
     email text NOT NULL,
-    password text NOT NULL,
+    password bytea NOT NULL,
     session_token text NOT NULL,
     data jsonb NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY (id)

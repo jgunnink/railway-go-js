@@ -1,8 +1,13 @@
 import React from 'react'
-import { Button, Checkbox, Container, Form } from 'semantic-ui-react'
+import { Button, Checkbox, Container, Form, Header } from 'semantic-ui-react'
 
 const SignupForm = () => (
   <Container>
+    <Header color='orange' as='h1'>
+      <Header.Content>
+        Signup
+      </Header.Content>
+    </Header>
     <Form inverted method='POST' action="http://jk-hyperv-ubuntu:8000/register">
       <Form.Field>
         <label>First Name</label>
