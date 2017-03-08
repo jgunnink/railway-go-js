@@ -12,5 +12,6 @@ func Drop() {
 	if err != nil {
 		log.Println(err)
 	}
+	log.Println("Database dropped")
 
 }

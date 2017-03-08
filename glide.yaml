@@ -2,3 +2,5 @@ package: github.com/jgunnink/railway
 import:
 - package: github.com/jmoiron/sqlx
 - package: github.com/lib/pq
+- package: github.com/rs/cors
+- package: github.com/rs/xhandler

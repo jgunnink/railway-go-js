@@ -1,12 +1,18 @@
-hash: 890cd7559bca3b7a6f3e968f788daba52263c8e022b0564b0f3a88ba6d9730f1
-updated: 2017-03-07T16:54:37.049778787+08:00
+hash: 3c84270773fb705cc2398e9b14e432a15ab8fd5c1e10f5243e8aa26adf9d8eab
+updated: 2017-03-08T10:25:12.000858351+08:00
 imports:
 - name: github.com/jmoiron/sqlx
   version: f980a91bdc37abef88269b8f122d7de6352102f5
   subpackages:
   - reflectx
+- name: github.com/julienschmidt/httprouter
+  version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
 - name: github.com/lib/pq
   version: 67c3f2a8884c9b1aac5503c8d42ae4f73a93511c
   subpackages:
   - oid
+- name: github.com/rs/cors
+  version: a62a804a8a009876ca59105f7899938a1349f4b3
+- name: github.com/rs/xhandler
+  version: d9d9599b6aaf6a058cb7b1f48291ded2cbd13390
 testImports: []

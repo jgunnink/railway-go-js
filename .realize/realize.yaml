@@ -19,7 +19,8 @@ projects:
   bin: true
   build: false
   run: true
-  params: []
+  params:
+  - run
   watcher:
     before: []
     after: []
