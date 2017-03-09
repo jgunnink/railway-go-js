@@ -7,3 +7,5 @@ import:
 - package: golang.org/x/crypto
   subpackages:
   - bcrypt
+- package: github.com/vulcand/oxy
+- package: github.com/Sirupsen/logrus

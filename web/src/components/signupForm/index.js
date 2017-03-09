@@ -8,7 +8,7 @@ const SignupForm = () => (
         Signup
       </Header.Content>
     </Header>
-    <Form inverted method='POST' action="http://jk-hyperv-ubuntu:8000/register">
+    <Form inverted method='POST' action="/api/register">
       <Form.Field>
         <label>First Name</label>
         <input name='first' placeholder='First Name' />

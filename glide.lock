@@ -1,5 +1,5 @@
-hash: dd10b6848cc2e25fe5e94d4f9995d5532873ede321a4eb7f67ee91846ce017f2
-updated: 2017-03-08T14:34:40.821466288+08:00
+hash: ce580e0005a69d93ad496ffc5d11b3570220b8e5700ac62cdafcf70d3c769118
+updated: 2017-03-09T11:05:14.521849859+08:00
 imports:
 - name: github.com/jmoiron/sqlx
   version: f980a91bdc37abef88269b8f122d7de6352102f5
@@ -16,12 +16,25 @@ imports:
   version: a62a804a8a009876ca59105f7899938a1349f4b3
 - name: github.com/rs/xhandler
   version: d9d9599b6aaf6a058cb7b1f48291ded2cbd13390
+- name: github.com/Sirupsen/logrus
+  version: d26492970760ca5d33129d2d799e34be5c4782eb
+- name: github.com/vulcand/oxy
+  version: 12aa65630360a8ab1827975bd46491a358094cd9
+  subpackages:
+  - forward
+  - testutils
+  - utils
 - name: golang.org/x/crypto
   version: 854ae91cdcbf914b499b1d7641d07859f3653481
   subpackages:
   - bcrypt
+  - blowfish
 - name: golang.org/x/net
   version: 236b8f043b920452504e263bc21d354427127473
   subpackages:
   - context
+- name: golang.org/x/sys
+  version: 075e574b89e4c2d22f2286a7e2b919519c6f3547
+  subpackages:
+  - unix
 testImports: []
