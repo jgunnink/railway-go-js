@@ -1,30 +1,49 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import SignupFormContainer from './containers/signup'
 import Home from './containers/home'
 import railway from './store/reducers'
 import 'semantic-ui-css/semantic.min.css'
 
-import { 
-  BrowserRouter as Router,
-  Route 
-} from 'react-router-dom'
+import { render } from 'react-dom';
+import {
+  createStore,
+  combineReducers,
+  compose,
+  applyMiddleware
+} from 'redux';
 
-let store = createStore(railway)
-window.store = store
+import { routerForBrowser } from 'redux-little-router';
 
-const Routes = () => (
-  <Router history={history}>
-    <div>
-      <Route exact path="/" component={Home}/>
-      <Route path="/signup" component={SignupFormContainer}/>
-    </div>
-  </Router>
-)
+import routes from './routes';
+import wrap from './wrap';
 
-ReactDOM.render(
-  <Provider store={store}><Routes /></Provider>,
+const {
+  reducer,
+  middleware,
+  enhancer  
+} = routerForBrowser({ routes });
+
+const store = createStore(
+  combineReducers({ 
+    router: reducer,
+    railway: railway
+  }),
+  // If this is a server render, we grab the
+  // initial state the hbs template inserted
+ {},
+  compose(
+    enhancer,
+    applyMiddleware(middleware),
+    // window.devToolsExtension ?
+    //   window.devToolsExtension() : f => f
+  )
+);
+
+const Demo = ({ router }) => {
+  return(
+    <div/>
+  )
+}
+render(
+  wrap(store),
   document.getElementById('root')
 );

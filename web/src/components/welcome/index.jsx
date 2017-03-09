@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Header } from 'semantic-ui-react'
+import { Link } from 'redux-little-router'
 import '../../../assets/css/landing_page.css'
-import { Link } from 'react-router-dom'
 
 const Welcome = (props) => {
   const changeActiveScreen = props.changeActiveScreen
@@ -14,7 +14,9 @@ const Welcome = (props) => {
         </Header.Content>
       </Header>
       <div>
-        <Link to="/signup"><Button content='Sign Up' icon='pencil' labelPosition='left' onClick={()=>{changeActiveScreen("signup")}}/></Link>
+        <Link className='anything' href='/signup'>
+          <Button content='Sign Up' icon='pencil' labelPosition='left' onClick={()=>{changeActiveScreen("signup")}}/>
+        </Link>
         <Button color='orange' content='Log in' icon='right arrow' labelPosition='right' />
       </div>
     </div>
