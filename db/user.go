@@ -1,8 +1,9 @@
 package db
 
 import (
-	"github.com/jgunnink/railway/models"
 	"log"
+
+	"github.com/jgunnink/railway/models"
 )
 
 // UserCreate saves a new USER to the database given a USER
@@ -14,8 +15,8 @@ VALUES (:first_name, :last_name, :email, :password, :session_token, :data)
 	if err != nil {
 		panic(err)
 	}
-	log.Println("Creating user...")
 	stmt.MustExec(user)
+	log.Println("New user created: " + user.Email)
 }
 
 // User returns a single User given an ID

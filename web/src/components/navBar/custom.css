@@ -1,0 +1,16 @@
+.ui.inverted.menu > .active.item:hover {
+  background: transparent !important;
+}
+
+.ui.inverted.menu > .active.item > a {
+  color: white !important;
+}
+
+.ui.inverted.menu > .item > a:hover {
+  font-weight: bold !important;
+  color: white !important;
+}
+
+.ui.inverted.menu > .item > a {
+  color: lightgrey !important;
+}
