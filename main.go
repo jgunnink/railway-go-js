@@ -1,11 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/jgunnink/railway/db"
 	"github.com/jgunnink/railway/models"
@@ -49,7 +50,7 @@ func run() {
 
 	rtr := httprouter.New()
 
-	rtr.HandlerFunc("POST", "/api/register", Register)
+	rtr.HandlerFunc("POST", "/register", Register)
 	handler := &Handler{
 		APIHandler:   rtr,
 		ProxyHandler: ReverseProxy,
@@ -68,8 +69,7 @@ type Handler struct {
 
 // ServeHTTP delegates a request to the appropriate subhandler.
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// if r.Header.Get("X-API") != "" {
-	if strings.HasPrefix(r.URL.Path, "/api") {
+	if r.Header.Get("X-API") != "" {
 		h.APIHandler.ServeHTTP(w, r)
 	} else {
 		if os.Getenv("PROD") == "" {
@@ -80,27 +80,37 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type registerRequest struct {
+	Email    string `json:"email"`
+	First    string `json:"first"`
+	Last     string `json:"last"`
+	Password string `json:"password"`
+}
+
 // Register takes the HTTP request and attempts to create a user
 func Register(w http.ResponseWriter, r *http.Request) {
 
-	log.Println("registering user...")
+	log.Println("Registering user...")
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	formValues := &registerRequest{}
+	err = json.Unmarshal(b, formValues)
 
-	r.ParseForm()
-	firstName := r.FormValue("first")
-	lastName := r.FormValue("last")
-	email := r.FormValue("email")
-	password := r.FormValue("password")
+	log.Println(formValues)
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(formValues.Password), bcrypt.DefaultCost)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	user := &models.User{
-		FirstName: firstName,
-		LastName:  lastName,
-		Email:     email,
+		FirstName: formValues.First,
+		LastName:  formValues.Last,
+		Email:     formValues.Email,
 		Password:  hashedPassword,
 	}
 

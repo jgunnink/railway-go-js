@@ -1,6 +1,6 @@
-export default  {
+export default {
   '/': {
-    title: 'Railway'
+    title: 'Home'
   },
   '/signup': {
     title: 'Signup'

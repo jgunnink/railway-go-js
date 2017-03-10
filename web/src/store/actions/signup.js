@@ -4,16 +4,15 @@ import { push } from 'redux-little-router'
 export const SIGNUP_FAILURE = 'SIGNUP_FAILURE'
 export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS'
 
-export function signup(formdetails) {
+export function signup(values) {
+  console.log(values.toJS())
   return dispatch => {
-    setTimeout(() => {
-      request.post('/api/register', formdetails)
-      .then((res) => {
-        dispatch(push('/'))
-      }).catch((err) => {
-        dispatch(signupError(err))
-      });
-    }, 3000)
+    request.post('/register', values)
+    .then((res) => {
+      dispatch(push('/'))
+    }).catch((err) => {
+      dispatch(signupError(err))
+    })
   }
 }
 
