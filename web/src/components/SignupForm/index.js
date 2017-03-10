@@ -11,9 +11,9 @@ const submit = (values, dispatch, props) => {
 const errorMessage = (errorCode) => {
 	switch (errorCode) {
 		case 400:
-      return (<Message negative>That email address has already been registered!</Message>)
+      return (<Message negative header="Already taken!" content="That email address has already been registered. Please use another email, or reset your password if you've forgotten it."/>)
     case 500:
-      return (<Message negative>A server error has occured. The administrators have been notified. Please try again later.</Message>)
+      return (<Message negative header="Internal server error" content="A server error has occured. The administrators have been notified. Please try again later." />)
 		default:
 			return (<div/>)
 	}
