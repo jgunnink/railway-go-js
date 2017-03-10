@@ -46,5 +46,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dbclient := db.Client()
-	dbclient.UserCreate(user)
+	err = dbclient.UserCreate(user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+	}
 }

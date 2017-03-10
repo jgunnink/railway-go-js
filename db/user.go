@@ -7,16 +7,20 @@ import (
 )
 
 // UserCreate saves a new USER to the database given a USER
-func (db *DB) UserCreate(user *models.User) {
+func (db *DB) UserCreate(user *models.User) error {
 	stmt, err := db.DB.PrepareNamed(`
 INSERT INTO users (first_name, last_name, email, password, session_token, data)
 VALUES (:first_name, :last_name, :email, :password, :session_token, :data)
 `)
 	if err != nil {
-		panic(err)
+		return err
 	}
-	stmt.MustExec(user)
+	_, err = stmt.Exec(user)
+	if err != nil {
+		return err
+	}
 	log.Println("New user created: " + user.Email)
+	return nil
 }
 
 // User returns a single User given an ID

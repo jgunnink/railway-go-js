@@ -6,7 +6,6 @@ export const SIGNUP_FAILURE = "SIGNUP_FAILURE"
 export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS"
 
 export function signup(values) {
-  console.log(values.toJS())
   return dispatch => {
     request.post("/register", values)
     .then((res) => {
@@ -18,20 +17,17 @@ export function signup(values) {
   }
 }
 
-function signupError(message) {
+function signupError(err) {
   return {
     type: SIGNUP_FAILURE,
-    isFetching: false,
-    isAuthenticated: false,
-    message
+    success: false,
+    status: err.response.status
   }
 }
 
 export function receiveSignup(userdata) {
   return {
     type: SIGNUP_SUCCESS,
-    isFetching: false,
-    isAuthenticated: false,
     user: userdata
   }
 }

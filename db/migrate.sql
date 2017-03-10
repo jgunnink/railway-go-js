@@ -37,3 +37,4 @@ CREATE TABLE users (
 );
 
 ALTER TABLE ONLY projects ADD CONSTRAINT clients_projects_fkey FOREIGN KEY (client_id) REFERENCES clients(id);
+ALTER TABLE ONLY users ADD CONSTRAINT unique_user_email UNIQUE (email);

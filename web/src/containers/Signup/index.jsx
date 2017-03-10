@@ -5,12 +5,15 @@ import { signup } from '../../store/actions/signup'
 
 const SignupPage = (props) => {
   return(
-    <SignupForm signup={props.signup} />
+    <SignupForm signup={props.signup} errorCode={props.errorCode} />
   )
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {}
+  const errorCode = state.railway.signup.get("status")
+  return {
+    errorCode
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
