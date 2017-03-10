@@ -3,9 +3,14 @@ import { Field, reduxForm } from 'redux-form/immutable'
 import { Button, Container, Form, Header, Message } from "semantic-ui-react"
 import { renderInput, renderCheckbox } from '../../helpers/renderField'
 import validate from './validate'
+import { SubmissionError } from 'redux-form'
 
 const submit = (values, dispatch, props) => {
-	return props.signup(values)
+	return props.signup(dispatch, values)
+    .then((res) => {
+    }).catch((err) => {
+      throw new SubmissionError({ email: "Please use another email address" })
+    })
 }
 
 const errorMessage = (errorCode) => {

@@ -18,7 +18,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    signup: (values) => {dispatch(signup(values))}
+    signup: signup 
   }
 }
 
