@@ -1,5 +1,5 @@
-import React, { PropTypes } from 'react';
-import { Fragment } from 'redux-little-router';
+import React, { PropTypes } from 'react'
+import { Fragment } from 'redux-little-router'
 import { connect } from 'react-redux'
 import Home from './containers/Home'
 import Signup from './containers/Signup'
@@ -24,12 +24,12 @@ const App = (props) => {
         </div>
       </Fragment>
     </div>
-  );
-};
+  )
+}
 
 App.propTypes = {
   router: PropTypes.object
-};
+}
 
 const mapStateToProps = (state, ownProps) => {
   return {

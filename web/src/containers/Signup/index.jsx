@@ -1,6 +1,6 @@
-import { connect } from 'react-redux'
-import SignupForm from '../../components/SignupForm'
 import React from 'react'
+import SignupForm from '../../components/SignupForm'
+import { connect } from 'react-redux'
 import { signup } from '../../store/actions/signup'
 
 const SignupPage = (props) => {

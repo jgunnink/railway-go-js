@@ -12,11 +12,9 @@ import App from './app'
 import railway from './store/reducers'
 import 'semantic-ui-css/semantic.min.css'
 
-const { reducer, enhancer, middleware } = routerForBrowser({ routes });
+const { reducer, enhancer, middleware } = routerForBrowser({ routes })
 const store = createStore(
   combineReducers({ router: reducer, railway: railway, form: form }),
-  // If this is a server render, we grab the
-  // initial state the hbs template inserted
   window.__INITIAL_STATE || {},
   compose(
     enhancer,
@@ -24,11 +22,10 @@ const store = createStore(
     window.devToolsExtension ?
       window.devToolsExtension() : f => f
   )
-);
+)
 
 window.store = store
 render(
   wrap(store)(App),
   document.getElementById('root')
-);
-
+)

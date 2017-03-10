@@ -1,15 +1,17 @@
-import request from '../../util/agent'
-import { push } from 'redux-little-router'
+import request from "../../util/agent"
+import { push } from "redux-little-router"
+import changeActiveScreen from "./ui"
 
-export const SIGNUP_FAILURE = 'SIGNUP_FAILURE'
-export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS'
+export const SIGNUP_FAILURE = "SIGNUP_FAILURE"
+export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS"
 
 export function signup(values) {
   console.log(values.toJS())
   return dispatch => {
-    request.post('/register', values)
+    request.post("/register", values)
     .then((res) => {
-      dispatch(push('/'))
+      dispatch(push("/"))
+      dispatch(changeActiveScreen("home"))
     }).catch((err) => {
       dispatch(signupError(err))
     })
