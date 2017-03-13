@@ -1,7 +1,7 @@
 import React from 'react'
 import Welcome from '../../components/Welcome'
 import { connect } from 'react-redux'
-import { changeActiveScreen } from '../../store/actions/ui'
+import changeActiveScreen from '../../store/actions/ui'
 
 const Home = (props) => {
   return(

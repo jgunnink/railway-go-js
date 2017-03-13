@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Fragment } from 'redux-little-router'
 import { connect } from 'react-redux'
 import Home from './containers/Home'
+import Registered from './containers/Registered'
 import Signup from './containers/Signup'
 import Navbar from './components/Navbar'
 import { changeActiveScreen } from './store/actions/ui'
@@ -21,6 +22,9 @@ const App = (props) => {
         }
         <div>
           <Fragment forRoute='/signup'><Signup /></Fragment>
+        </div>
+        <div>
+          <Fragment forRoute='/registered'><Registered /></Fragment>
         </div>
       </Fragment>
     </div>

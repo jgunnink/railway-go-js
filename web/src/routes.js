@@ -1,8 +1,11 @@
 export default {
-  '/': {
-    title: 'Home'
+  "/": {
+    title: "Home"
   },
-  '/signup': {
-    title: 'Signup'
+  "/signup": {
+    title: "Signup"
+  },
+  "/registered": {
+    title: "Registered"
   }
 }

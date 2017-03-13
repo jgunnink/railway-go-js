@@ -8,8 +8,8 @@ export function signup(dispatch, values) {
   return new Promise((resolve, reject) => {
     request.post("/register", values)
     .then((res) => {
-      resolve(res)
-      dispatch(push("/"))
+      dispatch(receiveSignup(res))
+      dispatch(push("/registered"))
       dispatch(changeActiveScreen("home"))
     }).catch((err) => {
       reject(err)

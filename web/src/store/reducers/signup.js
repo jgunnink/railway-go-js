@@ -9,11 +9,12 @@ const initialState = Immutable.fromJS({
 function signup(state = initialState, action) {
   switch (action.type) {
     case SIGNUP_FAILURE:
-			return state.merge(action)
+      return state.merge(action)
     case SIGNUP_SUCCESS:
-			// return (<Message positive>Successfully registered your account!</Message>)
-    break
-		default:
+      console.log("SIGNUP_SUCCESS")
+      console.log(action)
+      return state.merge(action)
+    default:
       return state
   }
 }

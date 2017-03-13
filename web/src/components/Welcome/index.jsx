@@ -4,7 +4,6 @@ import { Link } from 'redux-little-router'
 import '../../../assets/css/landing_page.css'
 
 const Welcome = (props) => {
-  console.log(props)
   const changeActiveScreen = props.changeActiveScreen
   
   return (
