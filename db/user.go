@@ -43,3 +43,36 @@ func (db *DB) UserAll() []*models.User {
 
 	return users
 }
+
+// UserByEmail returns a single User given an email
+func (db *DB) UserByEmail(email string) (*models.User, error) {
+	user := &models.User{}
+	err := db.DB.Get(user, "SELECT * FROM users WHERE email=$1", email)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// UserSetToken will set a session_token for a given User ID
+func (db *DB) UserSetToken(id int, sessionToken string) *models.User {
+	updatedUser := &models.User{}
+	err := db.DB.Get(updatedUser, "UPDATE users SET session_token=$1 WHERE id=$2 RETURNING *", sessionToken, id)
+	if err != nil {
+		panic(err)
+	}
+
+	return updatedUser
+}
+
+// UserLogout will delete a user's session_token
+func (db *DB) UserLogout(id int) *models.User {
+	updatedUser := &models.User{}
+	err := db.DB.Get(updatedUser, "UPDATE users SET session_token='' WHERE id=$1 RETURNING *", id)
+	if err != nil {
+		panic(err)
+	}
+
+	return updatedUser
+}

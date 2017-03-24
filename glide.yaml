@@ -9,3 +9,4 @@ import:
   - bcrypt
 - package: github.com/vulcand/oxy
 - package: github.com/Sirupsen/logrus
+- package: github.com/gorilla/sessions

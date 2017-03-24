@@ -4,11 +4,19 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/sessions"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 	"github.com/vulcand/oxy/forward"
 	"github.com/vulcand/oxy/testutils"
 )
+
+var cookieStore = sessions.NewCookieStore([]byte("gelatinoid-repairable-salmon"))
+
+type funcDetails struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
 
 // Handler is a collection of all the service handlers.
 type Handler struct {

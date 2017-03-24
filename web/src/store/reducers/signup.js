@@ -11,8 +11,6 @@ function signup(state = initialState, action) {
     case SIGNUP_FAILURE:
       return state.merge(action)
     case SIGNUP_SUCCESS:
-      console.log("SIGNUP_SUCCESS")
-      console.log(action)
       return state.merge(action)
     default:
       return state
