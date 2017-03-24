@@ -4,18 +4,15 @@ import { connect } from 'react-redux'
 import Home from './containers/Home'
 import Registered from './containers/Registered'
 import Signup from './containers/Signup'
-import Navbar from './components/Navbar'
+import Navbar from './containers/Navbar'
 import { changeActiveScreen } from './store/actions/ui'
 
 const App = (props) => {
-  const { router, changeActiveScreen, activeScreen } = props
+  const { router } = props
   return (
     <div>
       <Fragment forRoute='/'>
-        <Navbar 
-          changeActiveScreen={changeActiveScreen}
-          activeScreen={activeScreen}
-        />
+        <Navbar />
         {
           router.pathname === "/" &&
           <Home />
