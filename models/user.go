@@ -8,7 +8,7 @@ type User struct {
 	FirstName    string         `json:"firstName" db:"first_name"`
 	LastName     string         `json:"lastName" db:"last_name"`
 	Email        string         `json:"email" db:"email"`
-	Password     []byte         `json:"password" db:"password"`
+	Password     string         `json:"password" db:"password"`
 	SessionToken string         `json:"sessionToken" db:"session_token"`
 	Data         types.JSONText `json:"data" db:"data"`
 }

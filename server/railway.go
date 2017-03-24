@@ -43,6 +43,7 @@ func Run() {
 	rtr := httprouter.New()
 
 	rtr.HandlerFunc("POST", "/register", Register)
+	rtr.HandlerFunc("POST", "/auth", Auth)
 	handler := &Handler{
 		APIHandler:   rtr,
 		ProxyHandler: ReverseProxy,

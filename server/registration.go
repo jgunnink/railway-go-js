@@ -42,7 +42,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		FirstName: formValues.First,
 		LastName:  formValues.Last,
 		Email:     formValues.Email,
-		Password:  hashedPassword,
+		Password:  string(hashedPassword),
 	}
 
 	dbclient := db.Client()

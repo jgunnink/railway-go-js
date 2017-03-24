@@ -81,7 +81,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
+	log.Println(string(userFromRequest.Password))
 	userFromDB, err := dbclient.UserByEmail(userFromRequest.Email)
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
