@@ -35,6 +35,14 @@ func ReverseProxy(w http.ResponseWriter, r *http.Request) {
 	fwd.ServeHTTP(w, r)
 }
 
+func secureChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
+	return withLogging(withRecover(withToken(http.HandlerFunc(h)))).ServeHTTP
+}
+
+func insecureChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
+	return withLogging(withRecover(http.HandlerFunc(h))).ServeHTTP
+}
+
 // Run starts the server and serves the react application
 func Run() {
 	fileshttp := http.NewServeMux()
@@ -44,6 +52,7 @@ func Run() {
 
 	rtr.HandlerFunc("POST", "/register", Register)
 	rtr.HandlerFunc("POST", "/auth", Auth)
+	rtr.HandlerFunc("DELETE", "/logout", secureChain(Logout))
 	handler := &Handler{
 		APIHandler:   rtr,
 		ProxyHandler: ReverseProxy,
