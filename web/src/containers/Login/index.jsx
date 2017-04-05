@@ -4,16 +4,14 @@ import { connect } from "react-redux"
 import { login } from "../../store/actions/authentication"
 
 const LoginPage = (props) => {
+  console.log(props)
   return(
-    <div>
-      <h1> Hello</h1>
       <LoginForm login={props.login} errorCode={props.errorCode} />
-      </div>
   )
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const errorCode = state.railway.login.get("status")
+  const errorCode = state.railway.authentication.get("status")
   return {
     errorCode
   }

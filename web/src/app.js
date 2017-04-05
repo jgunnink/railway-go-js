@@ -19,13 +19,13 @@ const App = (props) => {
           <Home />
         }
         <div>
-          <Fragment forRoute="/signup"><Signup /></Fragment>
+          <Fragment forRoute="/login"><Login /></Fragment>
         </div>
         <div>
           <Fragment forRoute="/registered"><Registered /></Fragment>
         </div>
         <div>
-          <Fragment forRoute="/login"><Login /></Fragment>
+          <Fragment forRoute="/signup"><Signup /></Fragment>
         </div>
       </Fragment>
     </div>

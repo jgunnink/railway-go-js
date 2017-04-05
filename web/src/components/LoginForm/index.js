@@ -13,6 +13,15 @@ const submit = (values, dispatch, props) => {
   })
 }
 
+const errorMessage = (errorCode) => {
+	switch (errorCode) {
+    case 500:
+      return (<Message negative header="Internal server error" content="A server error has occured. The administrators have been notified. Please try again later." />)
+		default:
+			return (<div/>)
+	}
+}
+
 const LoginForm = reduxForm({form: "login", validate}) (({errorCode, handleSubmit, pristine, submitting}) => (
   <Container>
     {errorCode && errorMessage(errorCode)}

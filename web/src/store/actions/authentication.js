@@ -1,10 +1,11 @@
-import request from '../../util/agent'
-import loadState from '../loaders'
+import changeActiveScreen from "./ui"
+import request from "../../util/agent"
+// import loadState from "../loaders"
 
-export const LOGIN_REQUEST = 'LOGIN_REQUEST'
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
-export const LOGIN_FAILURE = 'LOGIN_FAILURE'
-export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
+export const LOGIN_REQUEST = "LOGIN_REQUEST"
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS"
+export const LOGIN_FAILURE = "LOGIN_FAILURE"
+export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS"
 
 import { push } from "redux-little-router"
 
@@ -48,36 +49,36 @@ function receiveLogout(message) {
 export function checkAuth(end) {
   return dispatch => {
     dispatch(requestLogin({}))
-    request.get('/authenticate')
-      .accept('application/json')
+    request.get("/authenticate")
+      .accept("application/json")
       .then((res) => {
           dispatch(receiveLogin(res.data))
       }).catch((err) => {
-          dispatch(loginError(res))
+          dispatch(loginError(err))
       })
   }
 }
 
 export function logout(creds) {
   return dispatch => {
-    request.delete('/logout')
+    request.delete("/logout")
       .then((res) => {
         dispatch(receiveLogout())
-        dispatch(push('/login'))
+        dispatch(push("/login"))
       })
   }
 }
 
-export function login(creds) {
-  return dispatch => {
-    dispatch(requestLogin(creds))
-    request.post('/auth', creds)
-      .then((res) => {
-        loadState(dispatch, () => {
-          dispatch(push('/'))
-        })
-      }).catch((err) => {
-        dispatch(loginError(err))
+export function login(dispatch, creds) {
+    return new Promise((resolve, reject) => {
+    request.post("/auth", creds)
+    .then((res) => {
+      dispatch(receiveLogin(res))
+      dispatch(push("/"))
+      dispatch(changeActiveScreen("home"))
+    }).catch((err) => {
+      reject(err)
+      dispatch(loginError(err))
     })
-  }
+  })
 }
