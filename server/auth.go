@@ -63,6 +63,11 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
+type loginResponse struct {
+	ID           int    `json:"user_id"`
+	SessionToken string `json:"sessionToken"`
+}
+
 // Auth returns a user model if a user a logged in
 // 	Route: {{ base_url }}/auth
 // 	Method: POST
@@ -81,7 +86,6 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	log.Println(string(userFromRequest.Password))
 	userFromDB, err := dbclient.UserByEmail(userFromRequest.Email)
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
@@ -116,7 +120,12 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 
 	result := dbclient.UserSetToken(userFromDB.ID, sessionToken)
 
-	response, err := json.Marshal(result)
+	loginResponse := &loginResponse{
+		ID:           result.ID,
+		SessionToken: result.SessionToken,
+	}
+
+	response, err := json.Marshal(loginResponse)
 	if err != nil {
 		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
 		return
