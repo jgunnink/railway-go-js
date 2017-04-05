@@ -7,5 +7,8 @@ export default {
   },
   "/registered": {
     title: "Registered"
+  },
+  "/login": {
+    title: "Login to your account"
   }
 }

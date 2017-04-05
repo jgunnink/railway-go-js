@@ -5,7 +5,10 @@ import { login } from "../../store/actions/authentication"
 
 const LoginPage = (props) => {
   return(
-    <LoginForm login={props.login} errorCode={props.errorCode} />
+    <div>
+      <h1> Hello</h1>
+      <LoginForm login={props.login} errorCode={props.errorCode} />
+      </div>
   )
 }
 

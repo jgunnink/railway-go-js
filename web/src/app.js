@@ -1,27 +1,31 @@
-import React, { PropTypes } from 'react'
-import { Fragment } from 'redux-little-router'
-import { connect } from 'react-redux'
-import Home from './containers/Home'
-import Registered from './containers/Registered'
-import Signup from './containers/Signup'
-import Navbar from './containers/Navbar'
-import { changeActiveScreen } from './store/actions/ui'
+import React, { PropTypes } from "react"
+import { Fragment } from "redux-little-router"
+import { connect } from "react-redux"
+import Home from "./containers/Home"
+import Registered from "./containers/Registered"
+import Signup from "./containers/Signup"
+import Login from "./containers/Login"
+import Navbar from "./containers/Navbar"
+import { changeActiveScreen } from "./store/actions/ui"
 
 const App = (props) => {
   const { router } = props
   return (
     <div>
-      <Fragment forRoute='/'>
+      <Fragment forRoute="/">
         <Navbar />
         {
           router.pathname === "/" &&
           <Home />
         }
         <div>
-          <Fragment forRoute='/signup'><Signup /></Fragment>
+          <Fragment forRoute="/signup"><Signup /></Fragment>
         </div>
         <div>
-          <Fragment forRoute='/registered'><Registered /></Fragment>
+          <Fragment forRoute="/registered"><Registered /></Fragment>
+        </div>
+        <div>
+          <Fragment forRoute="/login"><Login /></Fragment>
         </div>
       </Fragment>
     </div>
@@ -34,7 +38,7 @@ App.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    activeScreen: state.railway.ui.get('activeScreen')
+    activeScreen: state.railway.ui.get("activeScreen")
   }
 }
 

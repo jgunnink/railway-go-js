@@ -1,9 +1,9 @@
 import React from "react"
-import { Field, reduxForm } from 'redux-form/immutable' 
+import { Field, reduxForm } from "redux-form/immutable"
 import { Button, Container, Form, Header, Message } from "semantic-ui-react"
-import { renderInput, renderCheckbox } from '../../helpers/renderField'
-import validate from './validate'
-import { SubmissionError } from 'redux-form'
+import { renderInput, renderCheckbox } from "../../helpers/renderField"
+import validate from "./validate"
+import { SubmissionError } from "redux-form"
 
 const submit = (values, dispatch, props) => {
 	return props.signup(dispatch, values)
@@ -24,7 +24,7 @@ const errorMessage = (errorCode) => {
 	}
 }
 
-const SignupForm = reduxForm({form: 'signup', validate}) (({errorCode, handleSubmit, pristine, submitting}) => (
+const SignupForm = reduxForm({form: "signup", validate}) (({errorCode, handleSubmit, pristine, submitting}) => (
   <Container>
     {errorCode && errorMessage(errorCode)}
     <Header color="orange" as="h1">Signup</Header>
