@@ -7,14 +7,16 @@ const Home = (props) => {
   return(
     <Navbar 
 			activeScreen={props.activeScreen}
-			changeActiveScreen={props.changeActiveScreen} 
+			changeActiveScreen={props.changeActiveScreen}
+      isAuthenticated={props.isAuthenticated}
 		/>
   )
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
-		activeScreen: state.railway.ui.get("activeScreen")
+		activeScreen: state.railway.ui.get("activeScreen"),
+    isAuthenticated: state.railway.authentication.get("isAuthenticated")
 	}
 }
 
