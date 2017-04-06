@@ -53,6 +53,7 @@ func Run() {
 	rtr.HandlerFunc("POST", "/register", Register)
 	rtr.HandlerFunc("POST", "/auth", Auth)
 	rtr.HandlerFunc("DELETE", "/logout", secureChain(Logout))
+	rtr.HandlerFunc("GET", "/check_login", CheckLogin)
 	handler := &Handler{
 		APIHandler:   rtr,
 		ProxyHandler: ReverseProxy,

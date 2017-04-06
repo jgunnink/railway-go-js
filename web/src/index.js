@@ -1,16 +1,17 @@
-import { render } from 'react-dom'
-import { createStore, combineReducers, compose, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
-import { reducer as form } from 'redux-form/immutable'
+import ReactDOM from "react-dom"
+import thunk from "redux-thunk"
+import { createStore, combineReducers, compose, applyMiddleware } from "redux"
+import { reducer as form } from "redux-form/immutable"
 
-import { routerForBrowser } from 'redux-little-router'
+import { routerForBrowser } from "redux-little-router"
 
-import routes from './routes'
-import wrap from './wrap'
-import App from './app'
+import routes from "./routes"
+import wrap from "./wrap"
+import App from "./app"
+import loadState from "./store/loaders"
 
-import railway from './store/reducers'
-import 'semantic-ui-css/semantic.min.css'
+import railway from "./store/reducers"
+import "semantic-ui-css/semantic.min.css"
 
 const { reducer, enhancer, middleware } = routerForBrowser({ routes })
 const store = createStore(
@@ -25,7 +26,13 @@ const store = createStore(
 )
 
 window.store = store
-render(
-  wrap(store)(App),
-  document.getElementById('root')
-)
+const render = () => {
+  ReactDOM.render(
+    wrap(store)(App),
+    document.getElementById("root")
+  )
+}
+
+loadState(store.dispatch, () => {
+	render()
+})
