@@ -64,7 +64,7 @@ export function logout(creds) {
     request.delete("/logout")
       .then((res) => {
         dispatch(receiveLogout())
-        dispatch(push("/login"))
+        dispatch(push("/"))
       })
   }
 }

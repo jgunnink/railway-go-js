@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from '../../components/Navbar'
 import { connect } from 'react-redux'
 import changeActiveScreen from '../../store/actions/ui'
+import { logout } from '../../store/actions/authentication'
 
 const Home = (props) => {
   return(
@@ -9,6 +10,7 @@ const Home = (props) => {
 			activeScreen={props.activeScreen}
 			changeActiveScreen={props.changeActiveScreen}
       isAuthenticated={props.isAuthenticated}
+      logout={props.logout}
 		/>
   )
 }
@@ -22,7 +24,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    changeActiveScreen: (screen) => {dispatch(changeActiveScreen(screen))}
+    changeActiveScreen: (screen) => {dispatch(changeActiveScreen(screen))},
+    logout: () => {dispatch(logout())}
   }
 }
 

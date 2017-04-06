@@ -7,6 +7,7 @@ const NavigationBar = (props) => {
   const changeActiveScreen = props.changeActiveScreen
   const activeScreen = props.activeScreen
   const isAuthenticated = props.isAuthenticated
+  const logout = props.logout
 
   return (
     <Segment inverted>
@@ -14,7 +15,7 @@ const NavigationBar = (props) => {
         <Menu.Item name="home" active={activeScreen === "home"}><Link href="/" onClick={()=>{changeActiveScreen("home")}}>Home</Link></Menu.Item>
         <Menu.Item name="signup" active={activeScreen === "signup"}><Link href="/signup" onClick={()=>{changeActiveScreen("signup")}}>Signup</Link></Menu.Item>
         <Menu.Menu position="right">
-          { isAuthenticated && <Menu.Item name="Logout"><Link href="/logout" onClick={()=>{changeActiveScreen("home")}}>Logout</Link></Menu.Item> }
+          { isAuthenticated && <Menu.Item name="Logout"><Link href="/logout" onClick={()=>{changeActiveScreen("home"); logout()}}>Logout</Link></Menu.Item> }
           { !isAuthenticated && <Menu.Item name="Login" active={activeScreen === "login"}><Link href="/login" onClick={()=>{changeActiveScreen("login")}}>Login</Link></Menu.Item> }
         </Menu.Menu>
       </Menu>
