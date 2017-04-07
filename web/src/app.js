@@ -12,22 +12,17 @@ const App = (props) => {
   const { router } = props
   return (
     <div>
-      <Fragment forRoute="/">
-        <Navbar />
-        {
-          router.pathname === "/" &&
-          <Home />
-        }
-        <div>
-          <Fragment forRoute="/login"><Login /></Fragment>
-        </div>
-        <div>
-          <Fragment forRoute="/registered"><Registered /></Fragment>
-        </div>
-        <div>
-          <Fragment forRoute="/signup"><Signup /></Fragment>
-        </div>
-      </Fragment>
+      <Navbar />
+      { router.pathname === "/" && <Home /> }
+      <div>
+        <Fragment forRoute="/login"><Login /></Fragment>
+      </div>
+      <div>
+        <Fragment forRoute="/registered"><Registered /></Fragment>
+      </div>
+      <div>
+        <Fragment forRoute="/signup"><Signup /></Fragment>
+      </div>
     </div>
   )
 }
