@@ -5,12 +5,17 @@ import changeActiveScreen from '../../store/actions/ui'
 
 const Home = (props) => {
   return(
-    <Welcome changeActiveScreen={props.changeActiveScreen} />
+    <Welcome
+      changeActiveScreen={props.changeActiveScreen}
+      isAuthenticated={props.isAuthenticated}
+    />
   )
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {}
+  return {
+    isAuthenticated: state.railway.authentication.get("isAuthenticated")
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {

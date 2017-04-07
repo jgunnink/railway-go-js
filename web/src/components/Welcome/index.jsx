@@ -5,6 +5,7 @@ import "../../../assets/css/landing_page.css"
 
 const Welcome = (props) => {
   const changeActiveScreen = props.changeActiveScreen
+  const isAuthenticated = props.isAuthenticated
   
   return (
     <div className="vertical-center">
@@ -13,14 +14,20 @@ const Welcome = (props) => {
           Railway
         </Header.Content>
       </Header>
-      <div>
+      { !isAuthenticated && <div>
         <Link href="/signup">
           <Button content="Sign Up" icon="pencil" labelPosition="left" onClick={()=>{changeActiveScreen("signup")}}/>
         </Link>
         <Link href="/login">
           <Button color="orange" content="Log in" icon="right arrow" labelPosition="right" onClick={()=>{changeActiveScreen("login")}}/>
         </Link>
-      </div>
+      </div> }
+      { isAuthenticated && <div>
+        <p style={{color:"white"}}>You're signed in!</p>
+        <Link href="/dashboard">
+          <Button color="orange" content="Go to dashboard" icon="right arrow" labelPosition="right" onClick={()=>{changeActiveScreen("signup")}}/>
+        </Link>
+      </div> }
     </div>
   )
 }
