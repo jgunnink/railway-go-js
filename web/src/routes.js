@@ -6,7 +6,10 @@ export default {
     title: "Signup"
   },
   "/registered": {
-    title: "Registered"
+    title: "Successfuly Registered"
+  },
+  "/dashboard": {
+    title: "Railway - Dashboard"
   },
   "/login": {
     title: "Login to your account"

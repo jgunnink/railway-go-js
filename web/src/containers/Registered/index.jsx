@@ -6,7 +6,7 @@ import { Link } from "redux-little-router"
 const Registered = (props) => {  
   return (
 		<div>
-			<Container><Message positive header="Registration successful" content="Successfully created a new account." /></Container>
+			<Container><Message positive header="Registration successful!" content="Successfully created a new account." /></Container>
 			<div className="vertical-center">
 				<Header color="orange" as="h1" content="Registration complete" />
 				<p style={{color: "white"}}>Please check your email to verify your account.</p>
