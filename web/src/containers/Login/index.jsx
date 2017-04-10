@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 import { login } from "../../store/actions/authentication"
 
 const LoginPage = (props) => {
-  console.log(props)
   return(
       <LoginForm login={props.login} errorCode={props.errorCode} />
   )
@@ -19,7 +18,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    login: login 
+    login: login
   }
 }
 

@@ -6,6 +6,7 @@ import Registered from "./containers/Registered"
 import Signup from "./containers/Signup"
 import Login from "./containers/Login"
 import Navbar from "./containers/Navbar"
+import Dashboard from "./containers/Dashboard"
 import { changeActiveScreen } from "./store/actions/ui"
 
 const App = (props) => {
@@ -14,6 +15,9 @@ const App = (props) => {
     <div>
       <Navbar />
       { router.pathname === "/" && <Home /> }
+      <div>
+        <Fragment forRoute="/dashboard"><Dashboard /></Fragment>
+      </div>
       <div>
         <Fragment forRoute="/login"><Login /></Fragment>
       </div>

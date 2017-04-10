@@ -7,7 +7,7 @@ const loadState = (dispatch, cb) => {
 		dispatch(receiveLogin(res.data))
         cb()
 	}).catch(() => {
-		dispatch(push("/login"))
+		dispatch(push("/"))
 		cb()
 	})
 }
