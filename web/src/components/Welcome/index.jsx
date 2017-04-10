@@ -25,7 +25,7 @@ const Welcome = (props) => {
       { isAuthenticated && <div>
         <p style={{color:"white"}}>You're signed in!</p>
         <Link href="/dashboard">
-          <Button color="orange" content="Go to dashboard" icon="right arrow" labelPosition="right" onClick={()=>{changeActiveScreen("signup")}}/>
+          <Button color="orange" content="Go to dashboard" icon="right arrow" labelPosition="right" onClick={()=>{changeActiveScreen("dashboard")}}/>
         </Link>
       </div> }
     </div>
