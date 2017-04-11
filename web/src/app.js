@@ -11,8 +11,25 @@ import { changeActiveScreen } from "./store/actions/ui"
 
 const App = (props) => {
   const { router } = props
+  let area = "landing"
+
+  switch(router.pathname) {
+    case "/":
+    case "/login":
+    case "/signup":
+    case "/registered":
+      area = "landing"
+      break
+    case "/admin":
+      area = "admin"
+      break
+    default:
+      area = "default"
+      break
+  }
+  
   return (
-    <div>
+    <div className={area}>
       <Navbar />
       { router.pathname === "/" && <Home /> }
       <div>

@@ -7,10 +7,10 @@
   text-align: center
 }
 
-body {
-  background: #000 !important;
-}
-
-body {
+.landing {
   background-image: url("../img/autumn.jpeg") !important;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: auto;
 }
