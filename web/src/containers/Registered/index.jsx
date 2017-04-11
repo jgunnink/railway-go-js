@@ -4,7 +4,7 @@ import { Button, Container, Header, Message } from "semantic-ui-react"
 import { Link } from "redux-little-router"
 
 const Registered = (props) => {  
-  return (
+  	return (
 		<div>
 			<Container><Message positive header="Registration successful!" content="Successfully created a new account." /></Container>
 			<div className="vertical-center">
@@ -13,7 +13,7 @@ const Registered = (props) => {
 				<Link href="/"><Button content="Home" icon="right arrow" labelPosition="right"/></Link>
 			</div>
 		</div>
-  )
+	)
 }
 
 const mapStateToProps = (state, ownProps) => {

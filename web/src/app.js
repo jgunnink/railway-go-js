@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import Dashboard from "./containers/Dashboard"
 import Home from "./containers/Home"
 import Login from "./containers/Login"
+import MyAccount from "./containers/MyAccount"
 import Navbar from "./containers/Navbar"
 import Registered from "./containers/Registered"
 import Sidebar from "./containers/Sidebar"
@@ -11,6 +12,16 @@ import Signup from "./containers/Signup"
 import { changeActiveScreen } from "./store/actions/ui"
 import "../assets/css/common.css"
 
+const MemberArea = ({forRoute, children}) => (
+	<Fragment forRoute={forRoute}>
+		<div className="page-container">
+			<Sidebar />
+			<div className="page-content">
+				{children}
+			</div>
+		</div>
+	</Fragment>	
+)
 
 const App = (props) => {
 	const { router } = props
@@ -35,17 +46,11 @@ const App = (props) => {
 		<div id="app" className={area}>
 			<Navbar />
 			{ router.pathname === "/" && <Home /> }
-				<Fragment forRoute="/dashboard">
-					<div className="page-container">
-						<Sidebar />
-						<div className="page-content">
-							<Dashboard />
-						</div>
-					</div>
-				</Fragment>
-				<Fragment forRoute="/login"><Login /></Fragment>
-				<Fragment forRoute="/registered"><Registered /></Fragment>
-				<Fragment forRoute="/signup"><Signup /></Fragment>
+			<MemberArea forRoute="/dashboard"><Dashboard /></MemberArea>
+			<MemberArea forRoute="/myaccount"><MyAccount /></MemberArea>
+			<Fragment forRoute="/login"><Login /></Fragment>
+			<Fragment forRoute="/registered"><Registered /></Fragment>
+			<Fragment forRoute="/signup"><Signup /></Fragment>
 		</div>
 	)
 }

@@ -14,21 +14,18 @@ const SideBar = (props) => {
 				<Menu inverted vertical>
 					<Menu.Item name="Dashboard" active={activeScreen === "dashboard"}><Icon name="dashboard" /><Link href="/dashboard" onClick={()=>{changeActiveScreen("dashboard")}}>Dashboard</Link></Menu.Item>
 					<Menu.Item>
-						<Menu.Header>My Account</Menu.Header>
+						<Menu.Header>My Account<Icon name="user" style={{float:"right"}} /></Menu.Header>
 						<Menu.Menu>
-							<Menu.Item name="My Account" active={activeScreen === "account"}>
-							<Icon name="user" />
-								<Link href="/myaccount" onClick={()=>{changeActiveScreen("dashboard")}}>My profile</Link>
+							<Menu.Item active={activeScreen === "account"}>
+								<Link href="/myaccount" onClick={()=>{changeActiveScreen("dashboard")}}>Edit account</Link>
 							</Menu.Item>
 						</Menu.Menu>
 					</Menu.Item>
 					<Menu.Item>
-						<Menu.Menu>
-							<Menu.Item name="Logout">
-								<Icon name="power" />
-								<Link href="/logout" onClick={()=>{changeActiveScreen("home"); logout()}}>Logout</Link>
-							</Menu.Item>
-						</Menu.Menu>
+						<Menu.Header>
+							<Link style={{color: "white"}}href="/logout" onClick={()=>{changeActiveScreen("home"); logout()}}>Logout</Link>
+							<Icon name="power" style={{float:"right"}} />
+						</Menu.Header>
 					</Menu.Item>					
 				</Menu>
 			</Segment>
