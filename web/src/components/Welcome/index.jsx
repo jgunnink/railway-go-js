@@ -9,7 +9,7 @@ const Welcome = (props) => {
   
   return (
     <div className="vertical-center">
-      <Header color="orange" as="h1">
+      <Header as="h1">
         <Header.Content>
           Railway
         </Header.Content>
