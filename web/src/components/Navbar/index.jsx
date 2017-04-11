@@ -10,7 +10,7 @@ const NavigationBar = (props) => {
 	const logout = props.logout
 
 	return (
-		<Segment inverted>
+		<Segment inverted style={{margin:0}}>
 			<Menu inverted pointing secondary>
 				<Menu.Item name="home" active={activeScreen === "home"}><Link href="/" onClick={()=>{changeActiveScreen("home")}}>Home</Link></Menu.Item>
 				{ isAuthenticated && <Menu.Item name="Dashboard" active={activeScreen === "dashboard"}><Link href="/dashboard" onClick={()=>{changeActiveScreen("dashboard")}}>Dashboard</Link></Menu.Item> }

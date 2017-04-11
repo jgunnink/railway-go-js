@@ -1,0 +1,22 @@
+#app {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+}
+
+#root {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	top: 0; left: 0;
+	overflow: auto;
+}
+
+.page-container {
+	display: flex;
+	flex: 1;
+}
+
+.page-content {
+	flex: 1;
+}

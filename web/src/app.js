@@ -9,6 +9,8 @@ import Registered from "./containers/Registered"
 import Sidebar from "./containers/Sidebar"
 import Signup from "./containers/Signup"
 import { changeActiveScreen } from "./store/actions/ui"
+import "../assets/css/common.css"
+
 
 const App = (props) => {
 	const { router } = props
@@ -30,26 +32,20 @@ const App = (props) => {
 	}
   
 	return (
-		<div className={area}>
+		<div id="app" className={area}>
 			<Navbar />
 			{ router.pathname === "/" && <Home /> }
-			<div>
 				<Fragment forRoute="/dashboard">
-					<div>
-						<Dashboard/>
+					<div className="page-container">
 						<Sidebar />
+						<div className="page-content">
+							<Dashboard />
+						</div>
 					</div>
 				</Fragment>
-			</div>
-			<div>
 				<Fragment forRoute="/login"><Login /></Fragment>
-			</div>
-			<div>
 				<Fragment forRoute="/registered"><Registered /></Fragment>
-			</div>
-			<div>
 				<Fragment forRoute="/signup"><Signup /></Fragment>
-			</div>
 		</div>
 	)
 }
