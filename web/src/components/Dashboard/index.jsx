@@ -7,7 +7,7 @@ const Dashboard = (props) => {
     const changeActiveScreen = props.changeActiveScreen
   
     return (
-        <div><Segment>
+        <Segment>
             <Header color="orange" as="h1" content="Dashboard" />
             <p>
                 This is your Dashboard! As you start to use the application more content will fill out here.
@@ -17,7 +17,7 @@ const Dashboard = (props) => {
             <Link href="/">
                 <Button color="orange" content="Back to Homepage" icon="home" labelPosition="right" onClick={()=>{changeActiveScreen("home")}}/>
             </Link>
-		</Segment></div>
+		</Segment>
     )
 }
 
