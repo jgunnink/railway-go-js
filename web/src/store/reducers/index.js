@@ -1,12 +1,14 @@
 import { combineReducers } from "redux"
+import accountUpdate from "./accountUpdate"
 import authentication from "./authentication"
 import ui from "./ui"
 import signup from "./signup"
 
 const railway = combineReducers({
-  ui,
+  accountUpdate,
+  authentication,
   signup,
-  authentication
+  ui
 })
 
 export default railway

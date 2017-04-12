@@ -9,7 +9,7 @@ export default {
     title: "Login to your account"
   },
   "/myaccount": {
-    title: "Login to your account"
+    title: "Update your account"
   },
   "/registered": {
     title: "Successfuly Registered"

@@ -13,11 +13,11 @@ const SideBar = (props) => {
 			<Segment inverted>
 				<Menu inverted vertical>
 					<Menu.Item name="Dashboard" active={activeScreen === "dashboard"}><Icon name="dashboard" /><Link href="/dashboard" onClick={()=>{changeActiveScreen("dashboard")}}>Dashboard</Link></Menu.Item>
-					<Menu.Item>
+					<Menu.Item active={activeScreen === "account"}>
 						<Menu.Header>My Account<Icon name="user" style={{float:"right"}} /></Menu.Header>
 						<Menu.Menu>
-							<Menu.Item active={activeScreen === "account"}>
-								<Link href="/myaccount" onClick={()=>{changeActiveScreen("dashboard")}}>Edit account</Link>
+							<Menu.Item>
+								<Link href="/myaccount" onClick={()=>{changeActiveScreen("account")}}>Edit account</Link>
 							</Menu.Item>
 						</Menu.Menu>
 					</Menu.Item>

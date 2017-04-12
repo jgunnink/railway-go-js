@@ -1,19 +1,25 @@
-import React from 'react'
-import MyAccount from '../../components/MyAccount'
-import { connect } from 'react-redux'
+import React from "react"
+import MyAccount from "../../components/MyAccount"
+import { connect } from "react-redux"
+import { accountUpdate } from "../../store/actions/accountUpdate"
 
 const UserAccount = (props) => {
   return(
-	  <MyAccount />
+	  <MyAccount accountUpdate={props.accountUpdate} errorCode={props.errorCode} />
   )
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {}
+	const errorCode = state.railway.accountUpdate.get("status")
+	return {
+		errorCode
+	}
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+	  accountUpdate: accountUpdate
+  }
 }
 
 const UserAccountContainer = connect(mapStateToProps, mapDispatchToProps)(UserAccount)
