@@ -26,6 +26,9 @@ func main() {
 			db.Drop()
 		case "db:migrate":
 			db.Migrate()
+		case "db:setup":
+			db.Drop()
+			db.Migrate()
 		case "run":
 			server.Run()
 		default:

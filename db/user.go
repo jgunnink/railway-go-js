@@ -76,3 +76,23 @@ func (db *DB) UserLogout(id int) *models.User {
 
 	return updatedUser
 }
+
+// UserUpdate updates an existing user account to the database.
+func (db *DB) UserUpdate(user *models.User) error {
+	tx := db.DB.MustBegin()
+
+	stmt, err := tx.PrepareNamed(`UPDATE users SET id=:id,
+	first_name=:first_name,
+	last_name=:last_name,
+	email=:email,
+	password=:password
+	WHERE id=:id
+`)
+	if err != nil {
+		return err
+	}
+
+	stmt.MustExec(user)
+	tx.Commit()
+	return nil
+}

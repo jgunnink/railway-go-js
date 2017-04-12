@@ -51,6 +51,7 @@ func Run() {
 	rtr := httprouter.New()
 
 	rtr.HandlerFunc("POST", "/register", Register)
+	rtr.HandlerFunc("POST", "/myaccount", secureChain(UserUpdate))
 	rtr.HandlerFunc("POST", "/auth", Auth)
 	rtr.HandlerFunc("DELETE", "/logout", secureChain(Logout))
 	rtr.HandlerFunc("GET", "/check_login", CheckLogin)
