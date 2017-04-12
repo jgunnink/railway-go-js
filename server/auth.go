@@ -120,12 +120,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 
 	result := dbclient.UserSetToken(userFromDB.ID, sessionToken)
 
-	loginResponse := &loginResponse{
-		ID:           result.ID,
-		SessionToken: result.SessionToken,
-	}
-
-	response, err := json.Marshal(loginResponse)
+	response, err := json.Marshal(result)
 	if err != nil {
 		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
 		return

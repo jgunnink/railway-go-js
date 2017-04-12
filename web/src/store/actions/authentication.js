@@ -73,7 +73,7 @@ export function login(dispatch, creds) {
     return new Promise((resolve, reject) => {
     request.post("/auth", creds)
     .then((res) => {
-      dispatch(receiveLogin(res))
+      dispatch(receiveLogin(res.data))
       dispatch(push("/"))
       dispatch(changeActiveScreen("home"))
     }).catch((err) => {
