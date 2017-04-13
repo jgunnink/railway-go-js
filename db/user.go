@@ -9,8 +9,8 @@ import (
 // UserCreate saves a new USER to the database given a USER
 func (db *DB) UserCreate(user *models.User) error {
 	stmt, err := db.DB.PrepareNamed(`
-INSERT INTO users (first_name, last_name, email, password, session_token, data)
-VALUES (:first_name, :last_name, :email, :password, :session_token, :data)
+INSERT INTO users (first_name, last_name, email, password, session_token, data, role)
+VALUES (:first_name, :last_name, :email, :password, :session_token, :data, :role)
 `)
 	if err != nil {
 		return err

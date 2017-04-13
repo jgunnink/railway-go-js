@@ -9,6 +9,7 @@ import (
 	"github.com/jgunnink/railway/db"
 	"github.com/jgunnink/railway/helpers"
 	"github.com/jgunnink/railway/models"
+	"github.com/jmoiron/sqlx/types"
 )
 
 type userModelRequest struct {
@@ -39,6 +40,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		LastName:  formValues.Last,
 		Email:     formValues.Email,
 		Password:  string(hashedPassword),
+		Role:      "member",
+		Data:      types.JSONText(`{}`),
 	}
 
 	dbclient := db.Client()
