@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/jgunnink/railway/db"
+	"github.com/jgunnink/railway/seed"
 	"github.com/jgunnink/railway/server"
 )
 
@@ -26,9 +27,12 @@ func main() {
 			db.Drop()
 		case "db:migrate":
 			db.Migrate()
+		case "db:seed":
+			seed.Seed()
 		case "db:setup":
 			db.Drop()
 			db.Migrate()
+			seed.Seed()
 		case "run":
 			server.Run()
 		default:

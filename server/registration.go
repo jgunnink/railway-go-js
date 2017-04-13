@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/jgunnink/railway/db"
+	"github.com/jgunnink/railway/helpers"
 	"github.com/jgunnink/railway/models"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type userModelRequest struct {
@@ -32,11 +32,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(formValues)
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(formValues.Password), bcrypt.DefaultCost)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	hashedPassword := passwords.HashPassword(formValues.Password)
 
 	user := &models.User{
 		FirstName: formValues.First,
@@ -65,12 +61,7 @@ func UserUpdate(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(formValues)
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(formValues.Password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	hashedPassword := passwords.HashPassword(formValues.Password)
 
 	dbclient := db.Client()
 	user, err := dbclient.UserByEmail(formValues.Email)
