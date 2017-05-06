@@ -6,7 +6,7 @@ A ReactJS template with a backend built on Go used to build web applications.
 
 ## Getting Started
 After cloning the repo:
-1. Ensure postgres is listening for connections.
+1. Ensure postgres is listening for connections. A docker example: `docker run --rm -p 5432:5432 --name db -e POSTGRES_USER=develop -e POSTGRES_PASSWORD=develop -e POSTGRES_DB=railway postgres`
 2. `go run *.go db:drop` then `go run *.go db:migrate`
 3. Start the go server with `realize run`
 4. Start the react web server: `cd web/` then `npm start`
