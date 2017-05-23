@@ -9,5 +9,6 @@ CREATE TABLE users (
 	role text NOT NULL,
     session_token text NOT NULL,
     data jsonb NOT NULL,
-    CONSTRAINT users_pkey PRIMARY KEY (id)
+    CONSTRAINT users_pkey PRIMARY KEY (id),
+    CONSTRAINT users_email_key UNIQUE (email)
 );
