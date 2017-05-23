@@ -1,0 +1,92 @@
+{
+	"_type": "export",
+	"__export_format": 3,
+	"__export_date": "2017-05-23T08:28:28.642Z",
+	"__export_source": "insomnia.desktop.app:v5.0.20",
+	"resources": [
+		{
+			"_id": "wrk_fc1fc19054904bdba8e3f85cf6c46d5f",
+			"parentId": null,
+			"modified": 1495527813027,
+			"created": 1495527813027,
+			"name": "Railway",
+			"description": "",
+			"certificates": [],
+			"_type": "workspace"
+		},
+		{
+			"_id": "env_58ceedd5af3643bb85275171dd56146f",
+			"parentId": "wrk_fc1fc19054904bdba8e3f85cf6c46d5f",
+			"modified": 1495527890072,
+			"created": 1495527846736,
+			"name": "Base Environment",
+			"data": {
+				"base_url": "http://localhost:8000"
+			},
+			"_type": "environment"
+		},
+		{
+			"_id": "jar_23a17aa98cbe498d99e5dc858f22d7f2",
+			"parentId": "wrk_fc1fc19054904bdba8e3f85cf6c46d5f",
+			"modified": 1495527949813,
+			"created": 1495527862797,
+			"name": "Default Jar",
+			"cookies": [
+				{
+					"domain": "localhost",
+					"httpOnly": false,
+					"hostOnly": false,
+					"path": "/",
+					"secure": false,
+					"expires": "2017-06-22T08:25:49.000Z",
+					"key": "_railway_session",
+					"value": "MTQ5NTUyNzk0OXxEdi1CQkFFQ180SUFBUkFCRUFBQV81WF9nZ0FEQm5OMGNtbHVad3dQQUExelpYTnphVzl1WDNSdmEyVnVCbk4wY21sdVp3d3VBQ3hyVUZwWVptOUlNVkJvWVRoaWNUaHpWMWMwWTBGUUsySmlaRzEyU21WSlptMWhObGRZVVROdUwxVlpQUVp6ZEhKcGJtY01Cd0FGWlcxaGFXd0djM1J5YVc1bkRCUUFFbTFsYldKbGNrQmxlR0Z0Y0d4bExtTnZiUVp6ZEhKcGJtY01CQUFDYVdRRGFXNTBCQUlBQWc9PXwVKZF7Oi-PLRuDN009De4ZRkv_8QvRstia2TygBUPAGQ=="
+				}
+			],
+			"_type": "cookie_jar"
+		},
+		{
+			"_id": "fld_b7922b70fa61402a90966de90ac82f3a",
+			"parentId": "wrk_fc1fc19054904bdba8e3f85cf6c46d5f",
+			"modified": 1495527836649,
+			"created": 1495527836649,
+			"name": "auth",
+			"environment": {},
+			"metaSortKey": -1495527836649,
+			"_type": "request_group"
+		},
+		{
+			"_id": "req_a33dcf2185554e4aa88cdb97388668a2",
+			"parentId": "fld_b7922b70fa61402a90966de90ac82f3a",
+			"modified": 1495527948271,
+			"created": 1495527846604,
+			"url": "{{ base_url }}/auth",
+			"name": "auth",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"email\": \"member@example.com\",\n\t\"password\": \"password\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json",
+					"id": "pair_6cb48d3917f941e2b87b01bf3068a9d9"
+				},
+				{
+					"name": "X-API",
+					"value": "V1",
+					"id": "pair_998c78ca51514532b331d25b23c7a7f6"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1495527846604,
+			"settingStoreCookies": true,
+			"settingSendCookies": true,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"_type": "request"
+		}
+	]
+}
