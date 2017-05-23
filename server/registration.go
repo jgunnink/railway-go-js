@@ -36,13 +36,10 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dbclient := db.Client()
-	if user.Role == "member" {
-		dbclient.MemberCreate(user)
-	} else if user.Role == "admin" {
+	if user.Role == "admin" {
 		dbclient.AdminCreate(user)
 	} else {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		dbclient.MemberCreate(user)
 	}
 }
 
