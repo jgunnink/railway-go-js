@@ -50,11 +50,13 @@ func Run() {
 
 	rtr := httprouter.New()
 
-	rtr.HandlerFunc("POST", "/register", Register)
+	rtr.HandlerFunc("POST", "/register", insecureChain(Register))
 	rtr.HandlerFunc("POST", "/myaccount", secureChain(UserUpdate))
-	rtr.HandlerFunc("POST", "/auth", Auth)
+	rtr.HandlerFunc("POST", "/auth", insecureChain(Auth))
 	rtr.HandlerFunc("DELETE", "/logout", secureChain(Logout))
-	rtr.HandlerFunc("GET", "/check_login", CheckLogin)
+	rtr.HandlerFunc("GET", "/check_login", insecureChain(CheckLogin))
+	rtr.HandlerFunc("POST", "/member/create", secureChain(Register))
+
 	handler := &Handler{
 		APIHandler:   rtr,
 		ProxyHandler: ReverseProxy,

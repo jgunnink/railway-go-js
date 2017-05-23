@@ -6,8 +6,8 @@ import (
 	"github.com/jgunnink/railway/models"
 )
 
-// UserCreate saves a new USER to the database given a USER
-func (db *DB) UserCreate(user *models.User) error {
+// userCreate saves a new USER to the database given a USER
+func (db *DB) userCreate(user *models.User) error {
 	stmt, err := db.DB.PrepareNamed(`
 INSERT INTO users (first_name, last_name, email, password, session_token, data, role)
 VALUES (:first_name, :last_name, :email, :password, :session_token, :data, :role)
@@ -21,6 +21,22 @@ VALUES (:first_name, :last_name, :email, :password, :session_token, :data, :role
 	}
 	log.Println("New user created: " + user.Email)
 	return nil
+}
+
+// MemberCreate will create a user with the required role
+func (db *DB) MemberCreate(user *models.User) error {
+	user.Role = "member"
+	err := db.userCreate(user)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// AdminCreate will create a user with the required role
+func (db *DB) AdminCreate(user *models.User) {
+	user.Role = "admin"
+	db.userCreate(user)
 }
 
 // User returns a single User given an ID

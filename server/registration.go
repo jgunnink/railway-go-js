@@ -21,33 +21,28 @@ type userModelRequest struct {
 
 // Register takes the HTTP request and attempts to create a user
 func Register(w http.ResponseWriter, r *http.Request) {
+	userRequest := &userModelRequest{}
+	helpers.MustDecodeJSON(r, userRequest)
+	log.Println(userRequest)
 
-	log.Println("Registering user...")
-	b, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	formValues := &userModelRequest{}
-	err = json.Unmarshal(b, formValues)
-
-	log.Println(formValues)
-
-	hashedPassword := passwords.HashPassword(formValues.Password)
+	hashedPassword := helpers.HashPassword(userRequest.Password)
 
 	user := &models.User{
-		FirstName: formValues.First,
-		LastName:  formValues.Last,
-		Email:     formValues.Email,
+		FirstName: userRequest.First,
+		LastName:  userRequest.Last,
+		Email:     userRequest.Email,
 		Password:  string(hashedPassword),
-		Role:      "member",
 		Data:      types.JSONText(`{}`),
 	}
 
 	dbclient := db.Client()
-	err = dbclient.UserCreate(user)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+	if user.Role == "member" {
+		dbclient.MemberCreate(user)
+	} else if user.Role == "admin" {
+		dbclient.AdminCreate(user)
+	} else {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -64,8 +59,7 @@ func UserUpdate(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(formValues)
 
-	hashedPassword := passwords.HashPassword(formValues.Password)
-
+	hashedPassword := helpers.HashPassword(formValues.Password)
 	dbclient := db.Client()
 	user, err := dbclient.UserByEmail(formValues.Email)
 
