@@ -37,9 +37,17 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 	dbclient := db.Client()
 	if user.Role == "admin" {
-		dbclient.AdminCreate(user)
+		err := dbclient.AdminCreate(user)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 	} else {
-		dbclient.MemberCreate(user)
+		err := dbclient.MemberCreate(user)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 	}
 }
 

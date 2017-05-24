@@ -34,9 +34,13 @@ func (db *DB) MemberCreate(user *models.User) error {
 }
 
 // AdminCreate will create a user with the required role
-func (db *DB) AdminCreate(user *models.User) {
+func (db *DB) AdminCreate(user *models.User) error {
 	user.Role = "admin"
-	db.userCreate(user)
+	err := db.userCreate(user)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // User returns a single User given an ID
