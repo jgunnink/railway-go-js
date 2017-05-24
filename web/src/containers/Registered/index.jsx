@@ -5,15 +5,17 @@ import { Link } from "redux-little-router"
 
 const Registered = (props) => {  
   	return (
-		<div>
-			<Container><Message positive header="Registration successful!" content="Successfully created a new account." /></Container>
-			<div className="vertical-center">
-				<Container>
-					<Header as="h1" content="Registration complete" />
-					<p style={{color: "white"}}>Please check your email to verify your account.</p>
-					<Link href="/"><Button content="Home" icon="right arrow" labelPosition="right"/></Link>
-				</Container>
-			</div>
+		<div className="vertical-center jumbotron">
+			<Header style={{color: "white"}} as="h1" content="Registration complete" />
+			<p>Please check your email to verify your account.</p>
+			<Link href="/">
+				<Button
+					content="Home"
+					icon="right arrow"
+					labelPosition="right"
+					color="orange"
+				/>
+			</Link>
 		</div>
 	)
 }
