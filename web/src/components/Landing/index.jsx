@@ -8,8 +8,8 @@ const Welcome = (props) => {
 	const isAuthenticated = props.isAuthenticated
   
 	return (
-		<div className="vertical-center">
-			<Header as="h1" content="Railway" />
+		<div className="vertical-center jumbotron">
+			<Header style={{color:"white"}} as="h1" content="Railway"/>
 			{ !isAuthenticated && <div>
 			<Link href="/signup">
 				<Button content="Sign Up" icon="pencil" labelPosition="left" onClick={()=>{changeActiveScreen("signup")}}/>

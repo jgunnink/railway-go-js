@@ -20,3 +20,9 @@
 .page-content {
 	flex: 1;
 }
+
+.jumbotron {
+  padding: 2rem 1rem;
+  background-color: rgba(142, 142, 142, 0.7);
+  border-radius: 0.3rem;
+}

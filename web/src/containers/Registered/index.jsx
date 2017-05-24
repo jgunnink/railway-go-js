@@ -8,20 +8,22 @@ const Registered = (props) => {
 		<div>
 			<Container><Message positive header="Registration successful!" content="Successfully created a new account." /></Container>
 			<div className="vertical-center">
-				<Header as="h1" content="Registration complete" />
-				<p style={{color: "white"}}>Please check your email to verify your account.</p>
-				<Link href="/"><Button content="Home" icon="right arrow" labelPosition="right"/></Link>
+				<Container>
+					<Header as="h1" content="Registration complete" />
+					<p style={{color: "white"}}>Please check your email to verify your account.</p>
+					<Link href="/"><Button content="Home" icon="right arrow" labelPosition="right"/></Link>
+				</Container>
 			</div>
 		</div>
 	)
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {}
+	return {}
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+	return {}
 }
 
 const RegisteredContainer = connect(mapStateToProps, mapDispatchToProps)(Registered)

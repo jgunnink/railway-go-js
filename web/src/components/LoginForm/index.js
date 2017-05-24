@@ -1,6 +1,6 @@
 import React from "react"
 import { Field, reduxForm } from "redux-form/immutable"
-import { Button, Container, Form, Header, Message } from "semantic-ui-react"
+import { Button, Form, Header, Message } from "semantic-ui-react"
 import { renderInput } from "../../helpers/renderField"
 import validate from "../SignupForm/validate"
 import { SubmissionError } from "redux-form"
@@ -23,15 +23,15 @@ const errorMessage = (errorCode) => {
 }
 
 const LoginForm = reduxForm({form: "login", validate}) (({errorCode, handleSubmit, pristine, submitting}) => (
-  <Container>
-    {errorCode && errorMessage(errorCode)}
-    <Header color="orange" as="h1">Login</Header>
-    <Form inverted onSubmit={handleSubmit(submit)}>
-      <Field name="email" label="Email Address" component={renderInput}/>
-      <Field name="password" label="Password" type="Password" component={renderInput}/>
-      <Button disabled={pristine || submitting} type="submit">Login</Button>
-    </Form>
-  </Container>
+	<div className="vertical-center jumbotron">
+		{errorCode && errorMessage(errorCode)}
+		<Header as="h1" content="Login"/>
+    	<Form inverted onSubmit={handleSubmit(submit)}>
+      		<Field name="email" label="Email Address" component={renderInput}/>
+			<Field name="password" label="Password" type="Password" component={renderInput}/>
+			<Button color="orange" disabled={pristine || submitting} type="submit" content="Login"/>
+		</Form>
+	</div>
 ))
 
 export default LoginForm
