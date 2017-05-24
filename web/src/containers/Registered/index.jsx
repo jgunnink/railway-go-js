@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { Button, Container, Header, Message } from "semantic-ui-react"
+import { Button, Header } from "semantic-ui-react"
 import { Link } from "redux-little-router"
 
 const Registered = (props) => {  
