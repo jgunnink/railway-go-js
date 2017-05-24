@@ -6,17 +6,14 @@ import { logout } from "../../store/actions/authentication"
 
 const SideNavBar = (props) => {
 	return(
-    	<Sidebar
-			activeScreen={props.activeScreen}
-			changeActiveScreen={props.changeActiveScreen}
-			logout={props.logout}
-		/>
+    	<Sidebar {...props} />
 	)
 }
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		activeScreen: state.railway.ui.get("activeScreen")
+		activeScreen: state.railway.ui.get("activeScreen"),
+		role: state.railway.authentication.get("user").get("role")
 	}
 }
 

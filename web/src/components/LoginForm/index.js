@@ -23,7 +23,7 @@ const errorMessage = (errorCode) => {
 }
 
 const LoginForm = reduxForm({form: "login", validate}) (({errorCode, handleSubmit, pristine, submitting}) => (
-	<div className="vertical-center jumbotron">
+	<div className="vertical-center jumbotron-landing">
 		{errorCode && errorMessage(errorCode)}
 		<Header as="h1" content="Login"/>
     	<Form inverted onSubmit={handleSubmit(submit)}>

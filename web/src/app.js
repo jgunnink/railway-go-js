@@ -9,10 +9,22 @@ import Navbar from "./containers/Navbar"
 import Registered from "./containers/Registered"
 import Sidebar from "./containers/Sidebar"
 import Signup from "./containers/Signup"
+import UserManagement from "./containers/UserManagement"
 import { changeActiveScreen } from "./store/actions/ui"
 import "../assets/css/common.css"
 
 const MemberArea = ({forRoute, children}) => (
+	<Fragment forRoute={forRoute}>
+		<div className="page-container">
+			<Sidebar />
+			<div className="page-content">
+				{children}
+			</div>
+		</div>
+	</Fragment>	
+)
+
+const AdminArea = ({forRoute, children}) => (
 	<Fragment forRoute={forRoute}>
 		<div className="page-container">
 			<Sidebar />
@@ -48,6 +60,7 @@ const App = (props) => {
 			{ router.pathname === "/" && <Home /> }
 			<MemberArea forRoute="/dashboard"><Dashboard /></MemberArea>
 			<MemberArea forRoute="/myaccount"><MyAccount /></MemberArea>
+			<AdminArea forRoute="/admin/usermanagement"><UserManagement /></AdminArea>
 			<Fragment forRoute="/login"><Login /></Fragment>
 			<Fragment forRoute="/registered"><Registered /></Fragment>
 			<Fragment forRoute="/signup"><Signup /></Fragment>

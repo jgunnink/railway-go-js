@@ -1,9 +1,5 @@
 .vertical-center {
   margin: auto;
-  /*margin-top: -100px;*/
-  /*position: absolute;*/
-  /*top: 50%;*/
-  /*width: 100%;*/
   text-align: center;
 }
 
@@ -14,4 +10,10 @@
   width: 100%;
   position: fixed;
   overflow: auto;
+}
+
+.jumbotron-landing {
+  padding: 2rem 1rem;
+  background-color: rgba(142, 142, 142, 0.7);
+  border-radius: 0.3rem;
 }

@@ -2,6 +2,9 @@ export default {
   "/": {
     title: "Home"
   },
+  "/admin/usermanagement": {
+    title: "Manage your users"
+  },
   "/dashboard": {
     title: "Railway - Dashboard"
   },
@@ -12,7 +15,7 @@ export default {
     title: "Update your account"
   },
   "/registered": {
-    title: "Successfuly Registered"
+    title: "Successfuly registered"
   },
   "/signup": {
     title: "Signup"

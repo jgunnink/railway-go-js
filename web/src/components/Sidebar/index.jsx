@@ -7,6 +7,7 @@ const SideBar = (props) => {
 	const changeActiveScreen = props.changeActiveScreen
 	const activeScreen = props.activeScreen
 	const logout = props.logout
+	const role = props.role
 
 	return (
 		<div className="sidebar">
@@ -21,6 +22,12 @@ const SideBar = (props) => {
 							</Menu.Item>
 						</Menu.Menu>
 					</Menu.Item>
+					{role === "admin" && <Menu.Item>
+						<Menu.Header>
+							<Link style={{color: "white"}}href="/admin/usermanagement" onClick={()=>{changeActiveScreen("userManagement")}}>User Management</Link>
+							<Icon name="users" style={{float:"right"}} />
+						</Menu.Header>
+					</Menu.Item> }
 					<Menu.Item>
 						<Menu.Header>
 							<Link style={{color: "white"}}href="/logout" onClick={()=>{changeActiveScreen("home"); logout()}}>Logout</Link>

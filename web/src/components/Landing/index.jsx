@@ -8,7 +8,7 @@ const Welcome = (props) => {
 	const isAuthenticated = props.isAuthenticated
   
 	return (
-		<div className="vertical-center jumbotron">
+		<div className="vertical-center jumbotron-landing">
 			<Header style={{color:"white"}} as="h1" content="Railway"/>
 			{ !isAuthenticated && <div>
 			<Link href="/signup">
