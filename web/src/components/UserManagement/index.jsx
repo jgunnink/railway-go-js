@@ -8,7 +8,8 @@ import UserTable from "./userTable.jsx"
 const UserManagement = (props) => {
     const changeActiveScreen = props.changeActiveScreen
 	const role = props.role
-  
+	const users = props.users
+	
     return (
 		<div>
 			{role === "admin" && <Segment>
@@ -17,7 +18,7 @@ const UserManagement = (props) => {
 					This is the user management. Add new users to your account, 
 					edit existing users or remove them from your account.
 				</p>
-				<UserTable />
+				<UserTable users={users} />
 			</Segment> }
 			{role !== "admin" && <div className="jumbotron vertical-center">
 				<Message 

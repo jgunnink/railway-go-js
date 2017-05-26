@@ -1,6 +1,5 @@
 import changeActiveScreen from "./ui"
 import request from "../../util/agent"
-// import loadState from "../loaders"
 
 export const LOGIN_REQUEST = "LOGIN_REQUEST"
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS"

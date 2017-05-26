@@ -5,17 +5,15 @@ import changeActiveScreen from '../../store/actions/ui'
 
 const UserMgmt = (props) => {
 	return(
-		<UserManagement
-      		changeActiveScreen={props.changeActiveScreen}
-			role={props.role}
-		/>
+		<UserManagement {...props} />
 	)
 }
 
 const mapStateToProps = (state, ownProps) => {
 	return {
 		isAuthenticated: state.railway.authentication.get("isAuthenticated"),
-		role: state.railway.authentication.get("user").get("role")
+		role: state.railway.authentication.get("user").get("role"),
+		users: state.railway.users.get("list")
   	}
 }
 

@@ -9,6 +9,7 @@ import routes from "./routes"
 import wrap from "./wrap"
 import App from "./app"
 import loadState from "./store/loaders"
+import fetch from "./store/middleware/fetch"
 
 import railway from "./store/reducers"
 import "semantic-ui-css/semantic.min.css"
@@ -19,7 +20,7 @@ const store = createStore(
   window.__INITIAL_STATE || {},
   compose(
     enhancer,
-    applyMiddleware(middleware, thunk),
+    applyMiddleware(middleware, thunk, fetch),
     window.devToolsExtension ?
       window.devToolsExtension() : f => f
   )
