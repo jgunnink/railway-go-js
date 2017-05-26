@@ -35,6 +35,10 @@ func ReverseProxy(w http.ResponseWriter, r *http.Request) {
 	fwd.ServeHTTP(w, r)
 }
 
+func adminChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
+	return withLogging(withRecover(withToken(withAdmin(http.HandlerFunc(h))))).ServeHTTP
+}
+
 func secureChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
 	return withLogging(withRecover(withToken(http.HandlerFunc(h)))).ServeHTTP
 }
@@ -56,6 +60,7 @@ func Run() {
 	rtr.HandlerFunc("DELETE", "/logout", secureChain(Logout))
 	rtr.HandlerFunc("GET", "/check_login", insecureChain(CheckLogin))
 	rtr.HandlerFunc("POST", "/member/create", secureChain(Register))
+	rtr.HandlerFunc("GET", "/admin/users", adminChain(UserAll))
 
 	handler := &Handler{
 		APIHandler:   rtr,

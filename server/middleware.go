@@ -9,6 +9,36 @@ import (
 	"github.com/jgunnink/railway/db"
 )
 
+func withAdmin(next http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		details := &funcDetails{
+			Name:        "secureMiddleware",
+			Description: "Checks if a user is an admin user",
+		}
+
+		session, err := cookieStore.Get(r, "_railway_session")
+		email, ok := session.Values["email"].(string)
+		if !ok {
+			handleErrorAndRespond(details, w, "Email not in session", http.StatusForbidden)
+			return
+		}
+
+		dbclient := db.Client()
+		userFromDB, err := dbclient.UserByEmail(email)
+		if err != nil {
+			handleErrorAndRespond(details, w, "Email token mismatch", http.StatusForbidden)
+			return
+		}
+
+		if userFromDB.Role != "admin" {
+			handleErrorAndRespond(details, w, "Admin status required", http.StatusForbidden)
+			return
+		}
+		next.ServeHTTP(w, r)
+	}
+	return http.HandlerFunc(fn)
+}
+
 func withRecover(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		var err error
