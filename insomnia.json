@@ -1,7 +1,7 @@
 {
 	"_type": "export",
 	"__export_format": 3,
-	"__export_date": "2017-05-26T04:02:26.669Z",
+	"__export_date": "2017-05-29T09:01:24.914Z",
 	"__export_source": "insomnia.desktop.app:v5.0.20",
 	"resources": [
 		{
@@ -28,7 +28,7 @@
 		{
 			"_id": "jar_23a17aa98cbe498d99e5dc858f22d7f2",
 			"parentId": "wrk_fc1fc19054904bdba8e3f85cf6c46d5f",
-			"modified": 1495771329068,
+			"modified": 1496047975111,
 			"created": 1495527862797,
 			"name": "Default Jar",
 			"cookies": [
@@ -38,9 +38,9 @@
 					"hostOnly": false,
 					"path": "/",
 					"secure": false,
-					"expires": "2017-06-25T04:02:07.000Z",
+					"expires": "2017-06-28T08:03:14.000Z",
 					"key": "_railway_session",
-					"value": "MTQ5NTc3MTMyN3xEdi1CQkFFQ180SUFBUkFCRUFBQV81VF9nZ0FEQm5OMGNtbHVad3dIQUFWbGJXRnBiQVp6ZEhKcGJtY01Fd0FSWVdSdGFXNUFaWGhoYlhCc1pTNWpiMjBHYzNSeWFXNW5EQVFBQW1sa0EybHVkQVFDQUFRR2MzUnlhVzVuREE4QURYTmxjM05wYjI1ZmRHOXJaVzRHYzNSeWFXNW5EQzRBTEZGMVRGQlJXR05IVGpoYWJXZFFUbEpLTjJSMFJVWldVbXB3Vms5aVpHeGxhbTF5YTFOdFVraG5UMEU5fOfFILCsSJfCP7bAXT7DdADyk8lb7_sjYEr-nKxAmgjd"
+					"value": "MTQ5NjA0NDk5NHxEdi1CQkFFQ180SUFBUkFCRUFBQV81VF9nZ0FEQm5OMGNtbHVad3dIQUFWbGJXRnBiQVp6ZEhKcGJtY01Fd0FSWVdSdGFXNUFaWGhoYlhCc1pTNWpiMjBHYzNSeWFXNW5EQVFBQW1sa0EybHVkQVFDQUFRR2MzUnlhVzVuREE4QURYTmxjM05wYjI1ZmRHOXJaVzRHYzNSeWFXNW5EQzRBTEdKSmVqWkhZV3BwYm1SaVRDOUNUR0pIT1ZGSVpHOWhSbmRrT1hGdldGY3diekF4V2xadVoyMVNjMjg5fLbAFhiQbFwEaB8H7WUKKKgxfXgCbsoW-R9gR7wZSEQb"
 				}
 			],
 			"_type": "cookie_jar"
@@ -101,14 +101,14 @@
 		{
 			"_id": "req_710539b28ec44e648a4126c5e8809189",
 			"parentId": "fld_b7922b70fa61402a90966de90ac82f3a",
-			"modified": 1495771314333,
+			"modified": 1496047973656,
 			"created": 1495531039065,
 			"url": "{{ base_url }}/register",
 			"name": "register",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
-				"text": "{\n\t\"email\": \"member3@example.com\",\n\t\"first\": \"JK\",\n\t\"last\": \"Gunnink\",\n\t\"password\": \"password\"\n}"
+				"text": "{\n\t\"email\": \"jk4@blockninja.io\",\n\t\"first\": \"JK\",\n\t\"last\": \"Gunnink\",\n\t\"password\": \"password\"\n}"
 			},
 			"parameters": [],
 			"headers": [
@@ -224,6 +224,31 @@
 			],
 			"authentication": {},
 			"metaSortKey": -1495770892928,
+			"settingStoreCookies": true,
+			"settingSendCookies": true,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"_type": "request"
+		},
+		{
+			"_id": "req_d4990b37468b4b6ebbd1b86b9b82b7e6",
+			"parentId": "fld_3c844b8db3cc41ca967d4e98d49aac94",
+			"modified": 1496044402058,
+			"created": 1496044207040,
+			"url": "{{ base_url }}/archive/3",
+			"name": "archive user",
+			"method": "POST",
+			"body": {},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "X-API",
+					"value": "V1",
+					"id": "pair_8c922833e5e4437d86d16e0b3b40b878"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1496044207040,
 			"settingStoreCookies": true,
 			"settingSendCookies": true,
 			"settingDisableRenderRequestBody": false,
