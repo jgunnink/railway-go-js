@@ -2,6 +2,7 @@ import React from 'react'
 import UserManagement from '../../components/UserManagement'
 import { connect } from 'react-redux'
 import changeActiveScreen from '../../store/actions/ui'
+import archiveUser from '../../store/actions/archiveUser'
 
 const UserMgmt = (props) => {
 	return(
@@ -19,7 +20,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		changeActiveScreen: (screen) => {dispatch(changeActiveScreen(screen))}
+		changeActiveScreen: (screen) => {dispatch(changeActiveScreen(screen))},
+		archiveUser: (userID) => {dispatch(archiveUser(userID))}
 	}
 }
 

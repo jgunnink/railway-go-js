@@ -9,6 +9,7 @@ const UserManagement = (props) => {
     const changeActiveScreen = props.changeActiveScreen
 	const role = props.role
 	const users = props.users
+	const archiveUser = props.archiveUser
 	
     return (
 		<div>
@@ -18,7 +19,14 @@ const UserManagement = (props) => {
 					This is the user management. Add new users to your account, 
 					edit existing users or remove them from your account.
 				</p>
-				<UserTable users={users} />
+				<UserTable users={users} archiveUser={archiveUser} />
+				<p>
+					When you archive a user, they are prevented from logging in,
+					and their account becomes read only.
+					<br />
+					The content they create is not deleted or removed. An admin
+					user can selectively remove any content as required.
+				</p>
 			</Segment> }
 			{role !== "admin" && <div className="jumbotron vertical-center">
 				<Message 

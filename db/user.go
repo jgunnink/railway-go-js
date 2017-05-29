@@ -65,6 +65,18 @@ func (db *DB) UserAll() []*models.User {
 	return users
 }
 
+// UserArchive will archive a user.
+func (db *DB) UserArchive(id int) (*models.User, error) {
+	archivedUser := &models.User{}
+	err := db.DB.Get(archivedUser, "UPDATE users SET archived=true, archived_on=$1 WHERE id=$2 RETURNING *", time.Now().UTC().Format(time.RFC3339), id)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return archivedUser, nil
+}
+
 // UserByEmail returns a single User given an email
 func (db *DB) UserByEmail(email string) (*models.User, error) {
 	user := &models.User{}
@@ -96,18 +108,6 @@ func (db *DB) UserLogout(id int) *models.User {
 	}
 
 	return updatedUser
-}
-
-// UserArchive will archive a user.
-func (db *DB) UserArchive(id int) (*models.User, error) {
-	archivedUser := &models.User{}
-	err := db.DB.Get(archivedUser, "UPDATE users SET archived=true, archived_on=$1 WHERE id=$2 RETURNING *", time.Now().UTC().Format(time.RFC3339), id)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	return archivedUser, nil
 }
 
 // UserUpdate updates an existing user account to the database.
