@@ -2,6 +2,7 @@ package db
 
 import (
 	"log"
+	"time"
 
 	"github.com/jgunnink/railway/models"
 )
@@ -9,8 +10,8 @@ import (
 // userCreate saves a new USER to the database given a USER
 func (db *DB) userCreate(user *models.User) error {
 	stmt, err := db.DB.PrepareNamed(`
-INSERT INTO users (first_name, last_name, email, password, session_token, data, role)
-VALUES (:first_name, :last_name, :email, :password, :session_token, :data, :role)
+INSERT INTO users (first_name, last_name, email, password, session_token, data, role, archived_on)
+VALUES (:first_name, :last_name, :email, :password, :session_token, :data, :role, NULL)
 `)
 	if err != nil {
 		return err
@@ -56,7 +57,7 @@ func (db *DB) User(id int) *models.User {
 // UserAll returns all users
 func (db *DB) UserAll() []*models.User {
 	users := []*models.User{}
-	err := db.DB.Select(&users, "SELECT * FROM users")
+	err := db.DB.Select(&users, "SELECT * FROM users WHERE archived=false")
 	if err != nil {
 		panic(err)
 	}
@@ -95,6 +96,17 @@ func (db *DB) UserLogout(id int) *models.User {
 	}
 
 	return updatedUser
+}
+
+// UserArchive will archive a user.
+func (db *DB) UserArchive(id int) *models.User {
+	archivedUser := &models.User{}
+	err := db.DB.Get(archivedUser, "UPDATE users SET archived=true SET archived_on=$1 WHERE id=$2 RETURNING *", time.Now(), id)
+	if err != nil {
+		panic(err)
+	}
+
+	return archivedUser
 }
 
 // UserUpdate updates an existing user account to the database.

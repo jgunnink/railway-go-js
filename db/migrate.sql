@@ -9,6 +9,12 @@ CREATE TABLE users (
 	role text NOT NULL,
     session_token text NOT NULL,
     data jsonb NOT NULL,
+	archived boolean NOT NULL,
+	archived_on time,
+	created_at time NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY (id),
     CONSTRAINT users_email_key UNIQUE (email)
 );
+
+ALTER TABLE users ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE users ALTER COLUMN archived SET DEFAULT false;
