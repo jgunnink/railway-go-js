@@ -5,7 +5,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 
+	"github.com/blockninja/ninjarouter"
 	"github.com/jgunnink/railway/db"
 	"github.com/jgunnink/railway/helpers"
 	"github.com/jgunnink/railway/models"
@@ -26,6 +28,29 @@ func UserAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(users)
+}
+
+// UserArchive archives the given user
+//  Route: {{ base_url }}/archive/:id
+// 	Method: POST
+// This is a secure route for ADMIN users
+func UserArchive(w http.ResponseWriter, r *http.Request) {
+	userID, err := strconv.Atoi(ninjarouter.Var(r, "id"))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("Didn't get an int back from lookup")
+		return
+	}
+
+	dbclient := db.Client()
+	archiveUser, err := dbclient.UserArchive(userID)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	archivedUser, err := json.Marshal(archiveUser)
+	w.Write(archivedUser)
 }
 
 // UserUpdate takes the HTTP request and attempts to update the user record in the database

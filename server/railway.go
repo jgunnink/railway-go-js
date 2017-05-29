@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/blockninja/ninjarouter"
 	"github.com/gorilla/sessions"
-	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 	"github.com/vulcand/oxy/forward"
 	"github.com/vulcand/oxy/testutils"
@@ -20,7 +20,7 @@ type funcDetails struct {
 
 // Handler is a collection of all the service handlers.
 type Handler struct {
-	APIHandler   *httprouter.Router
+	APIHandler   *ninjarouter.Mux
 	ProxyHandler func(http.ResponseWriter, *http.Request)
 	FileServer   *http.ServeMux
 }
@@ -52,15 +52,16 @@ func Run() {
 	fileshttp := http.NewServeMux()
 	fileshttp.Handle("/", http.FileServer(http.Dir("./web/public/")))
 
-	rtr := httprouter.New()
+	rtr := ninjarouter.New()
 
-	rtr.HandlerFunc("POST", "/register", insecureChain(Register))
-	rtr.HandlerFunc("POST", "/myaccount", secureChain(UserUpdate))
-	rtr.HandlerFunc("POST", "/auth", insecureChain(Auth))
-	rtr.HandlerFunc("DELETE", "/logout", secureChain(Logout))
-	rtr.HandlerFunc("GET", "/check_login", insecureChain(CheckLogin))
-	rtr.HandlerFunc("POST", "/member/create", secureChain(Register))
-	rtr.HandlerFunc("GET", "/admin/users", adminChain(UserAll))
+	rtr.DELETE("/logout", secureChain(Logout))
+	rtr.POST("/register", insecureChain(Register))
+	rtr.POST("/myaccount", secureChain(UserUpdate))
+	rtr.POST("/auth", insecureChain(Auth))
+	rtr.GET("/check_login", insecureChain(CheckLogin))
+	rtr.POST("/member/create", secureChain(Register))
+	rtr.GET("/admin/users", adminChain(UserAll))
+	rtr.POST("/archive/:id", adminChain(UserArchive))
 
 	handler := &Handler{
 		APIHandler:   rtr,

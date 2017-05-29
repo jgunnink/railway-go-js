@@ -99,14 +99,15 @@ func (db *DB) UserLogout(id int) *models.User {
 }
 
 // UserArchive will archive a user.
-func (db *DB) UserArchive(id int) *models.User {
+func (db *DB) UserArchive(id int) (*models.User, error) {
 	archivedUser := &models.User{}
 	err := db.DB.Get(archivedUser, "UPDATE users SET archived=true SET archived_on=$1 WHERE id=$2 RETURNING *", time.Now(), id)
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return nil, err
 	}
 
-	return archivedUser
+	return archivedUser, nil
 }
 
 // UserUpdate updates an existing user account to the database.
