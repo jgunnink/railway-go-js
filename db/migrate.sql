@@ -10,8 +10,8 @@ CREATE TABLE users (
     session_token text NOT NULL,
     data jsonb NOT NULL,
 	archived boolean NOT NULL,
-	archived_on time,
-	created_at time NOT NULL,
+	archived_on timestamp,
+	created_at timestamp NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY (id),
     CONSTRAINT users_email_key UNIQUE (email)
 );
