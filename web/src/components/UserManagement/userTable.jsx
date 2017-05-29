@@ -31,28 +31,31 @@ const UserTable = (props) => {
 }
 
 const UserRow = (props) => {
+	const user=props.user
+	const fullName=`${user.firstName} ${user.lastName}`
+	const email=user.email
 	return (
 		<Table.Row>
 			<Table.Cell>
 				<Header as="h4" image>
 					<Image src={ImageLena} shape="rounded" size="mini" />
 					<Header.Content>
-						{props.user.firstName} {props.user.lastName}
+						{fullName}
 						<Header.Subheader>{props.user.data.occupation}</Header.Subheader>
 					</Header.Content>
 				</Header>
 			</Table.Cell>
 			<Table.Cell>
-				{props.user.email}
+				{email}
 			</Table.Cell>
 			<Table.Cell>
 				{/*<Button size="mini">Edit</Button>*/}
 				<Button 
 					negative size="mini" 
 					icon="archive" 
-					content="Archive" 
+					content="Archive"
 					onClick={()=> {
-						const r = confirm("Are you sure?")
+						const r = confirm("Are you sure you want to archive "+fullName+" ("+email+")?")
 							if (r) props.archiveUser()
 					}} 
 				/>
