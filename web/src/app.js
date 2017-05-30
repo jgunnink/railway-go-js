@@ -6,6 +6,7 @@ import Home from "./containers/Home"
 import Login from "./containers/Login"
 import MyAccount from "./containers/MyAccount"
 import Navbar from "./containers/Navbar"
+import Notifications from "./containers/Notifications"
 import Registered from "./containers/Registered"
 import Sidebar from "./containers/Sidebar"
 import Signup from "./containers/Signup"
@@ -56,6 +57,7 @@ const App = (props) => {
   
 	return (
 		<div id="app" className={area}>
+			<Notifications />
 			<Navbar />
 			{ router.pathname === "/" && <Home /> }
 			<MemberArea forRoute="/dashboard"><Dashboard /></MemberArea>

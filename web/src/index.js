@@ -16,22 +16,22 @@ import "semantic-ui-css/semantic.min.css"
 
 const { reducer, enhancer, middleware } = routerForBrowser({ routes })
 const store = createStore(
-  combineReducers({ router: reducer, railway: railway, form: form }),
-  window.__INITIAL_STATE || {},
-  compose(
-    enhancer,
-    applyMiddleware(middleware, thunk, fetch),
-    window.devToolsExtension ?
-      window.devToolsExtension() : f => f
-  )
+	combineReducers({ router: reducer, railway: railway, form: form }),
+	window.__INITIAL_STATE || {},
+	compose(
+		enhancer,
+		applyMiddleware(middleware, thunk, fetch),
+		window.devToolsExtension ?
+			window.devToolsExtension() : f => f
+	)
 )
 
 window.store = store
 const render = () => {
-  ReactDOM.render(
-    wrap(store)(App),
-    document.getElementById("root")
-  )
+	ReactDOM.render(
+	  	wrap(store)(App),
+		document.getElementById("root")
+	)
 }
 
 loadState(store.dispatch, () => {

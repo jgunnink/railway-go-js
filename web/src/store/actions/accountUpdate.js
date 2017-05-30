@@ -1,5 +1,6 @@
 import request from "../../util/agent"
 import { push } from "redux-little-router"
+import addNotification from "./notifications"
 import changeActiveScreen from "./ui"
 export const UPDATE_FAILURE = "UPDATE_FAILURE"
 export const UPDATE_SUCCESS = "UPDATE_SUCCESS"
@@ -10,6 +11,8 @@ export function accountUpdate(dispatch, values) {
 		.then((res) => {
 			dispatch(receiveUpdate(res))
 			dispatch(push("/myaccount"))
+			console.log("Updated")
+			dispatch(addNotification("Successfully updated your account", "success"))
 			dispatch(changeActiveScreen("account"))
 		}).catch((err) => {
       		reject(err)
