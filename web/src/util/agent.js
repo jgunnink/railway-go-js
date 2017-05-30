@@ -18,7 +18,6 @@ request.interceptors.response.use(function (response) {
 }, function (error) {
     if (error.response.status === 403) {
 		window.store.dispatch(push("/"))
-		return Promise.reject(error)
 	}
 	return Promise.reject(error)
 })

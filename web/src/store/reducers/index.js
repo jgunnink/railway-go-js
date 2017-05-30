@@ -1,7 +1,7 @@
 import { combineReducers } from "redux"
 import accountUpdate from "./accountUpdate"
 import authentication from "./authentication"
-import notifications from "./notifications.js"
+import notifications from "./notifications"
 import signup from "./signup"
 import ui from "./ui"
 import users from "./users"

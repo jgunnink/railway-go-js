@@ -77,7 +77,6 @@ func withToken(next http.Handler) http.Handler {
 		}
 
 		emailIface, ok := session.Values["email"]
-		log.Println(session)
 		if !ok {
 			handleErrorAndRespond(details, w, "email not in session", http.StatusForbidden)
 			return

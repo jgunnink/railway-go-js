@@ -5,10 +5,6 @@ import { addNotification, clearNotification } from "../../store/actions/notifica
 import NotificationSystem from "react-notification-system"
 
 class NotificationContainer extends React.Component {
-	constructor(props) {
-		super(props)
-	}
-
 	componentDidMount() {
 		this.notificationSystem = this.refs.notificationSystem
 	}
@@ -39,7 +35,7 @@ class NotificationContainer extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		notifications: state.get("notifications").toJS()
+		notifications: state.railway.notifications.toJS()
 	}
 }
 

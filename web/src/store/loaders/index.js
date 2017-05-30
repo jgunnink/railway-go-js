@@ -6,7 +6,7 @@ import { push } from "redux-little-router"
 const loadState = (dispatch, cb) => {
 	request.get("/check_login").then((res) => {
 		dispatch(receiveLogin(res.data))
-        cb()
+		cb()
 	}).catch(() => {
 		dispatch(push("/"))
 		cb()

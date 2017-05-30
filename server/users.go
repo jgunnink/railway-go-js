@@ -66,24 +66,44 @@ func UserUpdate(w http.ResponseWriter, r *http.Request) {
 
 	hashedPassword := helpers.HashPassword(formValues.Password)
 	dbclient := db.Client()
-	user, err := dbclient.UserByEmail(formValues.Email)
 
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	// Get the user ID of the user we are attempting to update
+	session, err := cookieStore.Get(r, "_railway_session")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	userID, ok := session.Values["id"]
+	if !ok || userID == "" {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	updatedUser := &models.User{
-		ID:        user.ID,
+		ID:        userID.(int),
 		FirstName: formValues.First,
 		LastName:  formValues.Last,
 		Email:     formValues.Email,
 		Password:  string(hashedPassword),
 	}
+
 	err = dbclient.UserUpdate(updatedUser)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	resp, err := json.Marshal(updatedUser)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.Write(resp)
 }

@@ -88,6 +88,17 @@ func (db *DB) UserByEmail(email string) (*models.User, error) {
 	return user, nil
 }
 
+// UserByID returns a single User given an email
+func (db *DB) UserByID(ID int) (*models.User, error) {
+	user := &models.User{}
+	err := db.DB.Get(user, "SELECT * FROM users WHERE ID=$1", ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
 // UserSetToken will set a session_token for a given User ID
 func (db *DB) UserSetToken(id int, sessionToken string) *models.User {
 	updatedUser := &models.User{}
@@ -112,10 +123,7 @@ func (db *DB) UserLogout(id int) *models.User {
 
 // UserUpdate updates an existing user account to the database.
 func (db *DB) UserUpdate(user *models.User) error {
-	tx := db.DB.MustBegin()
-
-	stmt, err := tx.PrepareNamed(`UPDATE users SET id=:id,
-	first_name=:first_name,
+	stmt, err := db.DB.PrepareNamed(`UPDATE users SET first_name=:first_name,
 	last_name=:last_name,
 	email=:email,
 	password=:password
@@ -125,7 +133,9 @@ func (db *DB) UserUpdate(user *models.User) error {
 		return err
 	}
 
-	stmt.MustExec(user)
-	tx.Commit()
+	_, err = stmt.Exec(user)
+	if err != nil {
+		return err
+	}
 	return nil
 }
