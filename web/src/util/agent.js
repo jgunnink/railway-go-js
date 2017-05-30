@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { push } from "redux-little-router"
 
 const request = axios.create({
   baseURL: '/',
@@ -9,6 +10,17 @@ const request = axios.create({
   	"Content-Type":"application/json",
   	"X-Requested-With": "XMLHttpRequest"
   }
+})
+
+// Add a response interceptor
+request.interceptors.response.use(function (response) {
+    return response
+}, function (error) {
+    if (error.response.status === 403) {
+		window.store.dispatch(push("/"))
+		return Promise.reject(error)
+	}
+	return Promise.reject(error)
 })
 
 export default request
