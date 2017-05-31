@@ -10,33 +10,24 @@ const SideBar = (props) => {
 	const role = props.role
 
 	return (
-		<div className="sidebar">
-			<Segment inverted>
-				<Menu inverted vertical>
-					<Menu.Item name="Dashboard" active={activeScreen === "dashboard"}><Icon name="dashboard" /><Link href="/dashboard" onClick={()=>{changeActiveScreen("dashboard")}}>Dashboard</Link></Menu.Item>
-					<Menu.Item active={activeScreen === "account"}>
-						<Menu.Header>My Account<Icon name="user" style={{float:"right"}} /></Menu.Header>
-						<Menu.Menu>
-							<Menu.Item>
-								<Link href="/myaccount" onClick={()=>{changeActiveScreen("account")}}>Edit account</Link>
-							</Menu.Item>
-						</Menu.Menu>
-					</Menu.Item>
-					{role === "admin" && <Menu.Item>
-						<Menu.Header>
-							<Link style={{color: "white"}}href="/admin/usermanagement" onClick={()=>{changeActiveScreen("userManagement")}}>User Management</Link>
-							<Icon name="users" style={{float:"right"}} />
-						</Menu.Header>
-					</Menu.Item> }
-					<Menu.Item>
-						<Menu.Header>
-							<Link style={{color: "white"}}href="/logout" onClick={()=>{changeActiveScreen("home"); logout()}}>Logout</Link>
-							<Icon name="power" style={{float:"right"}} />
-						</Menu.Header>
-					</Menu.Item>					
-				</Menu>
-			</Segment>
-		</div>
+		<div className="sidebar"><Segment inverted><Menu inverted vertical>
+			<Menu.Item name="Dashboard" active={activeScreen === "dashboard"}>
+				<Icon name="dashboard" />
+				<Link href="/dashboard" onClick={()=>{changeActiveScreen("dashboard")}}>Dashboard</Link>
+			</Menu.Item>
+			<Menu.Item active={activeScreen === "account"}>
+				<Icon name="user" />
+				<Link href="/myaccount" onClick={()=>{changeActiveScreen("account")}}>My account</Link>
+			</Menu.Item>
+			{role === "admin" && <Menu.Item active={activeScreen === "userManagement"}>
+				<Icon name="users" />
+				<Link href="/admin/usermanagement" onClick={()=>{changeActiveScreen("userManagement")}}>User Management</Link>
+			</Menu.Item> }
+			<Menu.Item style={{color: "red"}} name="Logout">
+				<Icon name="power" />
+				<Link href="/logout" onClick={()=>{changeActiveScreen("home"); logout()}}>Logout</Link>
+			</Menu.Item>				
+		</Menu></Segment></div>
 	)
 }
 
