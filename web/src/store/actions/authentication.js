@@ -1,4 +1,5 @@
 import changeActiveScreen from "./ui"
+import { addNotification } from "./notifications"
 import request from "../../util/agent"
 
 export const LOGIN_REQUEST = "LOGIN_REQUEST"
@@ -64,6 +65,7 @@ export function logout(creds) {
       .then((res) => {
         dispatch(receiveLogout())
         dispatch(push("/"))
+		dispatch(addNotification("Successfully signed out.", "info"))
       })
   }
 }
@@ -78,6 +80,7 @@ export function login(dispatch, creds) {
     }).catch((err) => {
       reject(err)
       dispatch(loginError(err))
+	  dispatch(addNotification("Login error, please try again.", "error"))
     })
   })
 }

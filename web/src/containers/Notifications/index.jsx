@@ -9,20 +9,16 @@ class NotificationContainer extends React.Component {
 		this.notificationSystem = this.refs.notificationSystem
 	}
 
-	componentWillReceiveProps(newProps) {
-		const { message, level } = newProps.notifications
-
-		if (message && level) {
-			this.notificationSystem.addNotification({
-				message,
-				level
-			})
-
-			this.props.dispatch((dispatch) => {
-				setTimeout(() => {
-					dispatch(clearNotification())
-				}, 1)
-			})
+	componentDidUpdate(prevProps) {
+		if (this.props.notifications !== prevProps.notifications) {
+			const { message, level } = this.props.notifications.toJS()
+			if (message && level) {
+				this.notificationSystem.addNotification({
+					message,
+					level
+				})
+				this.props.dispatch(clearNotification())
+			}
 		}
 	}
 
@@ -35,7 +31,7 @@ class NotificationContainer extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		notifications: state.railway.notifications.toJS()
+		notifications: state.railway.notifications
 	}
 }
 
