@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jgunnink/railway/db"
+	"github.com/jgunnink/railway/helpers"
 	"github.com/jgunnink/railway/httperrors"
 )
 
@@ -62,34 +63,20 @@ func withRecover(next http.Handler) http.Handler {
 
 func withToken(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		session, err := cookieStore.Get(r, "_railway_session")
+		cookie, err := helpers.LoadCookie(r, cookieStore)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
+			httperrors.HandleErrorAndRespond(w, httperrors.InvalidCookie, http.StatusUnauthorized)
 			return
 		}
-
-		emailIface, ok := session.Values["email"]
-		if !ok {
-			httperrors.HandleErrorAndRespond(w, httperrors.EmailNotInSession, http.StatusUnauthorized)
-			return
-		}
-		email := emailIface.(string)
-
-		sessionIface, ok := session.Values["session_token"]
-		if !ok {
-			httperrors.HandleErrorAndRespond(w, httperrors.SessionTokenNotInSession, http.StatusUnauthorized)
-			return
-		}
-		sessionToken := sessionIface.(string)
 
 		dbclient := db.Client()
-		userFromDB, err := dbclient.UserByEmail(email)
+		userFromDB, err := dbclient.UserByEmail(cookie.Email)
 		if err != nil {
-			httperrors.HandleErrorAndRespond(w, httperrors.EmailTokenMismatch, http.StatusUnauthorized)
+			httperrors.HandleErrorAndRespond(w, httperrors.UserNotFound, http.StatusUnauthorized)
 			return
 		}
 
-		if userFromDB.SessionToken != sessionToken {
+		if userFromDB.SessionToken != cookie.SessionToken {
 			httperrors.HandleErrorAndRespond(w, httperrors.EmailTokenMismatch, http.StatusUnauthorized)
 			return
 		}

@@ -1,8 +1,6 @@
 package server
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -10,6 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/jgunnink/railway/db"
+	"github.com/jgunnink/railway/helpers"
 	"github.com/jgunnink/railway/httperrors"
 	"github.com/jgunnink/railway/models"
 )
@@ -19,38 +18,20 @@ import (
 // 	Method: GET
 // This is an insecure route.
 func CheckLogin(w http.ResponseWriter, r *http.Request) {
-	details := &FuncDetails{
-		name:        "checkLogin",
-		description: "Returns a User model if user is logged in",
-	}
-	log.Println("[HANDLER]", details.Name)
-	session, err := cookieStore.Get(r, "_railway_session")
+	cookie, err := helpers.LoadCookie(r, cookieStore)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		httperrors.HandleErrorAndRespond(w, httperrors.InvalidCookie, http.StatusUnauthorized)
 		return
 	}
-
-	email, ok := session.Values["email"]
-	if !ok || email == "" {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	sessionIface, ok := session.Values["session_token"]
-	if !ok {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	sessionToken := sessionIface.(string)
 
 	dbclient := db.Client()
-	result, err := dbclient.UserByEmail(email.(string))
+	result, err := dbclient.UserByEmail(cookie.Email)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
-	if result.SessionToken != sessionToken {
+	if result.SessionToken != cookie.SessionToken {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -106,20 +87,20 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sessionTokenBytes := make([]byte, 32)
-	rand.Read(sessionTokenBytes)
-	sessionToken := base64.StdEncoding.EncodeToString(sessionTokenBytes)
+	newCookie := &models.Cookie{
+		SessionToken: helpers.NewSessionToken(),
+		Email:        userFromRequest.Email,
+		UserID:       userFromRequest.ID,
+	}
+	updatedSession := helpers.CreateCookie(newCookie, session)
 
-	session.Values["session_token"] = string(sessionToken)
-	session.Values["email"] = userFromDB.Email
-	session.Values["id"] = userFromDB.ID
-	err = session.Save(r, w)
+	err = updatedSession.Save(r, w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	result := dbclient.UserSetToken(userFromDB.ID, sessionToken)
+	result := dbclient.UserSetToken(userFromDB.ID, newCookie.SessionToken)
 
 	response, err := json.Marshal(result)
 	if err != nil {

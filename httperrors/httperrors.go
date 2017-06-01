@@ -11,7 +11,7 @@ type funcDetails interface {
 	Description() string
 }
 
-type ServerError map[int]string
+// ErrorCode contains the code and description of the custom error
 type ErrorCode struct {
 	Code int
 	Desc string
@@ -42,6 +42,16 @@ var (
 	SessionTokenNotInSession = &ErrorCode{
 		Code: 4015,
 		Desc: "Session token not in session",
+	}
+	// InvalidCookie indicates the provided cookie is invalid
+	InvalidCookie = &ErrorCode{
+		Code: 4016,
+		Desc: "Invalid cookie provided",
+	}
+	// UserNotFound indicates the user was not found in the database when looked up.
+	UserNotFound = &ErrorCode{
+		Code: 4017,
+		Desc: "User could not found",
 	}
 	// AdminStatusRequired indicates is used when the action is for admin users
 	AdminStatusRequired = &ErrorCode{

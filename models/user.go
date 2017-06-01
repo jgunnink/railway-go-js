@@ -17,3 +17,10 @@ type User struct {
 	ArchivedOn   *time.Time     `json:"archived_on" db:"archived_on"`
 	CreatedAt    time.Time      `json:"created_at" db:"created_at"`
 }
+
+// Cookie contains the email and cookie of the users session
+type Cookie struct {
+	UserID       int
+	Email        string
+	SessionToken string
+}
