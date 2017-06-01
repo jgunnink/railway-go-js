@@ -8,18 +8,18 @@ export const UPDATE_SUCCESS = "UPDATE_SUCCESS"
 
 export function accountUpdate(dispatch, values) {
 	return new Promise((resolve, reject) => {
-    	request.post("/myaccount", values)
-		.then((res) => {
-			dispatch(receiveUpdate(res))
-			dispatch(push("/dashboard"))
-			dispatch(changeActiveScreen("dashboard"))
-			dispatch(addNotification("Successfully updated your account.", "success"))
-			loadState(dispatch, () => {} )
-		}).catch((err) => {
-      		reject(err)
-			dispatch(updateError(err))
-			dispatch(addNotification("Couldn't update your account - check the errors below or try again later.", "error"))
-		})
+		request.post("/myaccount", values)
+			.then((res) => {
+				dispatch(receiveUpdate(res))
+				dispatch(push("/dashboard"))
+				dispatch(changeActiveScreen("dashboard"))
+				dispatch(addNotification("Successfully updated your account.", "success"))
+				loadState(dispatch, () => { })
+			}).catch((err) => {
+				reject(err)
+				dispatch(updateError(err))
+				dispatch(addNotification("Couldn't update your account. Please try again later.", "error"))
+			})
 	})
 }
 

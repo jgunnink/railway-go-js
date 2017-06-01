@@ -31,13 +31,13 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 
 	email, ok := session.Values["email"]
 	if !ok || email == "" {
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
 	sessionIface, ok := session.Values["session_token"]
 	if !ok {
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 	sessionToken := sessionIface.(string)
@@ -45,12 +45,12 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	dbclient := db.Client()
 	result, err := dbclient.UserByEmail(email.(string))
 	if err != nil {
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
 	if result.SessionToken != sessionToken {
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -88,13 +88,13 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	}
 	userFromDB, err := dbclient.UserByEmail(userFromRequest.Email)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		handleErrorAndRespond(details, w, "Incorrect username or password", http.StatusUnauthorized)
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(userFromDB.Password), []byte(userFromRequest.Password))
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		handleErrorAndRespond(details, w, "Incorrect username or password", http.StatusUnauthorized)
 		return
 	}
 
@@ -149,7 +149,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 	userIDiface, ok := session.Values["id"]
 	if !ok {
-		handleErrorAndRespond(details, w, "id not in session", http.StatusForbidden)
+		handleErrorAndRespond(details, w, "id not in session", http.StatusUnauthorized)
 		return
 	}
 	userID := userIDiface.(int)

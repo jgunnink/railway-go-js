@@ -1,5 +1,11 @@
 import immutable, {Map} from "immutable"
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS } from "../actions/authentication"
+import { 
+	LOGIN_REQUEST, 
+	LOGIN_SUCCESS, 
+	LOGIN_FAILURE, 
+	LOGOUT_SUCCESS,
+	UNAUTHORISED
+	} from "../actions/authentication"
 
 function auth(
   state = immutable.fromJS({
@@ -28,6 +34,8 @@ function auth(
         isFetching: false,
         isAuthenticated: false
       })
+	case UNAUTHORISED:
+      return state.merge(action)
     default:
       return state
   }

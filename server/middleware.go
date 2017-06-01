@@ -78,14 +78,14 @@ func withToken(next http.Handler) http.Handler {
 
 		emailIface, ok := session.Values["email"]
 		if !ok {
-			handleErrorAndRespond(details, w, "email not in session", http.StatusForbidden)
+			handleErrorAndRespond(details, w, "email not in session", http.StatusUnauthorized)
 			return
 		}
 		email := emailIface.(string)
 
 		sessionIface, ok := session.Values["session_token"]
 		if !ok {
-			handleErrorAndRespond(details, w, "session_token not in session", http.StatusForbidden)
+			handleErrorAndRespond(details, w, "session_token not in session", http.StatusUnauthorized)
 			return
 		}
 		sessionToken := sessionIface.(string)
@@ -93,12 +93,12 @@ func withToken(next http.Handler) http.Handler {
 		dbclient := db.Client()
 		userFromDB, err := dbclient.UserByEmail(email)
 		if err != nil {
-			handleErrorAndRespond(details, w, "Email token mismatch", http.StatusForbidden)
+			handleErrorAndRespond(details, w, "Email token mismatch", http.StatusUnauthorized)
 			return
 		}
 
 		if userFromDB.SessionToken != sessionToken {
-			handleErrorAndRespond(details, w, "Session tokens do not match", http.StatusForbidden)
+			handleErrorAndRespond(details, w, "Session tokens do not match", http.StatusUnauthorized)
 			return
 		}
 
