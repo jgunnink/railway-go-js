@@ -92,7 +92,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		Email:        userFromRequest.Email,
 		UserID:       userFromRequest.ID,
 	}
-	updatedSession := helpers.CreateCookie(newCookie, session)
+	updatedSession := helpers.UpdateCookieSession(newCookie, session)
 
 	err = updatedSession.Save(r, w)
 	if err != nil {

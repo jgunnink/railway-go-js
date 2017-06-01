@@ -11,7 +11,7 @@ import (
 	"errors"
 )
 
-// LoadCookie does something
+// LoadCookie loads a cookie and checks for valid sessions and returns a cookie struct
 func LoadCookie(r *http.Request, cs *sessions.CookieStore) (*models.Cookie, error) {
 	session, err := cs.Get(r, "_railway_session")
 	if err != nil {
@@ -42,8 +42,8 @@ func NewSessionToken() string {
 	return base64.StdEncoding.EncodeToString(sessionTokenBytes)
 }
 
-// CreateCookie does exactly that.
-func CreateCookie(cookie *models.Cookie, session *sessions.Session) *sessions.Session {
+// UpdateCookieSession updates a cookie session with passed in values.
+func UpdateCookieSession(cookie *models.Cookie, session *sessions.Session) *sessions.Session {
 	session.Values["session_token"] = cookie.SessionToken
 	session.Values["email"] = cookie.Email
 	session.Values["id"] = cookie.UserID
