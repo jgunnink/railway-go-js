@@ -7,31 +7,27 @@ import (
 	"time"
 
 	"github.com/jgunnink/railway/db"
+	"github.com/jgunnink/railway/httperrors"
 )
 
 func withAdmin(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		details := &funcDetails{
-			Name:        "secureMiddleware",
-			Description: "Checks if a user is an admin user",
-		}
-
 		session, err := cookieStore.Get(r, "_railway_session")
 		email, ok := session.Values["email"].(string)
 		if !ok {
-			handleErrorAndRespond(details, w, "Email not in session", http.StatusForbidden)
+			httperrors.HandleErrorAndRespond(w, httperrors.IDNotInSession, http.StatusUnauthorized)
 			return
 		}
 
 		dbclient := db.Client()
 		userFromDB, err := dbclient.UserByEmail(email)
 		if err != nil {
-			handleErrorAndRespond(details, w, "Email token mismatch", http.StatusForbidden)
+			httperrors.HandleErrorAndRespond(w, httperrors.EmailTokenMismatch, http.StatusUnauthorized)
 			return
 		}
 
 		if userFromDB.Role != "admin" {
-			handleErrorAndRespond(details, w, "Admin status required", http.StatusForbidden)
+			httperrors.HandleErrorAndRespond(w, httperrors.AdminStatusRequired, http.StatusForbidden)
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -66,26 +62,22 @@ func withRecover(next http.Handler) http.Handler {
 
 func withToken(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		details := &funcDetails{
-			Name:        "secureMiddleware",
-			Description: "Checks if a user is logged in before starting the next handler",
-		}
 		session, err := cookieStore.Get(r, "_railway_session")
 		if err != nil {
-			handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
 		emailIface, ok := session.Values["email"]
 		if !ok {
-			handleErrorAndRespond(details, w, "email not in session", http.StatusUnauthorized)
+			httperrors.HandleErrorAndRespond(w, httperrors.EmailNotInSession, http.StatusUnauthorized)
 			return
 		}
 		email := emailIface.(string)
 
 		sessionIface, ok := session.Values["session_token"]
 		if !ok {
-			handleErrorAndRespond(details, w, "session_token not in session", http.StatusUnauthorized)
+			httperrors.HandleErrorAndRespond(w, httperrors.SessionTokenNotInSession, http.StatusUnauthorized)
 			return
 		}
 		sessionToken := sessionIface.(string)
@@ -93,12 +85,12 @@ func withToken(next http.Handler) http.Handler {
 		dbclient := db.Client()
 		userFromDB, err := dbclient.UserByEmail(email)
 		if err != nil {
-			handleErrorAndRespond(details, w, "Email token mismatch", http.StatusUnauthorized)
+			httperrors.HandleErrorAndRespond(w, httperrors.EmailTokenMismatch, http.StatusUnauthorized)
 			return
 		}
 
 		if userFromDB.SessionToken != sessionToken {
-			handleErrorAndRespond(details, w, "Session tokens do not match", http.StatusUnauthorized)
+			httperrors.HandleErrorAndRespond(w, httperrors.EmailTokenMismatch, http.StatusUnauthorized)
 			return
 		}
 

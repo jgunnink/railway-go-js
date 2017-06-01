@@ -10,6 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/jgunnink/railway/db"
+	"github.com/jgunnink/railway/httperrors"
 	"github.com/jgunnink/railway/models"
 )
 
@@ -18,14 +19,14 @@ import (
 // 	Method: GET
 // This is an insecure route.
 func CheckLogin(w http.ResponseWriter, r *http.Request) {
-	details := &funcDetails{
-		Name:        "checkLogin",
-		Description: "Returns a User model if user is logged in",
+	details := &FuncDetails{
+		name:        "checkLogin",
+		description: "Returns a User model if user is logged in",
 	}
 	log.Println("[HANDLER]", details.Name)
 	session, err := cookieStore.Get(r, "_railway_session")
 	if err != nil {
-		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -56,7 +57,7 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 
 	response, err := json.Marshal(result)
 	if err != nil {
-		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -73,9 +74,9 @@ type loginResponse struct {
 // 	Method: POST
 // This is an insecure route.
 func Auth(w http.ResponseWriter, r *http.Request) {
-	details := &funcDetails{
-		Name:        "auth",
-		Description: "Create a new user session",
+	details := &FuncDetails{
+		name:        "auth",
+		description: "Create a new user session",
 	}
 	log.Println("[HANDLER]", details.Name)
 	// Check if password matches
@@ -83,25 +84,25 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	userFromRequest := &models.User{}
 	err := json.NewDecoder(r.Body).Decode(userFromRequest)
 	if err != nil {
-		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	userFromDB, err := dbclient.UserByEmail(userFromRequest.Email)
 	if err != nil {
-		handleErrorAndRespond(details, w, "Incorrect username or password", http.StatusUnauthorized)
+		httperrors.HandleErrorAndRespond(w, httperrors.StatusPasswordMismatch, http.StatusUnauthorized)
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(userFromDB.Password), []byte(userFromRequest.Password))
 	if err != nil {
-		handleErrorAndRespond(details, w, "Incorrect username or password", http.StatusUnauthorized)
+		httperrors.HandleErrorAndRespond(w, httperrors.StatusPasswordMismatch, http.StatusUnauthorized)
 		return
 	}
 
 	// Assign session token
 	session, err := cookieStore.Get(r, "_railway_session")
 	if err != nil {
-		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -114,7 +115,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	session.Values["id"] = userFromDB.ID
 	err = session.Save(r, w)
 	if err != nil {
-		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -122,7 +123,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 
 	response, err := json.Marshal(result)
 	if err != nil {
-		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -134,22 +135,22 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 // 	Method: DELETE
 // This is a secure route.
 func Logout(w http.ResponseWriter, r *http.Request) {
-	details := &funcDetails{
-		Name:        "logout",
-		Description: "Delete an existing user session",
+	details := &FuncDetails{
+		name:        "logout",
+		description: "Delete an existing user session",
 	}
 	log.Println("[HANDLER]", details.Name)
 	dbclient := db.Client()
 
 	session, err := cookieStore.Get(r, "_railway_session")
 	if err != nil {
-		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	userIDiface, ok := session.Values["id"]
 	if !ok {
-		handleErrorAndRespond(details, w, "id not in session", http.StatusUnauthorized)
+		httperrors.HandleErrorAndRespond(w, httperrors.IDNotInSession, http.StatusUnauthorized)
 		return
 	}
 	userID := userIDiface.(int)
@@ -158,27 +159,9 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 	response, err := json.Marshal(updatedUser)
 	if err != nil {
-		handleErrorAndRespond(details, w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	w.Write(response)
-}
-
-// Handles errors responds with an error response struct in JSON
-func handleErrorAndRespond(details *funcDetails, w http.ResponseWriter, errString string, code int) {
-	log.Println(details.Name, "handler error:", errString)
-	w.WriteHeader(code)
-	response := &errorResponse{
-		Code:    code,
-		Error:   errString,
-		Message: *details,
-	}
-	json.NewEncoder(w).Encode(response)
-}
-
-type errorResponse struct {
-	Code    int         `json:"code"`
-	Error   string      `json:"error"`
-	Message funcDetails `json:"message"`
 }

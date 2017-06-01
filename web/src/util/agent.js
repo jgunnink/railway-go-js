@@ -18,8 +18,8 @@ const request = axios.create({
 request.interceptors.response.use(function (response) {
 	return response
 }, function (error) {
-	if ((error.response.status === 401) && (error.response.data.error !== "Incorrect username or password")) {
-		console.log(error.response)
+	console.log(error.response)
+	if ((error.response.status === 401) && (error.response.data.error_code !== 4011)) {
 		window.store.dispatch(unauthorised())
 		window.store.dispatch(push("/login"))
 		window.store.dispatch(addNotification("It looks like you've logged in somewhere else. Please log in again to continue.", "error"))

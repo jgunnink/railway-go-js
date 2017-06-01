@@ -10,6 +10,7 @@ import (
 	"github.com/blockninja/ninjarouter"
 	"github.com/jgunnink/railway/db"
 	"github.com/jgunnink/railway/helpers"
+	"github.com/jgunnink/railway/httperrors"
 	"github.com/jgunnink/railway/models"
 )
 
@@ -82,7 +83,7 @@ func UserUpdate(w http.ResponseWriter, r *http.Request) {
 
 	userID, ok := session.Values["id"]
 	if !ok || userID == "" {
-		w.WriteHeader(http.StatusForbidden)
+		httperrors.HandleErrorAndRespond(w, httperrors.IDNotInSession, http.StatusUnauthorized)
 		return
 	}
 

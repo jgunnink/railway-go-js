@@ -13,9 +13,20 @@ import (
 
 var cookieStore = sessions.NewCookieStore([]byte("gelatinoid-repairable-salmon"))
 
-type funcDetails struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
+// FuncDetails is a struct containing a name and a description
+type FuncDetails struct {
+	name        string
+	description string
+}
+
+// Name returns a name
+func (fd *FuncDetails) Name() string {
+	return fd.name
+}
+
+// Description returns a description
+func (fd *FuncDetails) Description() string {
+	return fd.description
 }
 
 // Handler is a collection of all the service handlers.
