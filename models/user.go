@@ -21,6 +21,5 @@ type User struct {
 // Cookie contains the email and cookie of the users session
 type Cookie struct {
 	UserID       int
-	Email        string
 	SessionToken string
 }

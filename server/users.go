@@ -54,7 +54,8 @@ func UserArchive(w http.ResponseWriter, r *http.Request) {
 	w.Write(archivedUser)
 }
 
-// UserUpdate takes the HTTP request and attempts to update the user record in the database
+// UserUpdate takes the HTTP request and attempts to update the user record in
+// the database
 func UserUpdate(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -74,21 +75,19 @@ func UserUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get the user ID of the user we are attempting to update
-	session, err := cookieStore.Get(r, "_railway_session")
+	cookie, err := helpers.LoadCookie(r, cookieStore)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		httperrors.HandleErrorAndRespond(w, httperrors.InvalidCookie, http.StatusUnauthorized)
 		return
 	}
-
-	userID, ok := session.Values["id"]
-	if !ok || userID == "" {
+	userID := cookie.UserID
+	if userID == 0 {
 		httperrors.HandleErrorAndRespond(w, httperrors.IDNotInSession, http.StatusUnauthorized)
 		return
 	}
 
 	updatedUser := &models.User{
-		ID:        userID.(int),
+		ID:        userID,
 		FirstName: formValues.First,
 		LastName:  formValues.Last,
 		Email:     formValues.Email,

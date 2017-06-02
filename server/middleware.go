@@ -13,17 +13,16 @@ import (
 
 func withAdmin(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		session, err := cookieStore.Get(r, "_railway_session")
-		email, ok := session.Values["email"].(string)
-		if !ok {
-			httperrors.HandleErrorAndRespond(w, httperrors.IDNotInSession, http.StatusUnauthorized)
+		cookie, err := helpers.LoadCookie(r, cookieStore)
+		if err != nil {
+			httperrors.HandleErrorAndRespond(w, httperrors.InvalidCookie, http.StatusUnauthorized)
 			return
 		}
 
 		dbclient := db.Client()
-		userFromDB, err := dbclient.UserByEmail(email)
+		userFromDB, err := dbclient.UserByID(cookie.UserID)
 		if err != nil {
-			httperrors.HandleErrorAndRespond(w, httperrors.EmailTokenMismatch, http.StatusUnauthorized)
+			httperrors.HandleErrorAndRespond(w, httperrors.UserNotFound, http.StatusUnauthorized)
 			return
 		}
 
@@ -70,7 +69,7 @@ func withToken(next http.Handler) http.Handler {
 		}
 
 		dbclient := db.Client()
-		userFromDB, err := dbclient.UserByEmail(cookie.Email)
+		userFromDB, err := dbclient.UserByID(cookie.UserID)
 		if err != nil {
 			httperrors.HandleErrorAndRespond(w, httperrors.UserNotFound, http.StatusUnauthorized)
 			return

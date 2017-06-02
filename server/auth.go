@@ -25,7 +25,7 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dbclient := db.Client()
-	result, err := dbclient.UserByEmail(cookie.Email)
+	result, err := dbclient.UserByID(cookie.UserID)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -89,8 +89,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 
 	newCookie := &models.Cookie{
 		SessionToken: helpers.NewSessionToken(),
-		Email:        userFromRequest.Email,
-		UserID:       userFromRequest.ID,
+		UserID:       userFromDB.ID,
 	}
 	updatedSession := helpers.UpdateCookieSession(newCookie, session)
 
