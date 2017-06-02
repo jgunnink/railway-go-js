@@ -5,7 +5,7 @@ import { Link } from "redux-little-router"
 
 const Registered = (props) => {  
   	return (
-		<div className="vertical-center jumbotron">
+		<div className="vertical-center jumbotron-landing">
 			<Header style={{color: "white"}} as="h1" content="Registration complete" />
 			<p>Please check your email to verify your account.</p>
 			<Link href="/">

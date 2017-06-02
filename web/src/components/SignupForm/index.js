@@ -15,8 +15,6 @@ const submit = (values, dispatch, props) => {
 
 const errorMessage = (errorCode) => {
 	switch (errorCode) {
-		case 400:
-			return (<Message negative header="Already taken!" content="That email address has already been registered. Please use another email, or reset your password if you've forgotten it."/>)
 		case 500:
 			return (<Message negative header="Internal server error" content="A server error has occured. The administrators have been notified. Please try again later." />)
 		default:
@@ -25,7 +23,7 @@ const errorMessage = (errorCode) => {
 }
 
 const SignupForm = reduxForm({form: "signup", validate}) (({errorCode, handleSubmit, pristine, submitting}) => (
-	<div className="vertical-center jumbotron">
+	<div className="vertical-center jumbotron-landing">
 		{errorCode && errorMessage(errorCode)}
 		<Header as="h1" content="Signup"/>
 		<Form inverted onSubmit={handleSubmit(submit)}>

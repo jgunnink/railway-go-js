@@ -54,7 +54,7 @@ func (db *DB) User(id int) *models.User {
 	return user
 }
 
-// UserAll returns all users
+// UserAll returns all active users which are unarchived
 func (db *DB) UserAll() []*models.User {
 	users := []*models.User{}
 	err := db.DB.Select(&users, "SELECT * FROM users WHERE archived=false")
@@ -88,7 +88,7 @@ func (db *DB) UserByEmail(email string) (*models.User, error) {
 	return user, nil
 }
 
-// UserByID returns a single User given an email
+// UserByID returns a single User given an ID
 func (db *DB) UserByID(ID int) (*models.User, error) {
 	user := &models.User{}
 	err := db.DB.Get(user, "SELECT * FROM users WHERE ID=$1", ID)

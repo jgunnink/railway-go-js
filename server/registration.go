@@ -1,7 +1,6 @@
 package server
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/jgunnink/railway/db"
@@ -21,7 +20,6 @@ type userModelRequest struct {
 func Register(w http.ResponseWriter, r *http.Request) {
 	userRequest := &userModelRequest{}
 	helpers.MustDecodeJSON(r, userRequest)
-	log.Println(userRequest)
 
 	hashedPassword := helpers.HashPassword(userRequest.Password)
 
