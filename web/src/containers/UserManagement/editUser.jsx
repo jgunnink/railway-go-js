@@ -16,19 +16,18 @@ const EditUser = (props) => {
 			<ModalHeader>
 				<h1>{`Editing ${fullName}`}</h1>
 				<p>{`Update details about ${props.user.firstName} here.`}</p>
-	  		</ModalHeader>
+			</ModalHeader>
 			<ModalBody>
-				<AccountDetailsForm {...props} initialValues={{id: props.user.id}} />
+				<AccountDetailsForm {...props} initialValues={{ id: props.user.id }} />
 			</ModalBody>
 			<ModalActions>
-				<Button color="red" onClick={() => {props.push(`/admin/usermanagement/`)}}><Icon name="remove" /> Cancel</Button>
+				<Button color="red" onClick={() => { props.push(`/admin/usermanagement/`) }}><Icon name="remove" /> Cancel</Button>
 			</ModalActions>
 		</Segment></Modal>
 	)
 }
 
 const submit = (values, dispatch, props) => {
-	console.log(values.toJS())
 	return props.adminAccountUpdate(dispatch, values)
 		.then((res) => { })
 		.catch((err) => {
@@ -48,19 +47,19 @@ const AccountDetailsForm = reduxForm({ form: "adminAccountUpdate", validateEmail
 
 const mapStateToProps = (state, ownProps) => {
 	let user
-    let user_id = state.router.params.id
-    let users = state.railway.users.get("list").toJS()
+	let user_id = state.router.params.id
+	let users = state.railway.users.get("list").toJS()
 	for (let index = 0; index < users.length; index++) {
 		user = users[index];
 		if (user.id === parseInt(user_id, 10)) break
 	}
-    return {
-        user
-    }
+	return {
+		user
+	}
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return { 
+	return {
 		adminAccountUpdate: adminAccountUpdate,
 		push: (url) => { dispatch(push(url)) }
 	}

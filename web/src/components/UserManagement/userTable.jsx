@@ -1,8 +1,6 @@
 import React from "react"
 import { Button, Header, Image, Table } from "semantic-ui-react"
-// import { Link } from "redux-little-router"
 import ImageLena from "./images/avatar/small/lena.png"
-// import EditUser from "../../containers/UserManagement/editUser"
 
 const UserTable = (props) => {
 	const users = props.users.toJS()
@@ -19,12 +17,12 @@ const UserTable = (props) => {
 			</Table.Header>
 			<Table.Body>
 				{
-					users.map((user, dispatch)=>{
-						return <UserRow 
+					users.map((user, dispatch) => {
+						return <UserRow
 							user={user}
 							key={user.id}
-							{...props} 
-							archiveUser={() => {archiveUser(user.id)}} 
+							{...props}
+							archiveUser={() => { archiveUser(user.id) }}
 						/>
 					})
 				}
@@ -34,9 +32,9 @@ const UserTable = (props) => {
 }
 
 const UserRow = (props) => {
-	const user=props.user
-	const fullName=`${user.firstName} ${user.lastName}`
-	const email=user.email
+	const user = props.user
+	const fullName = `${user.firstName} ${user.lastName}`
+	const email = user.email
 	return (
 		<Table.Row>
 			<Table.Cell>
@@ -57,17 +55,17 @@ const UserRow = (props) => {
 					size="mini"
 					icon="pencil"
 					content="Edit"
-					onClick={() => {props.push(`/admin/usermanagement/${user.id}`)}}
+					onClick={() => { props.push(`/admin/usermanagement/${user.id}`) }}
 				/>
-				<Button 
-					negative 
-					size="mini" 
-					icon="archive" 
+				<Button
+					negative
+					size="mini"
+					icon="archive"
 					content="Archive"
-					onClick={()=> {
-						const r = confirm("Are you sure you want to archive "+fullName+" ("+email+")?")
-							if (r) props.archiveUser()
-					}} 
+					onClick={() => {
+						const r = confirm("Are you sure you want to archive " + fullName + " (" + email + ")?")
+						if (r) props.archiveUser()
+					}}
 				/>
 			</Table.Cell>
 		</Table.Row>

@@ -1,27 +1,27 @@
-import React from 'react'
-import { Checkbox, Form, Input, Label } from 'semantic-ui-react'
+import React from "react"
+import { Checkbox, Form, Input, Label } from "semantic-ui-react"
 
-export const renderInput = ({input, label, type, meta: {touched, error}}) => {
+export const renderInput = ({ input, label, type, meta: { touched, error } }) => {
 	return (
 		<Form.Field>
 			<label>{label}</label>
 			<Input {...input} type={type} />
-			{touched && error && <Label basic color='red' pointing>{error}</Label>}
+			{touched && error && <Label basic color="red" pointing>{error}</Label>}
 		</Form.Field>
 	)
 }
 
-export const renderHidden = ({initialValue, input, label, type, meta: {touched, error}}) => {
-    return (
-        <input {...input} value={initialValue} type="hidden" />
-    )
+export const renderHidden = ({ initialValue, input, label, type, meta: { touched, error } }) => {
+	return (
+		<input {...input} value={initialValue} type="hidden" />
+	)
 }
 
-export const renderCheckbox = ({input, label, meta: {touched, error}}) => {
+export const renderCheckbox = ({ input, label, meta: { touched, error } }) => {
 	return (
 		<Form.Field>
-			<Checkbox {...input} value={input.value ? 'true' : 'false'} label={label} checked={input.checked} onChange={(e, value) => input.onChange(value.checked)}/>
-			{touched && error && <Label basic color='red' pointing>{error}</Label>}
+			<Checkbox {...input} value={input.value ? "true" : "false"} label={label} checked={input.checked} onChange={(e, value) => input.onChange(value.checked)} />
+			{touched && error && <Label basic color="red" pointing>{error}</Label>}
 		</Form.Field>
 	)
 }

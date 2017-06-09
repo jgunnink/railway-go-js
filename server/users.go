@@ -65,16 +65,14 @@ func UserUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 	formValues := &userModelRequest{}
 	err = json.Unmarshal(b, formValues)
-
-	hashedPassword := helpers.HashPassword(formValues.Password)
-	dbclient := db.Client()
-
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
+	hashedPassword := helpers.HashPassword(formValues.Password)
+	dbclient := db.Client()
 	cookie, err := helpers.LoadCookie(r, cookieStore)
 	if err != nil {
 		httperrors.HandleErrorAndRespond(w, httperrors.InvalidCookie, http.StatusUnauthorized)
@@ -82,7 +80,7 @@ func UserUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 	userID := cookie.UserID
 	if userID == 0 {
-		httperrors.HandleErrorAndRespond(w, httperrors.IDNotInSession, http.StatusUnauthorized)
+		httperrors.HandleErrorAndRespond(w, httperrors.IDNotInSession, http.StatusForbidden)
 		return
 	}
 
@@ -119,16 +117,14 @@ func AdminUserUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 	formValues := &userModelRequest{}
 	err = json.Unmarshal(b, formValues)
-
-	hashedPassword := helpers.HashPassword(formValues.Password)
-	dbclient := db.Client()
-
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
+	hashedPassword := helpers.HashPassword(formValues.Password)
+	dbclient := db.Client()
 	userID := formValues.ID
 	if userID == 0 {
 		httperrors.HandleErrorAndRespond(w, httperrors.UserNotFound, http.StatusUnauthorized)
