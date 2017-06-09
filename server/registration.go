@@ -10,6 +10,7 @@ import (
 )
 
 type userModelRequest struct {
+	ID       int    `json:"id"`
 	Email    string `json:"email"`
 	First    string `json:"first"`
 	Last     string `json:"last"`

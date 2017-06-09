@@ -72,6 +72,7 @@ func Run() {
 	rtr.GET("/check_login", insecureChain(CheckLogin))
 	rtr.POST("/member/create", secureChain(Register))
 	rtr.GET("/admin/users", adminChain(UserAll))
+	rtr.POST("/admin/useraccountupdate", adminChain(AdminUserUpdate))
 	rtr.POST("/archive/:id", adminChain(UserArchive))
 
 	handler := &Handler{

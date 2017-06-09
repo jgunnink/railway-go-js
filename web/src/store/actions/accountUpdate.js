@@ -23,6 +23,23 @@ export function accountUpdate(dispatch, values) {
 	})
 }
 
+export function adminAccountUpdate(dispatch, values) {
+	return new Promise((resolve, reject) => {
+		request.post("/admin/useraccountupdate", values)
+			.then((res) => {
+				dispatch(receiveUpdate(res))
+				dispatch(push("/admin/usermanagement"))
+				dispatch(changeActiveScreen("dashboard"))
+				dispatch(addNotification("Account successfully updated.", "success"))
+				loadState(dispatch, () => { })
+			}).catch((err) => {
+				reject(err)
+				dispatch(updateError(err))
+				dispatch(addNotification("Couldn't update the account. Please try again later.", "error"))
+			})
+	})
+}
+
 function updateError(err) {
 	return {
 		type: UPDATE_FAILURE,

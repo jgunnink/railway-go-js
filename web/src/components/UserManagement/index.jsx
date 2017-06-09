@@ -8,9 +8,7 @@ import UserTable from "./userTable.jsx"
 const UserManagement = (props) => {
     const changeActiveScreen = props.changeActiveScreen
 	const role = props.role
-	const users = props.users
-	const archiveUser = props.archiveUser
-	
+
     return (
 		<div>
 			{role === "admin" && <Segment>
@@ -19,7 +17,7 @@ const UserManagement = (props) => {
 					This is the user management. Add new users to your account, 
 					edit existing users or remove them from your account.
 				</p>
-				<UserTable users={users} archiveUser={archiveUser} />
+				<UserTable {...props} />
 				<p>
 					When you archive a user, they are prevented from logging in,
 					and their account becomes read only.
@@ -37,6 +35,7 @@ const UserManagement = (props) => {
 					<Button color="orange" content="Go to dashboard" icon="right arrow" labelPosition="right" onClick={()=>{changeActiveScreen("dashboard")}}/>
 				</Link>
 			</div>}
+			{props.children}
 		</div>
     )
 }

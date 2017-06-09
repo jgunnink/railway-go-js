@@ -107,3 +107,52 @@ func UserUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write(resp)
 }
+
+// AdminUserUpdate takes the HTTP request and attempts to update the user record in
+// the database
+func AdminUserUpdate(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	formValues := &userModelRequest{}
+	err = json.Unmarshal(b, formValues)
+
+	hashedPassword := helpers.HashPassword(formValues.Password)
+	dbclient := db.Client()
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	userID := formValues.ID
+	if userID == 0 {
+		httperrors.HandleErrorAndRespond(w, httperrors.UserNotFound, http.StatusUnauthorized)
+		return
+	}
+
+	updatedUser := &models.User{
+		ID:        userID,
+		FirstName: formValues.First,
+		LastName:  formValues.Last,
+		Email:     formValues.Email,
+		Password:  string(hashedPassword),
+	}
+
+	err = dbclient.UserUpdate(updatedUser)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	resp, err := json.Marshal(updatedUser)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Write(resp)
+}

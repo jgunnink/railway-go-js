@@ -11,6 +11,12 @@ export const renderInput = ({input, label, type, meta: {touched, error}}) => {
 	)
 }
 
+export const renderHidden = ({initialValue, input, label, type, meta: {touched, error}}) => {
+    return (
+        <input {...input} value={initialValue} type="hidden" />
+    )
+}
+
 export const renderCheckbox = ({input, label, meta: {touched, error}}) => {
 	return (
 		<Form.Field>

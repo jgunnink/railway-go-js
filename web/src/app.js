@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import Dashboard from "./containers/Dashboard"
 import Home from "./containers/Home"
 import Login from "./containers/Login"
+import EditUser from "./containers/UserManagement/editUser"
 import MyAccount from "./containers/MyAccount"
 import Navbar from "./containers/Navbar"
 import Notifications from "./containers/Notifications"
@@ -14,7 +15,7 @@ import UserManagement from "./containers/UserManagement"
 import { changeActiveScreen } from "./store/actions/ui"
 import "../assets/css/common.css"
 
-const MemberArea = ({forRoute, children}) => (
+const MemberArea = ({ forRoute, children }) => (
 	<Fragment forRoute={forRoute}>
 		<div className="page-container">
 			<Sidebar />
@@ -22,10 +23,10 @@ const MemberArea = ({forRoute, children}) => (
 				{children}
 			</div>
 		</div>
-	</Fragment>	
+	</Fragment>
 )
 
-const AdminArea = ({forRoute, children}) => (
+const AdminArea = ({ forRoute, children }) => (
 	<Fragment forRoute={forRoute}>
 		<div className="page-container">
 			<Sidebar />
@@ -33,14 +34,14 @@ const AdminArea = ({forRoute, children}) => (
 				{children}
 			</div>
 		</div>
-	</Fragment>	
+	</Fragment>
 )
 
 const App = (props) => {
 	const { router } = props
 	let area = "landing"
 
-	switch(router.pathname) {
+	switch (router.pathname) {
 		case "/":
 		case "/login":
 		case "/signup":
@@ -54,15 +55,19 @@ const App = (props) => {
 			area = "default"
 			break
 	}
-  
+
 	return (
 		<div id="app" className={area}>
 			<Notifications />
 			<Navbar />
-			{ router.pathname === "/" && <Home /> }
+			{router.pathname === "/" && <Home />}
 			<MemberArea forRoute="/dashboard"><Dashboard /></MemberArea>
 			<MemberArea forRoute="/myaccount"><MyAccount /></MemberArea>
-			<AdminArea forRoute="/admin/usermanagement"><UserManagement /></AdminArea>
+			<AdminArea forRoute="/admin/usermanagement">
+				<UserManagement>
+					<Fragment forRoute="/:id"><EditUser /></Fragment>
+				</UserManagement>
+			</AdminArea>
 			<Fragment forRoute="/login"><Login /></Fragment>
 			<Fragment forRoute="/registered"><Registered /></Fragment>
 			<Fragment forRoute="/signup"><Signup /></Fragment>
@@ -82,7 +87,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		changeActiveScreen: (screen) => {dispatch(changeActiveScreen(screen))}
+		changeActiveScreen: (screen) => { dispatch(changeActiveScreen(screen)) }
 	}
 }
 
