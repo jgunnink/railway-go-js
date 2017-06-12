@@ -1,23 +1,29 @@
 # Railway
+
 A ReactJS template with a backend built on Go used to build web applications.
 
 ## Developer
+
 [JK Gunnink](mailto:jgunnink@gmail.com)
 
 ## Getting Started
+
 After cloning the repo:
+
 1. Ensure postgres is listening for connections. A docker example: `docker run --rm -p 5432:5432 --name db -e POSTGRES_USER=develop -e POSTGRES_PASSWORD=develop -e POSTGRES_DB=railway postgres`
-2. `glide install`
-3. `go run *.go db:setup`
-4. Start the go server with `realize run`
-5. Start the react web server: `cd web/` then `npm start`
-6. In a browser, navigate to `http://localhost:8000`
+1. `glide install`
+1. `go run *.go db:setup`
+1. Start the go server with `realize run`
+1. Start the react web server: `cd web/` then `npm start`
+1. In a browser, navigate to `http://localhost:8000`
 
 ## Dependencies
+
 1. PostgreSQL
-2. Golang (ensure you glide install to fetch dependencies)
-3. Node
+1. Golang (ensure you glide install to fetch dependencies)
+1. Node
 
 ## Notes
+
 The Go server runs on port 8000, and the react webserver runs on port 3000. The Go server reverse proxies the react server. Accessing the application on port 3000 in your browser will cause unhappiness :smiley:
 If you'd like to see how this reverse proxy works, [see this commit](https://github.com/jgunnink/railway/commit/1f55004d1ebfa052e56d199bfb23aa460bcd2874)
