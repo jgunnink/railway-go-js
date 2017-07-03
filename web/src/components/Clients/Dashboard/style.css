@@ -1,0 +1,18 @@
+.clients-card { 
+	margin: 20px;
+	padding: 0px;
+}
+
+.clients-card-body-image { 
+	width: 100%;
+}
+
+.clients-card-body-text { 
+	padding: 20px;
+}
+
+.clients-new-link { 
+	font-size: 80px;
+	color: #08c;
+}
+

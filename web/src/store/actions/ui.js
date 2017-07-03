@@ -1,10 +1,18 @@
-export const CHANGE_ACTIVE_SCREEN = 'CHANGE_ACTIVE_SCREEN'
+export const SCREEN_RESIZE = 'UI:SCREEN_RESIZE'
+export const SCREEN_ACTIVATE = 'UI:SCREEN_ACTIVATE'
 
-const changeActiveScreen = (screen) => {
-  return {
-    type: CHANGE_ACTIVE_SCREEN,
-    activeScreen: screen
-  }
+export const screenResize = (width, height) => {
+	return {
+		type: SCREEN_RESIZE,
+		screenWidth: width,
+		screenHeight: height
+	}
 }
 
-export default changeActiveScreen
+export const setActiveScreen = (key) => {
+	return {
+		type: SCREEN_ACTIVATE,
+		activeScreen: key
+	}
+}
+
