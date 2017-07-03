@@ -21,11 +21,13 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 	if (!loggedIn) {
 		checkAuth()
 		return (
-			<div style={{ padding: 70, width: "35%" }} >
+			<div style={{ padding: 70 }} >
 				<h1 style={{ fontSize: 80 }}>Railway.</h1>
 				<h1>Manage your studio.</h1>
 				<h3>Log In</h3>
 				<LoginForm />
+				<br />
+				<p>Don't have an account? <a>Sign up</a></p>
 			</div>
 		)
 	}
