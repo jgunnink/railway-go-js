@@ -23,14 +23,14 @@ func NewUserController(mw railway.MiddlewareService, us railway.UserService) *Us
 		Mux:         ninjarouter.New(),
 	}
 
-	result.Mux.GET("/users/all", mw.SecureChain(result.UserAll))
-	result.Mux.POST("/users/create", mw.SecureChain(result.UserCreate))
-	result.Mux.GET("/users/:id/get", mw.SecureChain(result.UserByID))
-	result.Mux.POST("/users/:id/update", mw.SecureChain(result.UserUpdate))
-	result.Mux.POST("/users/:id/archive", mw.SecureChain(result.UserArchive))
-	result.Mux.POST("/users/:id/unarchive", mw.SecureChain(result.UserUnarchive))
-	result.Mux.POST("/users/:id/disable", mw.SecureChain(result.UserDisable))
-	result.Mux.POST("/users/:id/enable", mw.SecureChain(result.UserEnable))
+	result.Mux.GET("/users/all", mw.AdminChain(result.UserAll))
+	result.Mux.POST("/users/create", mw.AdminChain(result.UserCreate))
+	result.Mux.GET("/users/:id/get", mw.StaffChain(result.UserByID))
+	result.Mux.POST("/users/:id/update", mw.StaffChain(result.UserUpdate))
+	result.Mux.POST("/users/:id/archive", mw.AdminChain(result.UserArchive))
+	result.Mux.POST("/users/:id/unarchive", mw.AdminChain(result.UserUnarchive))
+	result.Mux.POST("/users/:id/disable", mw.AdminChain(result.UserDisable))
+	result.Mux.POST("/users/:id/enable", mw.AdminChain(result.UserEnable))
 
 	return result
 }

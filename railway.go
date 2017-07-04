@@ -14,7 +14,7 @@ type Cookie struct {
 // MiddlewareService contains the middleware methods available to the app
 type MiddlewareService interface {
 	AdminChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request)
-	ClientAdminChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request)
+	StaffChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request)
 	SecureChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request)
 	InsecureChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request)
 }

@@ -24,14 +24,14 @@ func (mw *Middleware) AdminChain(h http.HandlerFunc) func(http.ResponseWriter, *
 	return mw.withLogging(mw.withRecover(mw.withToken(mw.withAdmin(http.HandlerFunc(h))))).ServeHTTP
 }
 
-// ClientAdminChain routes are only accessible to admins
-func (mw *Middleware) ClientAdminChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
-	return mw.withLogging(mw.withRecover(mw.withToken(mw.withClientAdmin(http.HandlerFunc(h))))).ServeHTTP
+// StaffChain routes are only accessible to staff users, managers, and admins
+func (mw *Middleware) StaffChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
+	return mw.withLogging(mw.withRecover(mw.withToken(http.HandlerFunc(h)))).ServeHTTP
 }
 
-// SecureChain routes are only accessible to members and above
+// SecureChain routes are accessible by everyone
 func (mw *Middleware) SecureChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
-	return mw.withLogging(mw.withRecover(mw.withToken(http.HandlerFunc(h)))).ServeHTTP
+	return mw.withLogging(mw.withRecover(mw.withToken(mw.withClientAdmin(http.HandlerFunc(h))))).ServeHTTP
 }
 
 // InsecureChain routes are accessible to everyone
