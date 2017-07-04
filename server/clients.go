@@ -49,10 +49,10 @@ func (cc *ClientController) ClientByID(w http.ResponseWriter, r *http.Request) {
 	marshalAndRespond(w, cc.ClientService.ClientByID(mustGetID(r, "id")))
 }
 
-// UserAll will return all non-archived sites for a client
+// UserAll will return all non-archived users for a client
 // Method = "GET"
 // Path = "http://localhost:8080/clients/:id/users/all"
-// Description = "Gets all non-archived sites"
+// Description = "Gets all non-archived users"
 func (cc *ClientController) UserAll(w http.ResponseWriter, r *http.Request) {
 	details := &funcDetails{
 		Handler:     "UserAll",

@@ -12,14 +12,15 @@ settings:
     flimit: 0
 projects:
 - name: railway
-  path: .
+  path: ./cmd/railway
   fmt: true
   test: false
   generate: false
   bin: true
   build: false
   run: true
-  params: []
+  params:
+  - serve
   watcher:
     before: []
     after: []

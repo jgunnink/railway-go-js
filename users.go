@@ -10,12 +10,14 @@ import (
 type RoleEnum string
 
 const (
-	// RoleClientAdmin users control administration for a single client
-	RoleClientAdmin = RoleEnum("admin")
-	// RoleOrangeAdmin users are the superusers
-	RoleOrangeAdmin = RoleEnum("orange")
-	// RoleMember users are just users for a single client
-	RoleMember = RoleEnum("staff")
+	// RoleAdmin users control everything. Super Users
+	RoleAdmin = RoleEnum("admin")
+	// RoleManager users are managers of staff
+	RoleManager = RoleEnum("manager")
+	// RoleStaff users are staff members of an agency
+	RoleStaff = RoleEnum("staff")
+	// RoleClient users are client users can view projects associated to them
+	RoleClient = RoleEnum("client")
 )
 
 // User represents a single User object in the app

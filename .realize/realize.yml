@@ -9,8 +9,8 @@ settings:
     host: localhost
     port: 5001
 projects:
-- name: monocular
-  path: ./cmd/monocular
+- name: railway
+  path: ./cmd/railway
   fmt: true
   generate: false
   test: false
