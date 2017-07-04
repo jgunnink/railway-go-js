@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Menu, Label, Image, Input, List, Segment } from 'semantic-ui-react'
 import { push } from 'react-router-redux'
-import { lookAt } from 'airscope/helpers/viewer'
-import australia from 'airscope/components/ModelViewer/australia'
+import { lookAt } from 'orange/helpers/viewer'
+import australia from 'orange/components/ModelViewer/australia'
 import { Table } from 'semantic-ui-react'
 
 import './list.css'
@@ -60,7 +60,7 @@ const TableExampleSelectableInvertedRow = ({ siteFilter, filterSites, sites, set
 	}
 
 	return (
-		<div className="airscope--sites-list">
+		<div className="orange--sites-list">
 			<div className="dark-input" style={{ float: 'right', marginBottom: 15 }}><Input onChange={(e, input) => {
 				filterSites(input.value)
 			}} placeholder='Filter...' /></div>

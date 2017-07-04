@@ -13,7 +13,7 @@ const Horizontal = (props) => {
 				<SiteTree {...props} />
 			</SubMenu>
 			{
-				role === "airscope" &&
+				role === "orange" &&
 				<Menu.Item key="manage">
 					<Link to="/admin/clients/all">
 						<Icon type="team" />

@@ -1,12 +1,12 @@
-hash: 8323104b94a2a91218f9570160e63d1f214de40bba8bcc728d9eefeb6967fa78
-updated: 2017-05-29T15:21:33.238297583+08:00
+hash: 63bf1d403111438336a5d90d84613db51443664a1ced8f097818e7384a9dae2b
+updated: 2017-07-04T22:11:01.163447128+08:00
 imports:
 - name: github.com/blockninja/ninjarouter
   version: 95d54002805fa4edde654e6574439543cf8c2f00
 - name: github.com/gorilla/context
   version: 1ea25387ff6f684839d82767c1733ff4d4d15d0a
 - name: github.com/gorilla/securecookie
-  version: fa5329f913702981df43dcb2a380bac429c810b5
+  version: 667fe4e3466a040b780561fe9b51a83a3753eefc
 - name: github.com/gorilla/sessions
   version: ca9ada44574153444b00d3fd9c8559e4cc95f896
 - name: github.com/jmoiron/sqlx
@@ -14,18 +14,16 @@ imports:
   subpackages:
   - reflectx
   - types
-- name: github.com/julienschmidt/httprouter
-  version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
 - name: github.com/lib/pq
   version: 67c3f2a8884c9b1aac5503c8d42ae4f73a93511c
   subpackages:
   - oid
-- name: github.com/rs/cors
-  version: a62a804a8a009876ca59105f7899938a1349f4b3
-- name: github.com/rs/xhandler
-  version: d9d9599b6aaf6a058cb7b1f48291ded2cbd13390
+- name: github.com/manveru/faker
+  version: 717f7cf83fb78669bfab612749c2e8ff63d5be11
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/Sirupsen/logrus
-  version: d26492970760ca5d33129d2d799e34be5c4782eb
+  version: 202f25545ea4cf9b191ff7f846df5d87c9382c2b
 - name: github.com/vulcand/oxy
   version: 12aa65630360a8ab1827975bd46491a358094cd9
   subpackages:
@@ -37,10 +35,6 @@ imports:
   subpackages:
   - bcrypt
   - blowfish
-- name: golang.org/x/net
-  version: 236b8f043b920452504e263bc21d354427127473
-  subpackages:
-  - context
 - name: golang.org/x/sys
   version: 075e574b89e4c2d22f2286a7e2b919519c6f3547
   subpackages:

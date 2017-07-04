@@ -1,6 +1,7 @@
 # Railway
 
-A ReactJS template with a backend built on Go used to build web applications.
+A project which aims to support the life-cycle of client to vendor relationship
+of the delivery of a product over the life of a project.
 
 ## Developer
 
@@ -8,12 +9,39 @@ A ReactJS template with a backend built on Go used to build web applications.
 
 ## Getting Started
 
-After cloning the repo:
+### First clone and install the ninja-forms dependency, then link it:
+```
+git clone git@github.com:blockninja/ninja-forms.git $GOPATH/src/github.com/blockninja/ninja-forms
+cd $_
+npm install
+npm run prepublish
+npm link
+```
+
+### Next, clone the project repo
+```
+git clone git@github.com:jgunnink/railway.git $GOPATH/src/github.com/jgunnink/railway
+cd $_
+```
+
+### Install required dependecies and create link to ninja-forms
+```
+npm install
+npm link ninja-forms
+ln -s ../src node_modules/railway
+```
+
+### Install go dependencies
+```
+glide install
+```
+
+### Start services
 
 1. Ensure postgres is listening for connections. A docker example: `docker run --rm -p 5432:5432 --name db -e POSTGRES_USER=develop -e POSTGRES_PASSWORD=develop -e POSTGRES_DB=railway postgres`
 1. `glide install`
-1. `go run *.go db:setup`
 1. Start the go server with `realize run`
+1. Seed the database with `go run cmd/railway/*.go db:setup`
 1. Start the react web server: `cd web/` then `npm start`
 1. In a browser, navigate to `http://localhost:8000`
 

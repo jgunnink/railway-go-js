@@ -5,104 +5,93 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/blockninja/ninjarouter"
+	"github.com/jgunnink/railway"
 	"golang.org/x/crypto/bcrypt"
-
-	"github.com/jgunnink/railway/db"
-	"github.com/jgunnink/railway/helpers"
-	"github.com/jgunnink/railway/httperrors"
-	"github.com/jgunnink/railway/models"
 )
 
-// CheckLogin returns a user model if a user a logged in
-// 	Route: {{ base_url }}/check_login
-// 	Method: GET
-// This is an insecure route.
-func CheckLogin(w http.ResponseWriter, r *http.Request) {
-	cookie, err := helpers.LoadCookie(r, cookieStore)
-	if err != nil {
-		httperrors.HandleErrorAndRespond(w, httperrors.InvalidCookie, http.StatusUnauthorized)
-		return
-	}
-
-	dbclient := db.Client()
-	result, err := dbclient.UserByID(cookie.UserID)
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	if result.SessionToken != cookie.SessionToken {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	response, err := json.Marshal(result)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	w.Write(response)
+// AuthController contains the handlers needed for authenticationn actions
+type AuthController struct {
+	*ninjarouter.Mux
+	AuthService railway.AuthService
+	UserService railway.UserService
 }
 
-type loginResponse struct {
-	ID           int    `json:"user_id"`
-	SessionToken string `json:"sessionToken"`
+// NewAuthController creates a new instance of a AuthController
+func NewAuthController(mw railway.MiddlewareService, as railway.AuthService, us railway.UserService) *AuthController {
+	result := &AuthController{
+		AuthService: as,
+		UserService: us,
+		Mux:         ninjarouter.New(),
+	}
+
+	result.Mux.GET("/auth/check", mw.InsecureChain(result.Check))
+	result.Mux.POST("/auth/sign_in", mw.InsecureChain(result.SignIn))
+	result.Mux.DELETE("/auth/sign_out", mw.SecureChain(result.SignOut))
+
+	return result
 }
 
-// Auth returns a user model if a user a logged in
-// 	Route: {{ base_url }}/auth
+// SignIn returns a user model if a user a logged in
+// 	Route: {{ base_url }}/auth/sign_in
 // 	Method: POST
 // This is an insecure route.
-func Auth(w http.ResponseWriter, r *http.Request) {
-	details := &FuncDetails{
-		name:        "auth",
-		description: "Create a new user session",
+func (ac *AuthController) SignIn(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "SignIn",
+		Description: "SignIn is the handler for SignIn",
 	}
-	log.Println("[HANDLER]", details.Name)
+	log.Println("HANDLER: " + details.Handler)
+
 	// Check if password matches
-	dbclient := db.Client()
-	userFromRequest := &models.User{}
+	userFromRequest := &railway.UserSignInRequest{}
 	err := json.NewDecoder(r.Body).Decode(userFromRequest)
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	userFromDB, err := dbclient.UserByEmail(userFromRequest.Email)
-	if err != nil {
-		httperrors.HandleErrorAndRespond(w, httperrors.StatusPasswordMismatch, http.StatusUnauthorized)
-		return
+
+	userFromDB := ac.UserService.UserByEmail(userFromRequest.Email)
+
+	//Check a user account is not disabled
+	if userFromDB.Disabled {
+		HandleErrorAndRespond(w, ErrorAccountDisabled, http.StatusUnauthorized)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(userFromDB.Password), []byte(userFromRequest.Password))
 	if err != nil {
-		httperrors.HandleErrorAndRespond(w, httperrors.StatusPasswordMismatch, http.StatusUnauthorized)
+		HandleErrorAndRespond(w, ErrorPasswordMismatch, http.StatusUnauthorized)
 		return
 	}
 
 	// Assign session token
-	session, err := cookieStore.Get(r, "_railway_session")
+	session, err := cookieStore.Get(r, cookieName)
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	newCookie := &models.Cookie{
-		SessionToken: helpers.NewSessionToken(),
+	newCookie := &railway.Cookie{
+		SessionToken: NewSessionToken(),
+		Role:         string(userFromDB.Role),
 		UserID:       userFromDB.ID,
 	}
-	updatedSession := helpers.UpdateCookieSession(newCookie, session)
+
+	updatedSession := updateCookieSession(newCookie, session)
 
 	err = updatedSession.Save(r, w)
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	result := dbclient.UserSetToken(userFromDB.ID, newCookie.SessionToken)
+	result := ac.AuthService.UserSetToken(userFromDB.ID, newCookie.SessionToken)
 
 	response, err := json.Marshal(result)
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -110,38 +99,49 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
-// Logout returns a user model if a user a logged in, and removes the session
-// 	Route: {{ base_url }}/logout
+// SignOut returns a user model if a user a logged in, and removes the session
+// 	Route: {{ base_url }}/sign_out
 // 	Method: DELETE
 // This is a secure route.
-func Logout(w http.ResponseWriter, r *http.Request) {
-	details := &FuncDetails{
-		name:        "logout",
-		description: "Delete an existing user session",
+func (ac *AuthController) SignOut(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "sign_out",
+		Description: "Delete an existing user session",
 	}
-	log.Println("[HANDLER]", details.Name)
-	dbclient := db.Client()
+	log.Println("HANDLER: " + details.Handler)
 
-	session, err := cookieStore.Get(r, "_railway_session")
+	cookie, err := LoadCookie(r, cookieStore)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	ac.AuthService.SignOut(cookie.UserID)
+	log.Println("signout success")
+}
 
-	userIDiface, ok := session.Values["id"]
-	if !ok {
-		httperrors.HandleErrorAndRespond(w, httperrors.IDNotInSession, http.StatusUnauthorized)
-		return
+// Check returns a user model if a user a logged in, 403 otherwise
+// Route: {{ base_url }}/check
+// Method: GET
+// This is a secure route.
+func (ac *AuthController) Check(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "check",
+		Description: "Check if a user is already logged in",
 	}
-	userID := userIDiface.(int)
-
-	updatedUser := dbclient.UserLogout(userID)
-
-	response, err := json.Marshal(updatedUser)
+	log.Println("HANDLER: " + details.Handler)
+	cookie, err := LoadCookie(r, cookieStore)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Println(err)
 		return
 	}
 
-	w.Write(response)
+	user := ac.UserService.UserByID(cookie.UserID)
+
+	if cookie.SessionToken != user.SessionToken {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	marshalAndRespond(w, cookie)
+
 }

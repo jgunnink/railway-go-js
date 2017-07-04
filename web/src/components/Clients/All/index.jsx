@@ -107,7 +107,7 @@ const ClientsModal = (props) => {
 			onClose={() => { history.push("/") }}
 		>
 			<ModalHeader>
-				Airscope Administration
+				Orange Administration
 			</ModalHeader>
 			<ModalBody>
 				<Clients {...props} />

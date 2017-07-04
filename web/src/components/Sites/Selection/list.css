@@ -1,12 +1,12 @@
-.airscope--sites-list .ui.inverted.table th {
+.orange--sites-list .ui.inverted.table th {
 	background: rgba(0,0,0,0.6);
 }
 
-.airscope--sites-list .ui.inverted.table {
+.orange--sites-list .ui.inverted.table {
 	background: transparent;
 }
 
-.airscope--sites-list .ui.celled.table tr td, .airscope--sites-list  .ui.celled.table tr th {
+.orange--sites-list .ui.celled.table tr td, .orange--sites-list  .ui.celled.table tr th {
 	background: rgba(0,0,0,0.3);
 	cursor: pointer;
 }
