@@ -38,7 +38,7 @@ func New(httpService railway.HTTPService, dbinstance *db.DB) *Seeder {
 // Seed seeds the database with an admin user and runs the seeder function.
 func (s *Seeder) Seed() error {
 	// Create the orange "client"
-	name := "Orange Industries"
+	name := "Studio Orange"
 	newClient := &railway.Client{
 		Name:        name,
 		Description: s.faker.Paragraph(2, true),
@@ -46,14 +46,14 @@ func (s *Seeder) Seed() error {
 	}
 	orangeClient := s.dbclient.ClientService().ClientCreate(newClient)
 
-	// Create the orange admin
+	// Create the admin
 	email := "admin@example.com"
 	s.dbclient.UserService().UserCreate(&railway.User{
 		FirstName: s.faker.FirstName(),
 		LastName:  s.faker.LastName(),
 		Email:     email,
 		Password:  helpers.HashPassword("password"),
-		Role:      railway.RoleOrangeAdmin,
+		Role:      railway.RoleAdmin,
 		Archived:  false,
 		Disabled:  false,
 		ClientID:  orangeClient.ID,
@@ -87,7 +87,7 @@ func (s *Seeder) Run() error {
 	return nil
 }
 
-// SeedClients will create all the clients
+// SeedClients will create some clients
 func (s *Seeder) SeedClients() error {
 	log.Println("Seeding clients...")
 
@@ -107,7 +107,6 @@ func (s *Seeder) SeedClients() error {
 			}
 			log.Println("New client created:", newClient.Name)
 			wg.Done()
-
 		}()
 	}
 	wg.Wait()
@@ -117,23 +116,47 @@ func (s *Seeder) SeedClients() error {
 // SeedUsers will create all the users
 func (s *Seeder) SeedUsers() error {
 	log.Println("Seeding users...")
+
+	// Create some staff users
+	wg := &sync.WaitGroup{}
+	for i := 0; i < 3; i++ {
+		wg.Add(1)
+		go func() {
+			firstName := s.faker.FirstName()
+			email := fmt.Sprintf("%s@example.com", strings.ToLower(firstName))
+			newUser := &railway.UserCreateRequest{
+				FirstName: firstName,
+				LastName:  s.faker.LastName(),
+				Email:     email,
+				Password:  "password",
+				Role:      railway.RoleStaff,
+				Data:      types.JSONText(fmt.Sprintf(`{"avatar":"%s"}`, avatar.Avatar(email))),
+			}
+			err := s.HTTPService.UserCreate(newUser)
+			if err != nil {
+				panic(err)
+			}
+			log.Println("New user created:", newUser.FirstName)
+			wg.Done()
+		}()
+	}
+
 	allClients, err := s.HTTPService.ClientAll()
 	if err != nil {
 		panic(err)
 	}
-	wg := &sync.WaitGroup{}
-	for clientID := range allClients {
 
-		// Create a single client admin user
+	for clientID := range allClients {
+		// Create a single client user for each client
 		wg.Add(1)
 		go func(clientID int) {
-			email := fmt.Sprintf("clientadmin%d@example.com", clientID)
+			email := fmt.Sprintf("client%d@example.com", clientID)
 			newUser := &railway.UserCreateRequest{
 				FirstName: s.faker.FirstName(),
 				LastName:  s.faker.LastName(),
 				Email:     email,
 				Password:  "password",
-				Role:      railway.RoleClientAdmin,
+				Role:      railway.RoleClient,
 				ClientID:  clientID,
 				Data:      types.JSONText(fmt.Sprintf(`{"avatar":"%s"}`, avatar.Avatar(email))),
 			}
@@ -144,30 +167,6 @@ func (s *Seeder) SeedUsers() error {
 			log.Println("New user created:", newUser.FirstName)
 			wg.Done()
 		}(clientID)
-
-		// Create some member users
-		for i := 0; i < 3; i++ {
-			wg.Add(1)
-			go func(clientID int) {
-				firstName := s.faker.FirstName()
-				email := fmt.Sprintf("%s@example.com", strings.ToLower(firstName))
-				newUser := &railway.UserCreateRequest{
-					FirstName: firstName,
-					LastName:  s.faker.LastName(),
-					Email:     email,
-					Password:  "password",
-					Role:      railway.RoleMember,
-					ClientID:  clientID,
-					Data:      types.JSONText(fmt.Sprintf(`{"avatar":"%s"}`, avatar.Avatar(email))),
-				}
-				err := s.HTTPService.UserCreate(newUser)
-				if err != nil {
-					panic(err)
-				}
-				log.Println("New user created:", newUser.FirstName)
-				wg.Done()
-			}(clientID)
-		}
 	}
 	wg.Wait()
 	return nil

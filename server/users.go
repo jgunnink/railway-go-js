@@ -106,7 +106,7 @@ func (uc *UserController) UserAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user := uc.UserService.UserByID(cookie.UserID)
-	if user.Role == railway.RoleOrangeAdmin {
+	if user.Role == railway.RoleAdmin {
 		marshalAndRespond(w, uc.UserService.UserAll())
 		return
 	}

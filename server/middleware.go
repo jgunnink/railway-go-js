@@ -49,9 +49,9 @@ func (mw *Middleware) withClientAdmin(next http.Handler) http.Handler {
 		}
 
 		userFromDB := mw.UserService.UserByID(cookie.UserID)
-		isClientAdmin := userFromDB.Role != railway.RoleClientAdmin
-		isOrangeAdmin := userFromDB.Role != railway.RoleOrangeAdmin
-		if !isClientAdmin || !isOrangeAdmin {
+		isAdmin := userFromDB.Role != railway.RoleAdmin
+		isManager := userFromDB.Role != railway.RoleManager
+		if !isAdmin || !isManager {
 			HandleErrorAndRespond(w, ErrorAdminStatusRequired, http.StatusForbidden)
 			return
 		}
@@ -71,7 +71,7 @@ func (mw *Middleware) withAdmin(next http.Handler) http.Handler {
 
 		userFromDB := mw.UserService.UserByID(cookie.UserID)
 
-		if userFromDB.Role != railway.RoleOrangeAdmin {
+		if userFromDB.Role != railway.RoleAdmin {
 			HandleErrorAndRespond(w, ErrorAdminStatusRequired, http.StatusForbidden)
 			return
 		}
