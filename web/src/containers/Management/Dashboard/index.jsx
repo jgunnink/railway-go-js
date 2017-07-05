@@ -1,5 +1,5 @@
 import React from "react"
-import ClientDashboard from "railway/components/Clients/Dashboard"
+import ManagementDashboard from "railway/components/Management/Dashboard"
 import { connect } from "react-redux"
 import {
 	archiveUser,
@@ -7,31 +7,19 @@ import {
 	enableUser,
 	fetchUsers
 } from "railway/store/actions/users"
-import { fetchSites } from "railway/store/actions/sites"
-import { fetchModels } from "railway/store/actions/models"
 import { setActiveModel } from "railway/store/actions/viewer"
 import Needs from "railway/hoc/needs"
 
-const ClientDashboardModalWithNeeds = Needs({ optimize: true }, [
-	{
+const ManagementDashboardModalWithNeeds = Needs({ optimize: true },
+	[{
 		name: "users",
 		action: fetchUsers,
 		path: ["users"]
-	},
-	{
-		name: "sites",
-		action: fetchSites,
-		path: ["sites"]
-	},
-	{
-		name: "models",
-		action: fetchModels,
-		path: ["models"]
-	}
-])(ClientDashboard)
+	}]
+)(ManagementDashboard)
 
 const ClientsDashboardContainer = (props) => {
-	return (<ClientDashboardModalWithNeeds {...props } />)
+	return (<ManagementDashboardModalWithNeeds {...props } />)
 }
 
 const mapStateToProps = (state, ownProps) => {

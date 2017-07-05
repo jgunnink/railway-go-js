@@ -1,14 +1,10 @@
 import React from "react"
 import { connect } from "react-redux"
 import { Layout, Row, Col } from "antd"
-import SiteSelectorContainer from "railway/containers/SiteSelector"
 import ClientsContainer from "railway/containers/Clients/All"
-import ClientDashboard from "railway/containers/Clients/Dashboard"
+import ManagementDashboard from "railway/containers/Management/Dashboard"
 import ClientUpdateForm from "railway/containers/Clients/Form/Update"
 import ClientCreateForm from "railway/containers/Clients/Form/Create"
-import SitesContainer from "railway/containers/Sites/All"
-import SiteUpdateForm from "railway/containers/Sites/Form/Update"
-import SiteCreateForm from "railway/containers/Sites/Form/Create"
 import UserEditForm from "railway/containers/Users/Update"
 import LoginForm from "railway/containers/Forms/LoginForm"
 import HorizontalMenuContainer from "railway/containers/Menus/Horizontal"
@@ -44,11 +40,8 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 					<Route exact path="/admin/clients/all" component={ClientsContainer} />
 					<Route exact path="/admin/clients/:id/update/" component={ClientUpdateForm} />
 					<Route exact path="/admin/clients/create" component={ClientCreateForm} />
-					<Route exact path="/admin/sites/all" component={SitesContainer} />
-					<Route exact path="/admin/sites/:id/update/" component={SiteUpdateForm} />
-					<Route exact path="/admin/sites/create" component={SiteCreateForm} />
 					<Route exact path="/user/update/:id" component={UserEditForm} />
-					<Route exact path="/client/dashboard" component={ClientDashboard} />
+					<Route exact path="/management" component={ManagementDashboard} />
 				</Layout>
 			</Layout>
 		)
@@ -64,11 +57,8 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 				</Row>
 				<Layout>
 					<Route path="/" component={Home} />
-					<Route exact path="/admin/sites/all" component={SitesContainer} />
-					<Route exact path="/admin/sites/:id/update" component={SiteUpdateForm} />
-					<Route exact path="/admin/sites/create" component={SiteCreateForm} />
 					<Route exact path="/user/update/:id" component={UserEditForm} />
-					<Route exact path="/client/dashboard" component={ClientDashboard} />
+					<Route exact path="/management" component={ManagementDashboard} />
 				</Layout>
 			</Layout>
 		)
@@ -83,9 +73,8 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 					</Col>
 				</Row>
 				<Layout>
-					<Route path="/" component={ClientDashboard} />
-					<Route exact path="/" component={SiteSelectorContainer} />
-					<Route exact path="/client/dashboard" component={ClientDashboard} />
+					<Route path="/" component={ManagementDashboard} />
+					<Route exact path="/client/dashboard" component={ManagementDashboard} />
 				</Layout>
 			</Layout>
 		)

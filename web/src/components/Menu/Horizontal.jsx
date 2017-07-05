@@ -1,30 +1,21 @@
 import React from "react"
 import { Menu, Icon } from "antd"
 import { Link } from "react-router-dom"
-import SiteTree from "railway/components/SiteTree"
-
-const SubMenu = Menu.SubMenu
 
 const Horizontal = (props) => {
 	const { role, logout, setActiveScreen } = props
 	return (
-		<Menu theme="light" mode="horizontal" onClick={({ key }) => { setActiveScreen(key) }}>
-			<SubMenu title={<span><Icon type="home" />Sites</span>}>
-				<SiteTree {...props} />
-			</SubMenu>
-			{
-				role === "orange" &&
-				<Menu.Item key="manage">
-					<Link to="/admin/clients/all">
-						<Icon type="team" />
-						Manage
+		<Menu theme="dark" mode="horizontal" onClick={({ key }) => { setActiveScreen(key) }}>
+			<Menu.Item key="home">
+				<Link to="/">
+					<Icon type="home" />
+					Home
 					</Link>
-				</Menu.Item>
-			}
+			</Menu.Item>
 			{
 				role === "admin" &&
 				<Menu.Item key="manage">
-					<Link to="/client/dashboard">
+					<Link to="/management">
 						<Icon type="team" />
 						Manage
 					</Link>

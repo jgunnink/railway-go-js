@@ -10,7 +10,8 @@ of the delivery of a product over the life of a project.
 ## Getting Started
 
 ### First clone and install the ninja-forms dependency, then link it:
-```
+
+```bash
 git clone git@github.com:blockninja/ninja-forms.git $GOPATH/src/github.com/blockninja/ninja-forms
 cd $_
 npm install
@@ -19,20 +20,23 @@ npm link
 ```
 
 ### Next, clone the project repo
-```
+
+```bash
 git clone git@github.com:jgunnink/railway.git $GOPATH/src/github.com/jgunnink/railway
 cd $_
 ```
 
 ### Install required dependecies and create link to ninja-forms
-```
+
+```bash
 npm install
 npm link ninja-forms
 ln -s ../src node_modules/railway
 ```
 
 ### Install go dependencies
-```
+
+```bash
 glide install
 ```
 

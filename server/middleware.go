@@ -29,9 +29,9 @@ func (mw *Middleware) StaffChain(h http.HandlerFunc) func(http.ResponseWriter, *
 	return mw.withLogging(mw.withRecover(mw.withToken(http.HandlerFunc(h)))).ServeHTTP
 }
 
-// SecureChain routes are accessible by everyone
+// SecureChain routes are accessible by logged in users
 func (mw *Middleware) SecureChain(h http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
-	return mw.withLogging(mw.withRecover(mw.withToken(mw.withClientAdmin(http.HandlerFunc(h))))).ServeHTTP
+	return mw.withLogging(mw.withRecover(mw.withToken(http.HandlerFunc(h)))).ServeHTTP
 }
 
 // InsecureChain routes are accessible to everyone
