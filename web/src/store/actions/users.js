@@ -1,7 +1,8 @@
 import { get, post } from "railway/utils/agent"
-import history from "railway/history"
 import { notification } from "antd"
 import { userFullName } from "railway/helpers/strings"
+import history from "railway/history"
+
 export const USERS_SENDINGREQUEST = "USERS:SENDINGREQUEST"
 export const USERS_LOAD = "USERS:LOAD"
 export const USERS_SET_USER = "USERS:SET:USER"
@@ -43,7 +44,7 @@ export function updateUser(user) {
 			.then((res) => {
 				dispatch(sendingRequest(false))
 				dispatch(setUser(res.data))
-				history.push("/client/dashboard")
+				history.push("/management/users")
 				notification["success"]({
 					message: `Successfully updated ${userFullName(user)}`,
 				})

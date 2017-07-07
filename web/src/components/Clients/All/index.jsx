@@ -1,6 +1,6 @@
 import React from "react"
 import { Icon, Button, Card, Col, Modal as antModal, Row } from "antd"
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom"
 import history from "railway/history"
 import "railway/components/Clients/All/style.css"
 
@@ -8,7 +8,7 @@ const confirm = antModal.confirm
 
 const Clients = (props) => {
 	const role = props.role
-	const manageClients = ((role === "manager") || (role === "staff") || role === "admin")
+	const manageClients = ((role === "manager") || (role === "staff") || (role === "admin"))
 	const loaded = props.clients.get("loaded")
 	if (!loaded) {
 		return (

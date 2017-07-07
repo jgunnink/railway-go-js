@@ -10,10 +10,10 @@ import LoginForm from "railway/containers/Forms/LoginForm"
 import HorizontalMenuContainer from "railway/containers/Menus/Horizontal"
 import { Route } from "react-router-dom"
 import { checkAuth } from "railway/store/actions/auth"
-
 import Home from "railway/components/Home"
 
 const AppLayout = ({ user, loggedIn, checkAuth }) => {
+	const userRole = user.get("role")
 	if (!loggedIn) {
 		checkAuth()
 		return (
@@ -27,7 +27,7 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 			</div>
 		)
 	}
-	if (user.get("role") === "admin") {
+	if ((userRole === "admin") || (userRole === "manager")) {
 		return (
 			<Layout style={{ height: "100vh" }}>
 				<HorizontalMenuContainer />
@@ -36,13 +36,14 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 					<Route exact path="/clients/all" component={ClientsContainer} />
 					<Route exact path="/clients/:id/update/" component={ClientUpdateForm} />
 					<Route exact path="/clients/create" component={ClientCreateForm} />
-					<Route exact path="/management/user/:id/update/" component={UserEditForm} />
-					<Route path="/management" component={ManagementDashboard} />
+					<Route exact path="/management" component={ManagementDashboard} />
+					<Route exact path="/management/:tab" component={ManagementDashboard} />
+					<Route path="/management/user/:id/update/" component={UserEditForm} />
 				</Layout>
 			</Layout>
 		)
 	}
-	if (user.get("role") === "staff") {
+	if (userRole === "staff") {
 		return (
 			<Layout style={{ height: "100vh" }}>
 				<HorizontalMenuContainer />
@@ -53,7 +54,7 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 		)
 	}
 
-	if (user.get("role") === "client") {
+	if (userRole === "client") {
 		return (
 			<Layout style={{ height: "100vh" }}>
 				<HorizontalMenuContainer />

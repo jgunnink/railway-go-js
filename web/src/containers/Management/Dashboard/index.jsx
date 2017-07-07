@@ -23,7 +23,10 @@ const ClientsDashboardContainer = (props) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-	return {}
+	const defaultActiveKey = ownProps.match.params.tab || "info"
+	return {
+		defaultActiveKey
+	}
 }
 
 const mapDispatchToProps = (dispatch) => {

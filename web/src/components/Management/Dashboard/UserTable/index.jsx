@@ -93,7 +93,7 @@ const DisableUser = ({ users, userID, disableUser, record }) => {
 
 const EditUser = ({ userID }) => {
 	return (
-		<Link to={`/management/user/${userID}/update`}>
+		<Link to={`user/${userID}/update`}>
 			<Button shape="circle" icon="edit" />
 		</Link >
 	)

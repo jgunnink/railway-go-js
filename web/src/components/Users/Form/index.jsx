@@ -75,7 +75,7 @@ const UserFormModal = (props) => {
 			title="User"
 			wrapClassName="vertical-center-modal"
 			footer={null} // Default buttons (Ok, Cancel) are excluded.
-			onCancel={() => { history.goBack() }}
+			onCancel={() => { history.push("/management/users") }}
 		>
 			<UserNinjaForm {...props} />
 		</Modal >
