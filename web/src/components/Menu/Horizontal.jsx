@@ -10,7 +10,7 @@ const Horizontal = (props) => {
 				<Link to="/">
 					<Icon type="home" />
 					Home
-					</Link>
+				</Link>
 			</Menu.Item>
 			{
 				role === "admin" &&

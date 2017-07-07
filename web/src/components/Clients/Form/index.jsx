@@ -3,9 +3,8 @@ import React from "react"
 import NinjaForm from "ninja-forms"
 import "railway/components/Clients/Form/style.css"
 import { ValidateStringLength } from "ninja-forms/lib/validators"
-import { Form, Input, Icon, Button } from "antd"
+import { Button, Form, Input, Icon, Modal } from "antd"
 import history from "railway/history"
-import { Modal, ModalBody, ModalHeader } from "railway/components/Modal"
 
 const ClientsForm = ({ field, loginAction, isValid, validate, handleSubmit, submit, clientID, initialValues }) => {
 	if (!initialValues) return <div />
@@ -62,13 +61,14 @@ const ClientNinjaForm = NinjaForm({
 
 const ClientsFormModal = (props) => {
 	return (
-		<Modal style={{ padding: 20 }} onClose={() => { history.push('/admin/clients/all') }}>
-			<ModalHeader>
-				Save Client
-	  		</ModalHeader>
-			<ModalBody>
-				<ClientNinjaForm {...props} />
-			</ModalBody>
+		<Modal
+			visible={true}
+			title="User"
+			wrapClassName="vertical-center-modal"
+			footer={null} // Default buttons (Ok, Cancel) are excluded.
+			onCancel={() => { history.goBack() }}
+		>
+			<ClientNinjaForm {...props} />
 		</Modal>
 	)
 }

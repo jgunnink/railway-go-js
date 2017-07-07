@@ -1,13 +1,14 @@
 import React from "react"
 import { Icon, Button, Card, Col, Modal as antModal, Row } from "antd"
 import { Link } from 'react-router-dom'
-import { Modal, ModalBody, ModalHeader } from "railway/components/Modal"
 import history from "railway/history"
 import "railway/components/Clients/All/style.css"
 
 const confirm = antModal.confirm
 
 const Clients = (props) => {
+	const role = props.role
+	const manageClients = ((role === "manager") || (role === "staff") || role === "admin")
 	const loaded = props.clients.get("loaded")
 	if (!loaded) {
 		return (
@@ -41,28 +42,32 @@ const Clients = (props) => {
 									className="clients-card-body-image"
 									src={client.get("data").get("avatar")}
 									alt="Company logo"
-									onClick={() => { history.push("/client/dashboard") }}
+									onClick={() => { history.push(`/client/${client.get("id")}`) }}
 								/>
 								<div
 									className="clients-card-body-text"
-									onClick={() => { history.push("/client/dashboard") }}
+									onClick={() => { history.push(`/client/${client.get("id")}`) }}
 								>
 									<h3>{client.get("name")}</h3>
 									<p>{client.get("description")}</p>
 								</div>
-								<br />
-								<p style={{ textAlign: "center" }}>
-									<EditLink client={client} />
-									<span className="ant-divider" />
-									<ArchiveLink client={client} {...props} />
-								</p>
-								<br />
+								{
+									manageClients &&
+									<div>
+										<p style={{ textAlign: "center" }}>
+											<EditLink client={client} />
+											<span className="ant-divider" />
+											<ArchiveLink client={client} {...props} />
+										</p>
+										<br />
+									</div>
+								}
 							</Card>
 						</Col>
 					)
 				})}
 
-				<Col span={6}>
+				<Col span={3}>
 					<CreateLink />
 				</Col>
 			</Row>
@@ -85,7 +90,7 @@ const ArchiveLink = ({ client, archiveClient }) => {
 
 const EditLink = ({ client }) => {
 	return (
-		<Link to={`/admin/clients/update/${client.get("id")}`}>
+		<Link to={`/clients/${client.get("id")}/update`}>
 			<Button shape="circle" icon="edit" />
 		</Link>
 	)
@@ -93,29 +98,19 @@ const EditLink = ({ client }) => {
 
 const CreateLink = () => {
 	return (
-		<Link className="clients-new-link" to={`/admin/clients/create`}>
+		<Link className="clients-new-link" to={`/clients/create`}>
 			<Icon type="plus-circle" />
 		</Link>
 	)
 }
 
-const ClientsModal = (props) => {
+const ClientTable = (props) => {
 	return (
-		<Modal
-			style={{ minHeight: "80%", minWidth: "80%" }}
-			className="client-modal"
-			onClose={() => { history.push("/") }}
-		>
-			<ModalHeader>
-				Orange Administration
-			</ModalHeader>
-			<ModalBody>
-				<Clients {...props} />
-			</ModalBody>
-		</Modal>
+		<div>
+			<Clients {...props} />
+		</div>
 	)
 }
 
-
-export default ClientsModal
+export default ClientTable
 

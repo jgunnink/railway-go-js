@@ -1,7 +1,7 @@
 import React from "react"
 
 const Home = () => (
-	<div style={{ padding: "30" }}>
+	<div style={{ padding: "30px" }}>
 		<h1>Home</h1>
 		<p>
 			This is your personal dashboard. Here, you'll see ongoing projects

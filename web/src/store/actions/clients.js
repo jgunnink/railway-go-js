@@ -46,7 +46,7 @@ export function createClient(client) {
 			.then((res) => {
 				dispatch(sendingRequest(false))
 				dispatch(setClient(res.data))
-				history.push("/admin/clients/all")
+				history.push("/management/clients")
 			}).catch((err) => {
 				console.log(err)
 				dispatch(sendingRequest(false))
@@ -64,7 +64,7 @@ export function updateClient(client) {
 				});
 				dispatch(sendingRequest(false))
 				dispatch(setClient(res.data))
-				history.push("/admin/clients/all")
+				history.push("/management/clients")
 			}).catch((err) => {
 				console.log(err)
 				dispatch(sendingRequest(false))

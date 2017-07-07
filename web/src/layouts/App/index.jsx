@@ -33,10 +33,10 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 				<HorizontalMenuContainer />
 				<Layout>
 					<Route exact path="/" component={Home} />
-					<Route exact path="/admin/clients/all" component={ClientsContainer} />
-					<Route exact path="/admin/clients/:id/update/" component={ClientUpdateForm} />
-					<Route exact path="/admin/clients/create" component={ClientCreateForm} />
-					<Route exact path="/management/user/update/:id" component={UserEditForm} />
+					<Route exact path="/clients/all" component={ClientsContainer} />
+					<Route exact path="/clients/:id/update/" component={ClientUpdateForm} />
+					<Route exact path="/clients/create" component={ClientCreateForm} />
+					<Route exact path="/management/user/:id/update/" component={UserEditForm} />
 					<Route path="/management" component={ManagementDashboard} />
 				</Layout>
 			</Layout>

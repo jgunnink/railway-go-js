@@ -15,7 +15,10 @@ const ClientsContainer = (props) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-	return {}
+	const role = state.get("auth").get("user").get("role")
+	return {
+		role
+	}
 }
 
 const mapDispatchToProps = (dispatch) => {
