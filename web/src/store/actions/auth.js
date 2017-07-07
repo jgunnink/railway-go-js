@@ -61,7 +61,9 @@ export function login(email, password) {
 				console.log(err)
 				notification["error"]({
 					message: "Sorry, could not log you in.",
-					description: "Please check your password and try again.	If your password is correct, there may be a problem with the server, or your account has been disabled.",
+					description: `Please check your password and try again.	If
+					your password is correct, there may be a problem with the
+					server, or your account has been disabled.`,
 					duration: 10
 				})
 			})
@@ -78,11 +80,13 @@ export function checkAuth() {
 			}).catch((err) => {
 				dispatch(sendingRequest(false))
 				dispatch(loginError(err))
-				notification["info"]({
-					message: "Your session has expired",
-					description: "You may have signed in somewhere else oryour data session with the server has been interrupted. Please sign in again to continue.",
-					duration: 10
-				})
+				// notification["info"]({
+				// 	message: "Your session has expired",
+				// 	description: `You may have signed in somewhere else or your
+				// 	data session with the server has been interrupted. Please
+				// 	sign in again to continue.`,
+				// 	duration: 10
+				// })
 			})
 	}
 }

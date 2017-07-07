@@ -1,8 +1,8 @@
 import React from "react"
 
 const Home = () => (
-	<div style={{ padding: "70px" }}>
-		<h2>Home</h2>
+	<div style={{ padding: "30" }}>
+		<h1>Home</h1>
 		<p>
 			This is your personal dashboard. Here, you'll see ongoing projects
 			and be able to keep up with the latest on your work.

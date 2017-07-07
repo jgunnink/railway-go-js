@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { Layout, Row, Col } from "antd"
+import { Layout } from "antd"
 import ClientsContainer from "railway/containers/Clients/All"
 import ManagementDashboard from "railway/containers/Management/Dashboard"
 import ClientUpdateForm from "railway/containers/Clients/Form/Update"
@@ -30,35 +30,24 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 	if (user.get("role") === "admin") {
 		return (
 			<Layout style={{ height: "100vh" }}>
-				<Row>
-					<Col>
-						<HorizontalMenuContainer />
-					</Col>
-				</Row>
+				<HorizontalMenuContainer />
 				<Layout>
-					<Route path="/" component={Home} />
+					<Route exact path="/" component={Home} />
 					<Route exact path="/admin/clients/all" component={ClientsContainer} />
 					<Route exact path="/admin/clients/:id/update/" component={ClientUpdateForm} />
 					<Route exact path="/admin/clients/create" component={ClientCreateForm} />
-					<Route exact path="/user/update/:id" component={UserEditForm} />
-					<Route exact path="/management" component={ManagementDashboard} />
+					<Route exact path="/management/user/update/:id" component={UserEditForm} />
+					<Route path="/management" component={ManagementDashboard} />
 				</Layout>
 			</Layout>
 		)
-
 	}
 	if (user.get("role") === "staff") {
 		return (
 			<Layout style={{ height: "100vh" }}>
-				<Row>
-					<Col>
-						<HorizontalMenuContainer />
-					</Col>
-				</Row>
+				<HorizontalMenuContainer />
 				<Layout>
 					<Route path="/" component={Home} />
-					<Route exact path="/user/update/:id" component={UserEditForm} />
-					<Route exact path="/management" component={ManagementDashboard} />
 				</Layout>
 			</Layout>
 		)
@@ -67,14 +56,9 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 	if (user.get("role") === "client") {
 		return (
 			<Layout style={{ height: "100vh" }}>
-				<Row>
-					<Col>
-						<HorizontalMenuContainer />
-					</Col>
-				</Row>
+				<HorizontalMenuContainer />
 				<Layout>
-					<Route path="/" component={ManagementDashboard} />
-					<Route exact path="/client/dashboard" component={ManagementDashboard} />
+					<Route path="/" component={Home} />
 				</Layout>
 			</Layout>
 		)
