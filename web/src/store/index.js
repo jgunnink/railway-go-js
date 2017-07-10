@@ -2,8 +2,6 @@ import auth from "railway/store/reducers/auth"
 import thunk from "redux-thunk"
 import users from "railway/store/reducers/users"
 import clients from "railway/store/reducers/clients"
-import sites from "railway/store/reducers/sites"
-import models from "railway/store/reducers/models"
 import ui from "railway/store/reducers/ui"
 import viewer from "railway/store/reducers/viewer"
 import { screenResize } from 'railway/store/actions/ui'
@@ -19,8 +17,6 @@ function configureStore(initialState = Map({})) {
 		auth,
 		clients,
 		forms,
-		models,
-		sites,
 		ui,
 		users,
 		viewer,

@@ -1,5 +1,6 @@
 import { get, post, del } from "railway/utils/agent"
 import { notification } from "antd"
+import history from "railway/history"
 
 export const AUTH_FAIL = "AUTH:FAIL"
 export const AUTH_SENDINGREQUEST = "AUTH:SENDINGREQUEST"
@@ -44,6 +45,11 @@ export function logout() {
 			.then((res) => {
 				dispatch(sendingRequest(false))
 				dispatch(receiveLogout())
+				history.push("/")
+				notification["success"]({
+					message: "Logged out successfully.",
+					duration: 3
+				})
 			})
 	}
 }
@@ -55,6 +61,7 @@ export function login(email, password) {
 			.then((res) => {
 				dispatch(sendingRequest(false))
 				dispatch(setUser(res.data))
+				history.push("/")
 			}).catch((err) => {
 				dispatch(sendingRequest(false))
 				dispatch(loginError(err))
