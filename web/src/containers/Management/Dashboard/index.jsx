@@ -7,7 +7,6 @@ import {
 	enableUser,
 	fetchUsers
 } from "railway/store/actions/users"
-import { setActiveModel } from "railway/store/actions/viewer"
 import Needs from "railway/hoc/needs"
 
 const ManagementDashboardModalWithNeeds = Needs({ optimize: true },
@@ -24,8 +23,10 @@ const ClientsDashboardContainer = (props) => {
 
 const mapStateToProps = (state, ownProps) => {
 	const defaultActiveKey = ownProps.match.params.tab || "info"
+	const currentUser = state.toJS().auth.user
 	return {
-		defaultActiveKey
+		defaultActiveKey,
+		currentUser
 	}
 }
 
@@ -33,8 +34,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		archiveUser: (user) => { dispatch(archiveUser(user)) },
 		disableUser: (user) => { dispatch(disableUser(user)) },
-		enableUser: (user) => { dispatch(enableUser(user)) },
-		setActiveModel: (model) => { dispatch(setActiveModel(model)) }
+		enableUser: (user) => { dispatch(enableUser(user)) }
 	}
 }
 

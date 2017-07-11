@@ -6,6 +6,8 @@ import { Link } from "react-router-dom"
 const confirm = antModal.confirm
 
 const UserTable = (props) => {
+	const currentUser = props.currentUser
+	console.log(currentUser)
 	let userMap
 	let userData = []
 	try {
@@ -48,10 +50,14 @@ const UserTable = (props) => {
 					<span>
 						{/*Hover text would do well here to illustrate what the buttons do?*/}
 						<EditUser userID={record.key} {...props} />
-						<span className="ant-divider" />
-						<DisableUser userID={record.key} {...props } />
-						<span className="ant-divider" />
-						<ArchiveUser userID={record.key} {...props } />
+						{(currentUser.user_id !== record.key) &&
+							<span>
+								<span className="ant-divider" />
+								<DisableUser userID={record.key} {...props } />
+								<span className="ant-divider" />
+								<ArchiveUser userID={record.key} {...props } />
+							</span>
+						}
 					</span>
 				)
 		}
