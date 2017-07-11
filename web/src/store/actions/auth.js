@@ -5,6 +5,7 @@ import history from "railway/history"
 export const AUTH_FAIL = "AUTH:FAIL"
 export const AUTH_SENDINGREQUEST = "AUTH:SENDINGREQUEST"
 export const AUTH_SET_USER = "AUTH:SET:USER"
+export const CHECKING_AUTHENTICATION = "AUTH:CHECKINGAUTHENTICATION"
 export const LOGGED_OUT = "AUTH:LOGGEDOUT"
 
 export const loadViewPort = (page) => {
@@ -16,6 +17,10 @@ export const loadViewPort = (page) => {
 
 export const authFail = () => {
 	return { type: AUTH_FAIL }
+}
+
+export const checkingAuthentication = () => {
+	return { type: CHECKING_AUTHENTICATION }
 }
 
 function receiveLogout(message) {
@@ -61,11 +66,10 @@ export function login(email, password) {
 			.then((res) => {
 				dispatch(sendingRequest(false))
 				dispatch(setUser(res.data))
-				history.push("/")
+				history.push("/home")
 			}).catch((err) => {
 				dispatch(sendingRequest(false))
 				dispatch(loginError(err))
-				console.log(err)
 				notification["error"]({
 					message: "Sorry, could not log you in.",
 					description: `Please check your password and try again.	If
@@ -77,23 +81,28 @@ export function login(email, password) {
 	}
 }
 
-export function checkAuth() {
+export function checkAuthentication() {
 	return (dispatch, getState) => {
 		dispatch(sendingRequest(true))
 		get("/auth/check")
 			.then((res) => {
+				dispatch(checkingAuthentication())
 				dispatch(sendingRequest(false))
 				dispatch(setUser(res.data))
 			}).catch((err) => {
+				dispatch(checkingAuthentication())
 				dispatch(sendingRequest(false))
 				dispatch(loginError(err))
-				// notification["info"]({
-				// 	message: "Your session has expired",
-				// 	description: `You may have signed in somewhere else or your
-				// 	data session with the server has been interrupted. Please
-				// 	sign in again to continue.`,
-				// 	duration: 10
-				// })
+				const error_code = err.response.data.error_code
+				if (error_code === 4014) {
+					notification["info"]({
+						message: "Your session has expired",
+						description: `You may have signed in somewhere else or
+						your data session with the server has been interrupted.
+						Please sign in again.`,
+						duration: 5
+					})
+				}
 			})
 	}
 }

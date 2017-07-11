@@ -7,7 +7,6 @@ const confirm = antModal.confirm
 
 const UserTable = (props) => {
 	const currentUser = props.currentUser
-	console.log(currentUser)
 	let userMap
 	let userData = []
 	try {

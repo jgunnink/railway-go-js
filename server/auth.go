@@ -139,7 +139,7 @@ func (ac *AuthController) Check(w http.ResponseWriter, r *http.Request) {
 	user := ac.UserService.UserByID(cookie.UserID)
 
 	if cookie.SessionToken != user.SessionToken {
-		w.WriteHeader(http.StatusUnauthorized)
+		HandleErrorAndRespond(w, ErrorEmailTokenMismatch, http.StatusUnauthorized)
 		return
 	}
 	marshalAndRespond(w, cookie)

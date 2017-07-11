@@ -2,7 +2,6 @@ import React from "react"
 import Horizontal from "railway/components/Menu/Horizontal"
 import { logout } from "railway/store/actions/auth"
 import { setActiveScreen } from "railway/store/actions/ui"
-import { setActiveModel } from "railway/store/actions/viewer"
 import { connect } from "react-redux"
 
 const HorizontalContainer = (props) => {
@@ -20,7 +19,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		setActiveModel: (model) => { dispatch(setActiveModel(model)) },
 		logout: () => { dispatch(logout()) },
 		setActiveScreen: (key) => { dispatch(setActiveScreen(key)) }
 	}

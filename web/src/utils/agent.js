@@ -30,7 +30,15 @@ export const get = (url) => {
 						 is a mistake, please contact your administrator.`,
 						duration: 10
 					})
-					history.push("/")
+					history.push("/home")
+					// } else if (err.response.status === 401) {
+					// 	store.dispatch(authFail())
+					// 	notification["warning"]({
+					// 		message: "Something went wrong",
+					// 		description: `Please log in and try your action again.`,
+					// 		duration: 5
+					// 	})
+					// 	history.push("/")
 				}
 				reject(err)
 			})
@@ -58,6 +66,5 @@ export const del = (url, data) => {
 			})
 	})
 }
-
 
 export default request

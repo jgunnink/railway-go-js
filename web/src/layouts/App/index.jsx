@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { Layout } from "antd"
+import { Layout, Spin } from "antd"
 import ClientsContainer from "railway/containers/Clients/All"
 import ManagementDashboard from "railway/containers/Management/Dashboard"
 import ClientUpdateForm from "railway/containers/Clients/Form/Update"
@@ -9,13 +9,16 @@ import UserEditForm from "railway/containers/Users/Update"
 import LoginForm from "railway/containers/Forms/LoginForm"
 import HorizontalMenuContainer from "railway/containers/Menus/Horizontal"
 import { Route } from "react-router-dom"
-import { checkAuth } from "railway/store/actions/auth"
+import { checkAuthentication } from "railway/store/actions/auth"
 import Home from "railway/components/Home"
 
-const AppLayout = ({ user, loggedIn, checkAuth }) => {
+const AppLayout = ({ user, loggedIn, checkAuthentication, checkingAuthentication, sendingRequest }) => {
 	const userRole = user.get("role")
+	if (checkingAuthentication && !sendingRequest) {
+		checkAuthentication()
+		return <Spin />
+	}
 	if (!loggedIn) {
-		checkAuth()
 		return (
 			<div style={{ padding: 70 }} >
 				<h1 style={{ fontSize: 80 }}>Railway.</h1>
@@ -69,6 +72,8 @@ const AppLayout = ({ user, loggedIn, checkAuth }) => {
 
 function mapStateToProps(state, ownProps) {
 	return {
+		sendingRequest: state.get("auth").get("sendingRequest"),
+		checkingAuthentication: state.get("auth").get("checkingAuthentication"),
 		loggedIn: state.get("auth").get("loggedIn"),
 		user: state.get("auth").get("user")
 	}
@@ -76,7 +81,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		checkAuth: () => { dispatch(checkAuth()) }
+		checkAuthentication: () => { dispatch(checkAuthentication()) }
 	}
 }
 

@@ -1,4 +1,10 @@
-import { AUTH_SENDINGREQUEST, AUTH_SET_USER, AUTH_FAIL, LOGGED_OUT } from "railway/store/actions/auth"
+import {
+	AUTH_SENDINGREQUEST,
+	AUTH_SET_USER,
+	AUTH_FAIL,
+	CHECKING_AUTHENTICATION,
+	LOGGED_OUT
+} from "railway/store/actions/auth"
 import Immutable from "immutable"
 
 export const guestUser = Immutable.Map({
@@ -8,9 +14,10 @@ export const guestUser = Immutable.Map({
 })
 
 let initialState = Immutable.Map({
+	checkingAuthentication: true,
 	loggedIn: false,
+	sendingRequest: false,
 	user: guestUser,
-	sendingRequest: false
 })
 
 const authReducer = (state = initialState, action) => {
@@ -18,9 +25,12 @@ const authReducer = (state = initialState, action) => {
 		case AUTH_SENDINGREQUEST:
 			return state.set("sendingRequest", action.sending)
 		case AUTH_FAIL:
-			return initialState
+			const authFailState = initialState
+			return authFailState.set("checkingAuthentication", false)
 		case AUTH_SET_USER:
 			return state.set("user", Immutable.fromJS(action.user)).set("loggedIn", true)
+		case CHECKING_AUTHENTICATION:
+			return state.set("checkingAuthentication", false)
 		case LOGGED_OUT:
 			return initialState
 		default:
