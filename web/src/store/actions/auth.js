@@ -81,41 +81,20 @@ export function login(email, password) {
 	}
 }
 
-export function checkAuthentication() {
+export function checkAuthentication(cb) {
 	return (dispatch, getState) => {
 		dispatch(sendingRequest(true))
 		get("/auth/check")
 			.then(res => {
 				dispatch(checkingAuthentication())
 				dispatch(sendingRequest(false))
-				dispatch(setUser(res.data))
+				cb()
 			})
 			.catch(err => {
-				dispatch(checkingAuthentication())
 				dispatch(sendingRequest(false))
-				console.log(err)
 				dispatch(loginError(err))
-				// Check the server sends back error data, then handle.
-				const error_data = err.response.data
-				if (error_data) {
-					if (error_data.error_code === 4014) {
-						notification["info"]({
-							message: "Your session has expired",
-							description: `You may have signed in somewhere else or
-							your data session with the server has been interrupted.
-							Please sign in again.`,
-							duration: 5
-						})
-					}
-					if (error_data.error_code === 4031) {
-						notification["info"]({
-							message: "Your session has expired",
-							description: `You may have signed in somewhere else or
-							your data session with the server has been interrupted.
-							Please sign in again.`,
-							duration: 5
-						})
-					}
+				if (typeof cb === "function") {
+					cb()
 				}
 			})
 	}

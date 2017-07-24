@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { Layout, Spin } from "antd"
+import { Layout } from "antd"
 import ClientsContainer from "railway/containers/Clients/All"
 import ManagementDashboard from "railway/containers/Management/Dashboard"
 import ClientUpdateForm from "railway/containers/Clients/Form/Update"
@@ -13,12 +13,15 @@ import { Route } from "react-router-dom"
 import { checkAuthentication } from "railway/store/actions/auth"
 import Home from "railway/components/Home"
 
-const AppLayout = ({ user, loggedIn, checkAuthentication, checkingAuthentication, sendingRequest }) => {
-	const userRole = user.get("role")
-	if (checkingAuthentication && !sendingRequest) {
-		checkAuthentication()
-		return <Spin />
-	}
+const AppLayout = props => {
+	const { user, loggedIn } = props
+
+	// TODO
+	// Render the password reset form if url is accessed.
+	// If route doesn't start with prefix, then render the rest of the app.
+	// if (props.location.pathname.startsWith("/users/passwordreset/")) {
+	// 	return <Route path="/users/passwordreset/:uuid" component={PasswordResetForm} />
+	// }
 	if (!loggedIn) {
 		return (
 			<Layout style={{ padding: 70, height: "100vh" }}>
@@ -27,6 +30,7 @@ const AppLayout = ({ user, loggedIn, checkAuthentication, checkingAuthentication
 			</Layout>
 		)
 	}
+	const userRole = user.get("role")
 	if (userRole === "admin" || userRole === "manager") {
 		return (
 			<Layout style={{ height: "100vh" }}>
@@ -39,7 +43,6 @@ const AppLayout = ({ user, loggedIn, checkAuthentication, checkingAuthentication
 					<Route exact path="/management" component={ManagementDashboard} />
 					<Route path="/management/:tab" component={ManagementDashboard} />
 					<Route path="/management/users/:id/update/" component={UserEditForm} />
-					<Route exact path="/register" component={Register} />
 				</Layout>
 			</Layout>
 		)

@@ -74,7 +74,11 @@ func (us *UserService) UserUnarchive(id int) *railway.User {
 // UserDisable will disable a user.
 func (us *UserService) UserDisable(id int) *railway.User {
 	disabledUser := &railway.User{}
-	err := us.db.Get(disabledUser, "UPDATE users SET disabled=true, disabled_on=$1 WHERE id=$2 RETURNING *", time.Now().UTC().Format(time.RFC3339), id)
+	err := us.db.Get(disabledUser, `
+	UPDATE users 
+	SET disabled=true, disabled_on=$1, session_token='' 
+	WHERE id=$2 RETURNING *
+`, time.Now().UTC().Format(time.RFC3339), id)
 	if err != nil {
 		panic(err)
 	}

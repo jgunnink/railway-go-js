@@ -32,7 +32,7 @@ export const get = url => {
 						 is a mistake, please contact your administrator.`,
 						duration: 10
 					})
-					history.push("/home")
+					history.push("/")
 				}
 				reject(err)
 			})

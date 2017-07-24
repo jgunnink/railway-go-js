@@ -10,6 +10,7 @@ import history from "railway/history"
 import store from "railway/store"
 import { LocaleProvider } from "antd"
 import enUS from "antd/lib/locale-provider/en_US"
+import { checkAuthentication } from "railway/store/actions/auth"
 
 window.store = store
 
@@ -22,10 +23,20 @@ const App = () =>
 		</Router>
 	</Provider>
 
-ReactDOM.render(
-	<LocaleProvider locale={enUS}>
-		<App />
-	</LocaleProvider>,
-	document.getElementById("root")
+store.dispatch(
+	checkAuthentication(() => {
+		try {
+			let loading = document.getElementById("loading")
+			loading.parentNode.removeChild(loading)
+		} catch (err) {
+			console.log(err)
+		}
+		ReactDOM.render(
+			<LocaleProvider locale={enUS}>
+				<App />
+			</LocaleProvider>,
+			document.getElementById("root")
+		)
+	})
 )
 registerServiceWorker()
