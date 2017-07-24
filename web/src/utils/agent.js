@@ -15,12 +15,14 @@ const request = axios.create({
 	}
 })
 
-export const get = (url) => {
-	return new Promise(function (resolve, reject) {
-		request.get(url)
-			.then((res) => {
+export const get = url => {
+	return new Promise(function(resolve, reject) {
+		request
+			.get(url)
+			.then(res => {
 				resolve(res)
-			}).catch((err) => {
+			})
+			.catch(err => {
 				if (err.response.status === 403) {
 					store.dispatch(authFail())
 					notification["warning"]({
@@ -31,14 +33,6 @@ export const get = (url) => {
 						duration: 10
 					})
 					history.push("/home")
-					// } else if (err.response.status === 401) {
-					// 	store.dispatch(authFail())
-					// 	notification["warning"]({
-					// 		message: "Something went wrong",
-					// 		description: `Please log in and try your action again.`,
-					// 		duration: 5
-					// 	})
-					// 	history.push("/")
 				}
 				reject(err)
 			})
@@ -46,22 +40,26 @@ export const get = (url) => {
 }
 
 export const post = (url, data) => {
-	return new Promise(function (resolve, reject) {
-		request.post(url, data)
-			.then((res) => {
+	return new Promise(function(resolve, reject) {
+		request
+			.post(url, data)
+			.then(res => {
 				resolve(res)
-			}).catch((err) => {
+			})
+			.catch(err => {
 				reject(err)
 			})
 	})
 }
 
 export const del = (url, data) => {
-	return new Promise(function (resolve, reject) {
-		request.delete(url)
-			.then((res) => {
+	return new Promise(function(resolve, reject) {
+		request
+			.delete(url)
+			.then(res => {
 				resolve(res)
-			}).catch((err) => {
+			})
+			.catch(err => {
 				reject(err)
 			})
 	})

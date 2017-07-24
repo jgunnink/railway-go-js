@@ -7,6 +7,7 @@ import ClientUpdateForm from "railway/containers/Clients/Form/Update"
 import ClientCreateForm from "railway/containers/Clients/Form/Create"
 import UserEditForm from "railway/containers/Users/Update"
 import LoginForm from "railway/containers/Forms/LoginForm"
+import Register from "railway/containers/Forms/Register"
 import HorizontalMenuContainer from "railway/containers/Menus/Horizontal"
 import { Route } from "react-router-dom"
 import { checkAuthentication } from "railway/store/actions/auth"
@@ -20,17 +21,13 @@ const AppLayout = ({ user, loggedIn, checkAuthentication, checkingAuthentication
 	}
 	if (!loggedIn) {
 		return (
-			<div style={{ padding: 70 }} >
-				<h1 style={{ fontSize: 80 }}>Railway.</h1>
-				<h1>Manage your studio.</h1>
-				<h3>Log In</h3>
-				<LoginForm />
-				<br />
-				<p>Don't have an account? <a>Sign up</a></p>
-			</div>
+			<Layout style={{ padding: 70, height: "100vh" }}>
+				<Route path="/" component={LoginForm} />
+				<Route path="/register" component={Register} />
+			</Layout>
 		)
 	}
-	if ((userRole === "admin") || (userRole === "manager")) {
+	if (userRole === "admin" || userRole === "manager") {
 		return (
 			<Layout style={{ height: "100vh" }}>
 				<HorizontalMenuContainer />
@@ -40,8 +37,9 @@ const AppLayout = ({ user, loggedIn, checkAuthentication, checkingAuthentication
 					<Route exact path="/clients/:id/update/" component={ClientUpdateForm} />
 					<Route exact path="/clients/create" component={ClientCreateForm} />
 					<Route exact path="/management" component={ManagementDashboard} />
-					<Route exact path="/management/:tab" component={ManagementDashboard} />
-					<Route path="/management/user/:id/update/" component={UserEditForm} />
+					<Route path="/management/:tab" component={ManagementDashboard} />
+					<Route path="/management/users/:id/update/" component={UserEditForm} />
+					<Route exact path="/register" component={Register} />
 				</Layout>
 			</Layout>
 		)
@@ -67,6 +65,21 @@ const AppLayout = ({ user, loggedIn, checkAuthentication, checkingAuthentication
 			</Layout>
 		)
 	}
+	if (userRole === "guest") {
+		return (
+			<Layout style={{ height: "100vh" }}>
+				<HorizontalMenuContainer />
+				<Layout>
+					<div style={{ padding: "30px" }}>
+						<h1>Welcome, and thanks for signing up!</h1>
+						<p>Right now your account isn't assigned to any clients so there's nothing much for you to do.</p>
+						<p>If you think this is a mistake, please contact your manager or administrator!</p>
+						<p>Have a lovely day!</p>
+					</div>
+				</Layout>
+			</Layout>
+		)
+	}
 	return <div />
 }
 
@@ -81,7 +94,9 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		checkAuthentication: () => { dispatch(checkAuthentication()) }
+		checkAuthentication: () => {
+			dispatch(checkAuthentication())
+		}
 	}
 }
 

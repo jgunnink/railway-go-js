@@ -13,7 +13,7 @@ import enUS from "antd/lib/locale-provider/en_US"
 
 window.store = store
 
-const App = () => (
+const App = () =>
 	<Provider store={store}>
 		<Router history={history}>
 			<div>
@@ -21,7 +21,6 @@ const App = () => (
 			</div>
 		</Router>
 	</Provider>
-)
 
 ReactDOM.render(
 	<LocaleProvider locale={enUS}>

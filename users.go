@@ -18,6 +18,8 @@ const (
 	RoleStaff = RoleEnum("staff")
 	// RoleClient users are client users can view projects associated to them
 	RoleClient = RoleEnum("client")
+	// RoleGuest users are guest users who have signed up for an account
+	RoleGuest = RoleEnum("guest")
 )
 
 // User represents a single User object in the app

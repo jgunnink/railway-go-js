@@ -5,68 +5,74 @@ import { Link } from "react-router-dom"
 
 const confirm = antModal.confirm
 
-const UserTable = (props) => {
+const UserTable = props => {
 	const currentUser = props.currentUser
 	let userMap
 	let userData = []
 	try {
 		userMap = props.users.get("users")
-		userData = userMap.map((user, i) => {
-			return {
-				key: user.get("id"),
-				name: userFullName(user),
-				email: user.get("email"),
-				role: capitalizeFirstLetter(user.get("role"))
-			}
-		}).toArray()
+		userData = userMap
+			.map((user, i) => {
+				return {
+					key: user.get("id"),
+					name: userFullName(user),
+					email: user.get("email"),
+					role: capitalizeFirstLetter(user.get("role"))
+				}
+			})
+			.toArray()
 	} catch (err) {
 		userData = []
 	}
-	const userColumns = [{
-		title: "Name",
-		dataIndex: "name",
-		key: "name",
-		render: text => <div>{text}</div>,
-	}, {
-		title: "Email",
-		dataIndex: "email",
-		key: "email",
-	}, {
-		title: "Role",
-		dataIndex: "role",
-		key: "role",
-	}, {
-		title: "Action",
-		key: "action",
-		render: (text, record) => {
-			const user = props.users.get("users").get(record.key.toString())
-			if (user.toJS().disabled)
-				return (
-					<EnableUser userID={record.key} {...props } />
-				)
-			else
-				return (
-					<span>
-						{/*Hover text would do well here to illustrate what the buttons do?*/}
-						<EditUser userID={record.key} {...props} />
-						{(currentUser.user_id !== record.key) &&
-							<span>
-								<span className="ant-divider" />
-								<DisableUser userID={record.key} {...props } />
-								<span className="ant-divider" />
-								<ArchiveUser userID={record.key} {...props } />
-							</span>
-						}
-					</span>
-				)
+	const userColumns = [
+		{
+			title: "Name",
+			dataIndex: "name",
+			key: "name",
+			render: text =>
+				<div>
+					{text}
+				</div>
+		},
+		{
+			title: "Email",
+			dataIndex: "email",
+			key: "email"
+		},
+		{
+			title: "Role",
+			dataIndex: "role",
+			key: "role"
+		},
+		{
+			title: "Action",
+			key: "action",
+			render: (text, record) => {
+				const user = props.users.get("users").get(record.key.toString())
+				if (user.toJS().disabled) return <EnableUser userID={record.key} {...props} />
+				else
+					return (
+						<span>
+							{/*Hover text would do well here to illustrate what the buttons do?*/}
+							<EditUser userID={record.key} {...props} />
+							{currentUser.user_id !== record.key &&
+								<span>
+									<span className="ant-divider" />
+									<DisableUser userID={record.key} {...props} />
+									<span className="ant-divider" />
+									<ArchiveUser userID={record.key} {...props} />
+								</span>}
+						</span>
+					)
+			}
 		}
-	}]
+	]
 
 	return (
-		<div >
+		<div>
 			<h2>Users</h2>
 			<Table bordered columns={userColumns} dataSource={userData} />
-		</div >
+		</div>
 	)
 }
 
@@ -76,11 +82,13 @@ const ArchiveUser = ({ users, userID, archiveUser, record }) => {
 		confirm({
 			title: "Are you sure you want to archive this user?",
 			content: "This will archive the user removing them from view. This cannot be undone. Please be certain.",
-			onOk() { archiveUser(user) },
-			onCancel() { },
+			onOk() {
+				archiveUser(user)
+			},
+			onCancel() {}
 		})
 	}
-	return (<Button shape="circle" type="danger" icon="delete" onClick={showConfirm} />)
+	return <Button shape="circle" type="danger" icon="delete" onClick={showConfirm} />
 }
 
 const DisableUser = ({ users, userID, disableUser, record }) => {
@@ -89,18 +97,20 @@ const DisableUser = ({ users, userID, disableUser, record }) => {
 		confirm({
 			title: "Are you sure you want to disable this user?",
 			content: "Disabling a user account prevents them from accessing this system.",
-			onOk() { disableUser(user) },
-			onCancel() { },
+			onOk() {
+				disableUser(user)
+			},
+			onCancel() {}
 		})
 	}
-	return (<Button shape="circle" icon="lock" onClick={showConfirm} />)
+	return <Button shape="circle" icon="lock" onClick={showConfirm} />
 }
 
 const EditUser = ({ userID }) => {
 	return (
-		<Link to={`/management/user/${userID}/update`}>
+		<Link to={`/management/users/${userID}/update`}>
 			<Button shape="circle" icon="edit" />
-		</Link >
+		</Link>
 	)
 }
 
@@ -110,11 +120,13 @@ const EnableUser = ({ users, userID, enableUser, record }) => {
 		confirm({
 			title: "This will re-enable this user account.",
 			content: "They will regain access to this system.",
-			onOk() { enableUser(user) },
-			onCancel() { },
+			onOk() {
+				enableUser(user)
+			},
+			onCancel() {}
 		})
 	}
-	return (<Button shape="circle" icon="unlock" onClick={showConfirm} />)
+	return <Button shape="circle" icon="unlock" onClick={showConfirm} />
 }
 
 export default UserTable

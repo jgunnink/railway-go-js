@@ -27,7 +27,7 @@ CREATE TABLE users (
 	role text NOT NULL,
 	session_token text NOT NULL,
 	data jsonb NOT NULL,
-	client_id int NOT NULL,
+	client_id int,
 	disabled boolean NOT NULL,
 	disabled_on timestamp,
 	archived boolean NOT NULL,

@@ -138,6 +138,11 @@ func (ac *AuthController) Check(w http.ResponseWriter, r *http.Request) {
 
 	user := ac.UserService.UserByID(cookie.UserID)
 
+	if user.SessionToken == "" {
+		HandleErrorAndRespond(w, ErrorEmailNotInSession, http.StatusUnauthorized)
+		return
+	}
+
 	if cookie.SessionToken != user.SessionToken {
 		HandleErrorAndRespond(w, ErrorEmailTokenMismatch, http.StatusUnauthorized)
 		return

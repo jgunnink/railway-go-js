@@ -25,6 +25,7 @@ func NewUserController(mw railway.MiddlewareService, us railway.UserService) *Us
 
 	result.Mux.GET("/users/all", mw.AdminChain(result.UserAll))
 	result.Mux.POST("/users/create", mw.AdminChain(result.UserCreate))
+	result.Mux.POST("/users/registration", mw.InsecureChain(result.UserCreate))
 	result.Mux.GET("/users/:id/get", mw.StaffChain(result.UserByID))
 	result.Mux.POST("/users/:id/update", mw.StaffChain(result.UserUpdate))
 	result.Mux.POST("/users/:id/archive", mw.AdminChain(result.UserArchive))
