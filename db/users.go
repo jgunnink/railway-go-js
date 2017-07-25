@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/jgunnink/railway"
-
 	"github.com/jmoiron/sqlx"
 )
 

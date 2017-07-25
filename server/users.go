@@ -74,7 +74,6 @@ func (uc *UserController) UserCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	marshalAndRespond(w, uc.UserService.UserCreate(user))
-
 }
 
 // UserByID will return the user given an ID

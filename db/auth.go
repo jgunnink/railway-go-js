@@ -1,8 +1,6 @@
 package db
 
 import (
-	"log"
-
 	"github.com/jgunnink/railway"
 	"github.com/jmoiron/sqlx"
 )
@@ -29,7 +27,6 @@ func (as *AuthService) UserSetToken(id int, sessionToken string) *railway.User {
 	updatedUser := &railway.User{}
 	err := as.db.Get(updatedUser, "UPDATE users SET session_token=$1 WHERE id=$2 RETURNING *", sessionToken, id)
 	if err != nil {
-		log.Println("panic here! :D")
 		panic(err)
 	}
 
