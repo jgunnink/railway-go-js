@@ -1,24 +1,19 @@
 import React from "react"
 import ManagementDashboard from "railway/components/Management/Dashboard"
 import { connect } from "react-redux"
-import {
-	archiveUser,
-	disableUser,
-	enableUser,
-	fetchUsers
-} from "railway/store/actions/users"
+import { archiveUser, disableUser, enableUser, fetchUsers } from "railway/store/actions/users"
 import Needs from "railway/hoc/needs"
 
-const ManagementDashboardModalWithNeeds = Needs({ optimize: true },
-	[{
+const ManagementDashboardModalWithNeeds = Needs({ optimize: true }, [
+	{
 		name: "users",
 		action: fetchUsers,
 		path: ["users"]
-	}]
-)(ManagementDashboard)
+	}
+])(ManagementDashboard)
 
-const ClientsDashboardContainer = (props) => {
-	return (<ManagementDashboardModalWithNeeds {...props } />)
+const ClientsDashboardContainer = props => {
+	return <ManagementDashboardModalWithNeeds {...props} />
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -30,14 +25,18 @@ const mapStateToProps = (state, ownProps) => {
 	}
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
 	return {
-		archiveUser: (user) => { dispatch(archiveUser(user)) },
-		disableUser: (user) => { dispatch(disableUser(user)) },
-		enableUser: (user) => { dispatch(enableUser(user)) }
+		archiveUser: user => {
+			dispatch(archiveUser(user))
+		},
+		disableUser: user => {
+			dispatch(disableUser(user))
+		},
+		enableUser: user => {
+			dispatch(enableUser(user))
+		}
 	}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientsDashboardContainer)
-
-
