@@ -4,37 +4,80 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/jgunnink/railway"
 	"github.com/jmoiron/sqlx"
 
-	// This imports the PostgreSQL driver
+	// Postgres driver
 	_ "github.com/lib/pq"
 )
 
-var instance *DB
-
-// DB is a container for the sqlx.DB instance
+// DB contains the database connection
 type DB struct {
-	DB *sqlx.DB
+	client        *sqlx.DB
+	authService   *AuthService
+	clientService *ClientService
+	userService   *UserService
 }
 
-// Init will start the connection to the DB
-func Init(dbname, username, password, host, port string) {
-	var err error
-	db, err := sqlx.Open("postgres", fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%s sslmode=disable", dbname, username, password, host, port))
+// New returns a new instance of DB
+func New(dbname, username, password, host, port string) *DB {
 
+	connString := fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%s sslmode=disable", dbname, username, password, host, port)
+	db, err := sqlx.Connect("postgres", connString)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	instance = &DB{
-		DB: db,
+	as := &AuthService{
+		db: db,
+	}
+
+	cs := &ClientService{
+		db: db,
+	}
+
+	us := &UserService{
+		db: db,
+	}
+
+	return &DB{
+		client:        db,
+		authService:   as,
+		clientService: cs,
+		userService:   us,
 	}
 }
 
-// Client will return a singleton instance of the DB connection
-func Client() *DB {
-	if instance == nil {
-		log.Fatalln("DB instance not initialised")
+// Close will close the connection to the DB
+func (db *DB) Close() error {
+	return db.client.Close()
+}
+
+// AuthService returns the dial service associated with the client.
+func (db *DB) AuthService() railway.AuthService {
+	return db.authService
+}
+
+// ClientService returns the dial service associated with the client.
+func (db *DB) ClientService() railway.ClientService {
+	return db.clientService
+}
+
+// UserService returns the dial service associated with the client.
+func (db *DB) UserService() railway.UserService {
+	return db.userService
+}
+
+// Migrate will begin the database migration
+func (db *DB) Migrate() {
+	log.Println("Begin DB migration")
+	db.client.MustExec(migrateSQL)
+}
+
+// Drop will drop the entire DB
+func (db *DB) Drop() {
+	_, err := db.client.Exec("DROP SCHEMA public CASCADE;")
+	if err != nil {
+		log.Println(err)
 	}
-	return instance
 }

@@ -1,154 +1,191 @@
 package server
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"strconv"
+	"time"
 
 	"github.com/blockninja/ninjarouter"
-	"github.com/jgunnink/railway/db"
-	"github.com/jgunnink/railway/helpers"
-	"github.com/jgunnink/railway/httperrors"
-	"github.com/jgunnink/railway/models"
+	"github.com/jgunnink/railway"
+	"github.com/jmoiron/sqlx/types"
 )
 
-// UserAll returns all users in the database
-// 	Route: {{ base_url }}/admin/users
-// 	Method: GET
-// This is a secure route for ADMIN users
-func UserAll(w http.ResponseWriter, r *http.Request) {
-	dbclient := db.Client()
-	allUsers := dbclient.UserAll()
-
-	users, err := json.Marshal(allUsers)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.Write(users)
+// UserController contains the handlers needed for User actions
+type UserController struct {
+	*ninjarouter.Mux
+	UserService railway.UserService
 }
 
-// UserArchive archives the given user
-//  Route: {{ base_url }}/archive/:id
-// 	Method: POST
-// This is a secure route for ADMIN users
-func UserArchive(w http.ResponseWriter, r *http.Request) {
-	userID, err := strconv.Atoi(ninjarouter.Var(r, "id"))
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Didn't get an int back from lookup")
-		return
+// NewUserController creates a new instance of a UserController
+func NewUserController(mw railway.MiddlewareService, us railway.UserService) *UserController {
+	result := &UserController{
+		UserService: us,
+		Mux:         ninjarouter.New(),
 	}
 
-	dbclient := db.Client()
-	archiveUser, err := dbclient.UserArchive(userID)
+	result.Mux.GET("/users/all", mw.AdminChain(result.UserAll))
+	result.Mux.POST("/users/create", mw.AdminChain(result.UserCreate))
+	result.Mux.POST("/users/registration", mw.InsecureChain(result.UserCreate))
+	result.Mux.GET("/users/:id/get", mw.StaffChain(result.UserByID))
+	result.Mux.POST("/users/:id/update", mw.StaffChain(result.UserUpdate))
+	result.Mux.POST("/users/:id/archive", mw.AdminChain(result.UserArchive))
+	result.Mux.POST("/users/:id/unarchive", mw.AdminChain(result.UserUnarchive))
+	result.Mux.POST("/users/:id/disable", mw.AdminChain(result.UserDisable))
+	result.Mux.POST("/users/:id/enable", mw.AdminChain(result.UserEnable))
 
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	archivedUser, err := json.Marshal(archiveUser)
-	w.Write(archivedUser)
+	return result
 }
 
-// UserUpdate takes the HTTP request and attempts to update the user record in
-// the database
-func UserUpdate(w http.ResponseWriter, r *http.Request) {
-	b, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+// UserCreate will create a new user
+// Method = "POST"
+// Path = "http://localhost:8080/users/create"
+// Description = "Creates a new user in the system"
+// END API
+func (uc *UserController) UserCreate(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserCreate",
+		Description: "UserCreate is the handler for UserCreate",
 	}
-	formValues := &userModelRequest{}
-	err = json.Unmarshal(b, formValues)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
+	log.Println("Run handler:", details.Handler)
+	userCreateRequest := &railway.UserCreateRequest{}
+	MustDecodeJSON(r, userCreateRequest)
+
+	user := &railway.User{
+		FirstName:    userCreateRequest.FirstName,
+		LastName:     userCreateRequest.LastName,
+		Email:        userCreateRequest.Email,
+		Password:     HashPassword(userCreateRequest.Password),
+		Role:         userCreateRequest.Role,
+		SessionToken: "",
+		Data:         types.JSONText(userCreateRequest.Data),
+		ClientID:     userCreateRequest.ClientID,
+		Disabled:     false,
+		DisabledOn:   nil,
+		Archived:     false,
+		ArchivedOn:   nil,
+		CreatedAt:    time.Now(),
+	}
+
+	// Check for existing user
+	existingUser := uc.UserService.UserByEmail(userCreateRequest.Email)
+	if existingUser != nil {
+		HandleErrorAndRespond(w, ErrorDuplicateEmail, http.StatusBadRequest)
 		return
 	}
 
-	hashedPassword := helpers.HashPassword(formValues.Password)
-	dbclient := db.Client()
-	cookie, err := helpers.LoadCookie(r, cookieStore)
-	if err != nil {
-		httperrors.HandleErrorAndRespond(w, httperrors.InvalidCookie, http.StatusUnauthorized)
-		return
-	}
-	userID := cookie.UserID
-	if userID == 0 {
-		httperrors.HandleErrorAndRespond(w, httperrors.IDNotInSession, http.StatusForbidden)
-		return
-	}
+	marshalAndRespond(w, uc.UserService.UserCreate(user))
 
-	updatedUser := &models.User{
-		ID:        userID,
-		FirstName: formValues.First,
-		LastName:  formValues.Last,
-		Email:     formValues.Email,
-		Password:  string(hashedPassword),
-	}
-
-	err = dbclient.UserUpdate(updatedUser)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	resp, err := json.Marshal(updatedUser)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.Write(resp)
 }
 
-// AdminUserUpdate takes the HTTP request and attempts to update the user record in
-// the database
-func AdminUserUpdate(w http.ResponseWriter, r *http.Request) {
-	b, err := ioutil.ReadAll(r.Body)
+// UserByID will return the user given an ID
+// Method = "GET"
+// Path = "http://localhost:8080/users/:id/get"
+// Description = "Gets a user based on their ID"
+func (uc *UserController) UserByID(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserByID",
+		Description: "UserByID is the handler for UserByID",
+	}
+	log.Println("Run handler:", details.Handler)
+	marshalAndRespond(w, uc.UserService.UserByID(mustGetID(r, "id")))
+}
+
+// UserAll will return all non-archived sites
+// Method = "GET"
+// Path = "http://localhost:8080/users/all"
+// Description = "Gets all non-archived sites"
+func (uc *UserController) UserAll(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserAll",
+		Description: "UserAll is the handler for UserAll",
+	}
+	log.Println("Run handler:", details.Handler)
+	cookie, err := LoadCookie(r, cookieStore)
 	if err != nil {
-		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	formValues := &userModelRequest{}
-	err = json.Unmarshal(b, formValues)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
+	user := uc.UserService.UserByID(cookie.UserID)
+	if user.Role == railway.RoleAdmin {
+		marshalAndRespond(w, uc.UserService.UserAll())
 		return
 	}
 
-	hashedPassword := helpers.HashPassword(formValues.Password)
-	dbclient := db.Client()
-	userID := formValues.ID
-	if userID == 0 {
-		httperrors.HandleErrorAndRespond(w, httperrors.UserNotFound, http.StatusUnauthorized)
-		return
-	}
+	marshalAndRespond(w, uc.UserService.UsersByClient(user.ClientID))
+}
 
-	updatedUser := &models.User{
-		ID:        userID,
-		FirstName: formValues.First,
-		LastName:  formValues.Last,
-		Email:     formValues.Email,
-		Password:  string(hashedPassword),
+// UserUpdate will update the user given an ID
+// Method = "POST"
+// Path = "http://localhost:8080/user/:id/update"
+// Description = "Updates a user given an ID"
+func (uc *UserController) UserUpdate(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserUpdate",
+		Description: "UserUpdate is the handler for UserUpdate",
 	}
+	log.Println("Run handler:", details.Handler)
 
-	err = dbclient.UserUpdate(updatedUser)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+	userID := mustGetID(r, "id")
+	user := uc.UserService.UserByID(userID)
+
+	mustDecodeJSON(r, user)
+
+	result := uc.UserService.UserUpdate(user)
+	marshalAndRespond(w, result)
+}
+
+// UserArchive will archive then return the user given an ID
+// Method = "POST"
+// Path = "http://localhost:8080/users/:id/archive"
+// Description = "Archives a user based on their ID"
+func (uc *UserController) UserArchive(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserArchive",
+		Description: "UserArchive is the handler for UserArchive",
 	}
-	resp, err := json.Marshal(updatedUser)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+	log.Println("Run handler:", details.Handler)
+
+	marshalAndRespond(w, uc.UserService.UserArchive(mustGetID(r, "id")))
+}
+
+// UserUnarchive will unarchive then return the user given an ID
+// Method = "POST"
+// Path = "http://localhost:8080/users/:id/unarchive"
+// Description = "Archives a user based on their ID"
+func (uc *UserController) UserUnarchive(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserUnarchive",
+		Description: "UserUnarchive is the handler for UserUnarchive",
 	}
-	w.Write(resp)
+	log.Println("Run handler:", details.Handler)
+
+	marshalAndRespond(w, uc.UserService.UserUnarchive(mustGetID(r, "id")))
+}
+
+// UserDisable will disable then return the user given an ID
+// Method = "POST"
+// Path = "http://localhost:8080/users/:id/disable"
+// Description = "Archives a user based on their ID"
+func (uc *UserController) UserDisable(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserDisable",
+		Description: "UserDisable is the handler for UserDisable",
+	}
+	log.Println("Run handler:", details.Handler)
+
+	marshalAndRespond(w, uc.UserService.UserDisable(mustGetID(r, "id")))
+}
+
+// UserEnable will enable then return the user given an ID
+// Method = "POST"
+// Path = "http://localhost:8080/users/:id/enable"
+// Description = "Archives a user based on their ID"
+func (uc *UserController) UserEnable(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserEnable",
+		Description: "UserEnable is the handler for UserEnable",
+	}
+	log.Println("Run handler:", details.Handler)
+
+	marshalAndRespond(w, uc.UserService.UserEnable(mustGetID(r, "id")))
 }
