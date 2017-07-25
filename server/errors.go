@@ -13,6 +13,11 @@ type ErrorCode struct {
 }
 
 var (
+	// ErrorDuplicateEmail will result from a mismatch of passwords
+	ErrorDuplicateEmail = &ErrorCode{
+		Code: 4001,
+		Desc: "That email already exists in the system",
+	}
 	// ErrorPasswordMismatch will result from a mismatch of passwords
 	ErrorPasswordMismatch = &ErrorCode{
 		Code: 4011,

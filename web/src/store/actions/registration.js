@@ -29,12 +29,19 @@ export function userRegistration(formValues) {
 				})
 			})
 			.catch(err => {
-				console.log(err)
 				dispatch(sendingRequest(false))
-				notification["error"]({
-					message: "Couldn't sign you up.",
-					description: "Please check the form details and try again."
-				})
+				if (err.response.data.error_code === 4001) {
+					notification["error"]({
+						message: "Email already taken",
+						description: `That email address is already in use on the system.
+						Try to log in or use the forgot password link instead.`
+					})
+				} else {
+					notification["error"]({
+						message: "Couldn't sign you up",
+						description: "Please check the form details and try again."
+					})
+				}
 			})
 	}
 }
