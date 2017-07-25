@@ -1,5 +1,6 @@
 import React from "react"
 import NinjaForm from "ninja-forms"
+import history from "railway/history"
 import { Form, Icon, Input, Button, Checkbox } from "antd"
 import { ValidateStringContains, ValidateStringLength } from "ninja-forms/lib/validators"
 
@@ -40,6 +41,16 @@ const LoginForm = ({ field, login, isValid, validate, handleSubmit }) => {
 					<div>
 						<Button icon="login" type="primary" htmlType="submit" disabled={!isValid()}>
 							Log in
+						</Button>
+						<span className="ant-divider" />
+						Don't have an account?{" "}
+						<Button
+							icon="edit"
+							type="default"
+							onClick={() => {
+								history.push("/register")
+							}}>
+							Register now!
 						</Button>
 					</div>
 				</Form.Item>
