@@ -177,6 +177,5 @@ func (cc *ClientController) ClientCreate(w http.ResponseWriter, r *http.Request)
 		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
 		return
 	}
-	log.Println("Chicken")
 	marshalAndRespond(w, resp)
 }
