@@ -1,12 +1,13 @@
 package db
 
 import (
+	"fmt"
 	"log"
 	"time"
 
+	"github.com/jackc/pgx"
 	"github.com/jgunnink/railway"
-
-	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 )
 
 // This ensures the struct satisfies the interface
@@ -14,86 +15,141 @@ var _ railway.ClientService = &ClientService{}
 
 // ClientService contains the methods DB has for Clients
 type ClientService struct {
-	db *sqlx.DB
+	db *pgx.ConnPool
 }
 
-// ClientCreate saves a new CLIENT to the database given a CLIENT
-func (cs *ClientService) ClientCreate(client *railway.Client) *railway.Client {
-
-	dest := &railway.Client{}
-	query := `
-INSERT INTO clients (name, description, data, archived_on)
-VALUES ($1, $2, $3, NULL)
-RETURNING *
+const clientAllColumns = `
+		id,
+		name,
+		description
+		data,
+		archived,
+		archived_on,
+		created_at
 `
 
-	mustGet(cs.db, dest, query, client.Name, client.Description, client.Data)
+// ClientCreate saves a new CLIENT to the database given a CLIENT
+func (cs *ClientService) ClientCreate(client *railway.Client) (*railway.Client, error) {
+	details := &MethodInfo{
+		Name:        "ClientCreate",
+		Description: "ClientCreate is the DB method used to ClientCreate",
+	}
+	newClient := &railway.Client{}
+	query := fmt.Sprintf(`
+	INSERT INTO clients (name, description, data, archived_on)
+	VALUES ($1, $2, $3, NULL)
+	RETURNING %s
+`, clientAllColumns)
+	err := cs.db.QueryRow(query,
+		client.Name,
+		client.Description,
+		client.Data,
+	).Scan(newClient.Scan())
+	if err != nil {
+		return nil, errors.Wrap(err, details.Name)
+	}
 
-	log.Println("New client created:", client.Name)
-	return cs.ClientByID(dest.ID)
+	return newClient, nil
 }
 
 // ClientAll returns all active clients which are unarchived
-func (cs *ClientService) ClientAll() map[int]*railway.Client {
-	clients := []*railway.Client{}
-	err := cs.db.Select(&clients, "SELECT * FROM clients WHERE archived=false")
+func (cs *ClientService) ClientAll() (map[int]*railway.Client, error) {
+	details := &MethodInfo{
+		Name:        "ClientAll",
+		Description: "ClientAll is the DB method used to ClientAll",
+	}
+	query := fmt.Sprintf(`
+		SELECT %s
+		FROM clients 
+		WHERE archived=false
+`, clientAllColumns)
+	rows, err := cs.db.Query(query)
 	if err != nil {
-		panic(err)
+		return nil, errors.Wrap(err, details.Name)
 	}
 	result := map[int]*railway.Client{}
-	for _, client := range clients {
-		result[client.ID] = client
+	for rows.Next() {
+		tempClient := &railway.Client{}
+		rows.Scan(tempClient.Scan())
+		result[tempClient.ID] = tempClient
 	}
-	return result
+	rows.Close()
+
+	return result, nil
 }
 
 // ClientArchive will archive a client.
-func (cs *ClientService) ClientArchive(id int) *railway.Client {
-	archivedClient := &railway.Client{}
-	err := cs.db.Get(archivedClient, "UPDATE clients SET archived=true, archived_on=$1 WHERE id=$2 RETURNING *", time.Now().UTC().Format(time.RFC3339), id)
+func (cs *ClientService) ClientArchive(id int) (*railway.Client, error) {
+	details := &MethodInfo{
+		Name:        "ClientArchive",
+		Description: "ClientArchive is the DB method used to ClientArchive",
+	}
+	tx, err := cs.db.Begin()
 	if err != nil {
-		panic(err)
+		return nil, errors.Wrap(err, details.Name)
 	}
 
-	return archivedClient
+	query := fmt.Sprintf(`
+	UPDATE clients SET archived=true, archived_on=$1 WHERE id=$2 
+	RETURNING %s
+`, clientAllColumns)
+	archivedClient := &railway.Client{}
+	err = tx.QueryRow(query, time.Now().UTC().Format(time.RFC3339), id).Scan(archivedClient.Scan())
+	if err != nil {
+		return nil, errors.Wrap(err, details.Name)
+	}
+
+	tx.Commit()
+	return archivedClient, nil
 }
 
 // ClientByID returns a single Client given an ID
-func (cs *ClientService) ClientByID(ID int) *railway.Client {
+func (cs *ClientService) ClientByID(ID int) (*railway.Client, error) {
+	details := &MethodInfo{
+		Name:        "ClientByID",
+		Description: "ClientByID is the DB method used to find a ClientByID",
+	}
 	client := &railway.Client{}
-	err := cs.db.Get(client, "SELECT * FROM clients WHERE ID=$1", ID)
+	query := fmt.Sprintf(`
+		SELECT %s
+		FROM users
+		WHERE id=$1
+`, clientAllColumns)
+	err := cs.db.QueryRow(query, ID).Scan(client.Scan())
 	if err != nil {
-		panic(err)
+		return nil, errors.Wrap(err, details.Name)
 	}
 
-	return client
+	return client, nil
 }
 
 // ClientUpdate updates an existing client account to the database.
-func (cs *ClientService) ClientUpdate(client *railway.Client) *railway.Client {
-	query := `
+func (cs *ClientService) ClientUpdate(client *railway.Client) (*railway.Client, error) {
+	details := &MethodInfo{
+		Name:        "ClientUpdate",
+		Description: "ClientUpdate is the DB method used to ClientUpdate",
+	}
+	tx, err := cs.db.Begin()
+	if err != nil {
+		return nil, errors.Wrap(err, details.Name)
+	}
+	query := fmt.Sprintf(`
 	UPDATE clients 
-	SET name=$1, description=$2, data=$3
+	SET name=$1, 
+		description=$2, 
+		data=$3
 	WHERE id=$4
-	RETURNING id
-`
-	var id int
-	mustGet(cs.db, &id, query, client.Name, client.Description, client.Data, client.ID)
+	RETURNING %s
+`, clientAllColumns)
 
+	updatedClient := &railway.Client{}
+
+	err = tx.QueryRow(query, client.Name, client.Description, client.Data, client.ID).Scan(updatedClient.Scan())
+	if err != nil {
+		return nil, errors.Wrap(err, details.Name)
+	}
+
+	tx.Commit()
 	log.Println("Client updated:", client.Name)
-	return cs.ClientByID(id)
-}
-
-func mustGet(q sqlx.Queryer, dest interface{}, query string, args ...interface{}) {
-	err := sqlx.Get(q, dest, query, args...)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func mustSelect(q sqlx.Queryer, dest interface{}, query string, args ...interface{}) {
-	err := sqlx.Select(q, dest, query, args...)
-	if err != nil {
-		panic(err)
-	}
+	return updatedClient, nil
 }

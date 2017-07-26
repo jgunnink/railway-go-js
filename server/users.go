@@ -7,7 +7,6 @@ import (
 
 	"github.com/blockninja/ninjarouter"
 	"github.com/jgunnink/railway"
-	"github.com/jmoiron/sqlx/types"
 )
 
 // UserController contains the handlers needed for User actions
@@ -57,7 +56,7 @@ func (uc *UserController) UserCreate(w http.ResponseWriter, r *http.Request) {
 		Password:     HashPassword(userCreateRequest.Password),
 		Role:         userCreateRequest.Role,
 		SessionToken: "",
-		Data:         types.JSONText(userCreateRequest.Data),
+		Data:         userCreateRequest.Data,
 		ClientID:     userCreateRequest.ClientID,
 		Disabled:     false,
 		DisabledOn:   nil,
@@ -67,13 +66,23 @@ func (uc *UserController) UserCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check for existing user
-	existingUser := uc.UserService.UserByEmail(userCreateRequest.Email)
+	existingUser, err := uc.UserService.UserByEmail(userCreateRequest.Email)
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 	if existingUser != nil {
 		HandleErrorAndRespond(w, ErrorDuplicateEmail, http.StatusBadRequest)
 		return
 	}
 
-	marshalAndRespond(w, uc.UserService.UserCreate(user))
+	result, err := uc.UserService.UserCreate(user)
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+
+	marshalAndRespond(w, result)
 }
 
 // UserByID will return the user given an ID
@@ -85,11 +94,16 @@ func (uc *UserController) UserByID(w http.ResponseWriter, r *http.Request) {
 		Handler:     "UserByID",
 		Description: "UserByID is the handler for UserByID",
 	}
+	result, err := uc.UserService.UserByID(mustGetID(r, "id"))
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 	log.Println("Run handler:", details.Handler)
-	marshalAndRespond(w, uc.UserService.UserByID(mustGetID(r, "id")))
+	marshalAndRespond(w, result)
 }
 
-// UserAll will return all non-archived sites
+// UserAll will return all non-archived users
 // Method = "GET"
 // Path = "http://localhost:8080/users/all"
 // Description = "Gets all non-archived sites"
@@ -99,18 +113,13 @@ func (uc *UserController) UserAll(w http.ResponseWriter, r *http.Request) {
 		Description: "UserAll is the handler for UserAll",
 	}
 	log.Println("Run handler:", details.Handler)
-	cookie, err := LoadCookie(r, cookieStore)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	user := uc.UserService.UserByID(cookie.UserID)
-	if user.Role == railway.RoleAdmin {
-		marshalAndRespond(w, uc.UserService.UserAll())
-		return
-	}
 
-	marshalAndRespond(w, uc.UserService.UsersByClient(user.ClientID))
+	result, err := uc.UserService.UserAll()
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	marshalAndRespond(w, result)
 }
 
 // UserUpdate will update the user given an ID
@@ -125,11 +134,18 @@ func (uc *UserController) UserUpdate(w http.ResponseWriter, r *http.Request) {
 	log.Println("Run handler:", details.Handler)
 
 	userID := mustGetID(r, "id")
-	user := uc.UserService.UserByID(userID)
+	user, err := uc.UserService.UserByID(userID)
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 
 	mustDecodeJSON(r, user)
 
-	result := uc.UserService.UserUpdate(user)
+	result, err := uc.UserService.UserUpdate(user)
+	if err != nil {
+		return
+	}
 	marshalAndRespond(w, result)
 }
 
@@ -144,7 +160,12 @@ func (uc *UserController) UserArchive(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Run handler:", details.Handler)
 
-	marshalAndRespond(w, uc.UserService.UserArchive(mustGetID(r, "id")))
+	result, err := uc.UserService.UserArchive(mustGetID(r, "id"))
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	marshalAndRespond(w, result)
 }
 
 // UserUnarchive will unarchive then return the user given an ID
@@ -158,7 +179,12 @@ func (uc *UserController) UserUnarchive(w http.ResponseWriter, r *http.Request) 
 	}
 	log.Println("Run handler:", details.Handler)
 
-	marshalAndRespond(w, uc.UserService.UserUnarchive(mustGetID(r, "id")))
+	result, err := uc.UserService.UserUnarchive(mustGetID(r, "id"))
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	marshalAndRespond(w, result)
 }
 
 // UserDisable will disable then return the user given an ID
@@ -172,7 +198,12 @@ func (uc *UserController) UserDisable(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Run handler:", details.Handler)
 
-	marshalAndRespond(w, uc.UserService.UserDisable(mustGetID(r, "id")))
+	result, err := uc.UserService.UserDisable(mustGetID(r, "id"))
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	marshalAndRespond(w, result)
 }
 
 // UserEnable will enable then return the user given an ID
@@ -186,5 +217,10 @@ func (uc *UserController) UserEnable(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Run handler:", details.Handler)
 
-	marshalAndRespond(w, uc.UserService.UserEnable(mustGetID(r, "id")))
+	result, err := uc.UserService.UserEnable(mustGetID(r, "id"))
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	marshalAndRespond(w, result)
 }

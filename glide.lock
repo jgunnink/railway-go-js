@@ -1,5 +1,5 @@
-hash: 63bf1d403111438336a5d90d84613db51443664a1ced8f097818e7384a9dae2b
-updated: 2017-07-04T22:11:01.163447128+08:00
+hash: fc02ee5cc9ff995cde034f3df96498aea848d32ef433390c347d04e1a19b75cc
+updated: 2017-07-26T15:53:39.273096619+08:00
 imports:
 - name: github.com/blockninja/ninjarouter
   version: 95d54002805fa4edde654e6574439543cf8c2f00
@@ -9,21 +9,22 @@ imports:
   version: 667fe4e3466a040b780561fe9b51a83a3753eefc
 - name: github.com/gorilla/sessions
   version: ca9ada44574153444b00d3fd9c8559e4cc95f896
+- name: github.com/jackc/pgx
+  version: c5278b8b573010219404da6b1966d69fc1d02bdc
 - name: github.com/jmoiron/sqlx
   version: f980a91bdc37abef88269b8f122d7de6352102f5
   subpackages:
-  - reflectx
   - types
 - name: github.com/lib/pq
   version: 67c3f2a8884c9b1aac5503c8d42ae4f73a93511c
-  subpackages:
-  - oid
 - name: github.com/manveru/faker
   version: 717f7cf83fb78669bfab612749c2e8ff63d5be11
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/satori/go.uuid
+  version: 5bf94b69c6b68ee1b541973bb8e1144db23a194b
 - name: github.com/Sirupsen/logrus
-  version: 202f25545ea4cf9b191ff7f846df5d87c9382c2b
+  version: a3f95b5c423586578a4e099b11a46c2479628cac
 - name: github.com/vulcand/oxy
   version: 12aa65630360a8ab1827975bd46491a358094cd9
   subpackages:

@@ -7,7 +7,7 @@ var DBname = "railway"
 var DBhost = "localhost"
 
 // DBport is the port of the database to connect to
-var DBport = "5432"
+var DBport uint = 5432
 
 // DBuser is the name of the user to connect with
 var DBuser = "develop"

@@ -52,7 +52,12 @@ func (ac *AuthController) SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userFromDB := ac.UserService.UserByEmail(userFromRequest.Email)
+	userFromDB, err := ac.UserService.UserByEmail(userFromRequest.Email)
+	if err != nil {
+		log.Println(err)
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 
 	//Check a user account is not disabled
 	if userFromDB.Disabled {
@@ -87,7 +92,12 @@ func (ac *AuthController) SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := ac.AuthService.UserSetToken(userFromDB.ID, newCookie.SessionToken)
+	result, err := ac.AuthService.UserSetToken(userFromDB.ID, newCookie.SessionToken)
+	if err != nil {
+		log.Println(err)
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 
 	response, err := json.Marshal(result)
 	if err != nil {
@@ -136,7 +146,12 @@ func (ac *AuthController) Check(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := ac.UserService.UserByID(cookie.UserID)
+	user, err := ac.UserService.UserByID(cookie.UserID)
+	if err != nil {
+		log.Println(err)
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 
 	if user.SessionToken == "" {
 		HandleErrorAndRespond(w, ErrorEmailNotInSession, http.StatusUnauthorized)

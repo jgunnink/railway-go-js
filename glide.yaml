@@ -16,3 +16,5 @@ import:
   - testutils
 - package: github.com/Sirupsen/logrus
   version: ~1.0.0
+- package: github.com/jackc/pgx
+- package: github.com/satori/go.uuid

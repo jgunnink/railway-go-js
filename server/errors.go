@@ -68,6 +68,11 @@ var (
 		Code: 4032,
 		Desc: "Client Admin status required",
 	}
+	// ErrorDatabaseQuery indicates there was a problem with the database
+	ErrorDatabaseQuery = &ErrorCode{
+		Code: 5001,
+		Desc: "Database query did not execute properly.",
+	}
 )
 
 // HandleErrorAndRespond responds with an error response struct in JSON
