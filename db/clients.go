@@ -21,7 +21,7 @@ type ClientService struct {
 const clientAllColumns = `
 		id,
 		name,
-		description
+		description,
 		data,
 		archived,
 		archived_on,
@@ -40,11 +40,12 @@ func (cs *ClientService) ClientCreate(client *railway.Client) (*railway.Client, 
 	VALUES ($1, $2, $3, NULL)
 	RETURNING %s
 `, clientAllColumns)
+	log.Println("CLIENT DB")
 	err := cs.db.QueryRow(query,
 		client.Name,
 		client.Description,
 		client.Data,
-	).Scan(newClient.Scan())
+	).Scan(newClient.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -70,7 +71,7 @@ func (cs *ClientService) ClientAll() (map[int]*railway.Client, error) {
 	result := map[int]*railway.Client{}
 	for rows.Next() {
 		tempClient := &railway.Client{}
-		rows.Scan(tempClient.Scan())
+		rows.Scan(tempClient.Scan()...)
 		result[tempClient.ID] = tempClient
 	}
 	rows.Close()

@@ -66,11 +66,7 @@ func (uc *UserController) UserCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check for existing user
-	existingUser, err := uc.UserService.UserByEmail(userCreateRequest.Email)
-	if err != nil {
-		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
-		return
-	}
+	existingUser, _ := uc.UserService.UserByEmail(userCreateRequest.Email)
 	if existingUser != nil {
 		HandleErrorAndRespond(w, ErrorDuplicateEmail, http.StatusBadRequest)
 		return

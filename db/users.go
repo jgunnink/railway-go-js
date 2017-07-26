@@ -27,6 +27,7 @@ const userAllColumns = `
 		role,
 		session_token,
 		data,
+		client_id,
 		disabled,
 		disabled_on,
 		archived,
@@ -43,8 +44,8 @@ func (us *UserService) UserCreate(user *railway.User) (*railway.User, error) {
 	}
 	newUser := &railway.User{}
 	query := fmt.Sprintf(`
-	INSERT INTO users (first_name, last_name, email, password, session_token, data, role, archived, disabled, archived_on, disabled_on)
-	VALUES ($1, $2, $3, $4, $5, '{}', $6, false, false, NULL, NULL)
+	INSERT INTO users (first_name, last_name, email, password, session_token, data, client_id, role, archived, disabled, archived_on, disabled_on)
+	VALUES ($1, $2, $3, $4, $5, '{}', 0, $6, false, false, NULL, NULL)
 	RETURNING %s
 `, userAllColumns)
 
@@ -55,7 +56,7 @@ func (us *UserService) UserCreate(user *railway.User) (*railway.User, error) {
 		user.Password,
 		user.SessionToken,
 		user.Role,
-	).Scan(newUser.Scan())
+	).Scan(newUser.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -81,7 +82,7 @@ func (us *UserService) UserAll() (map[int]*railway.User, error) {
 	result := map[int]*railway.User{}
 	for rows.Next() {
 		tempUser := &railway.User{}
-		rows.Scan(tempUser.Scan())
+		rows.Scan(tempUser.Scan()...)
 		result[tempUser.ID] = tempUser
 	}
 	rows.Close()
@@ -101,11 +102,14 @@ func (us *UserService) UserArchive(id int) (*railway.User, error) {
 	}
 
 	query := fmt.Sprintf(`
-	UPDATE users SET archived=true, archived_on=$1 WHERE id=$2 
+	UPDATE users 
+	SET archived=true, 
+		archived_on=$1 
+	WHERE id=$2 
 	RETURNING %s
 `, userAllColumns)
 	archivedUser := &railway.User{}
-	err = tx.QueryRow(query, time.Now().UTC().Format(time.RFC3339), id).Scan(archivedUser.Scan())
+	err = tx.QueryRow(query, time.Now().UTC().Format(time.RFC3339), id).Scan(archivedUser.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -130,7 +134,7 @@ func (us *UserService) UserUnarchive(id int) (*railway.User, error) {
 	UPDATE users SET archived=false, archived_on=null WHERE id=$1 
 	RETURNING %s
 `, userAllColumns)
-	err = tx.QueryRow(query, id).Scan(unarchivedUser.Scan())
+	err = tx.QueryRow(query, id).Scan(unarchivedUser.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -159,7 +163,7 @@ func (us *UserService) UserDisable(id int) (*railway.User, error) {
 	RETURNING %s
 `, userAllColumns)
 
-	err = tx.QueryRow(query, time.Now().UTC().Format(time.RFC3339), id).Scan(disabledUser.Scan())
+	err = tx.QueryRow(query, time.Now().UTC().Format(time.RFC3339), id).Scan(disabledUser.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -187,7 +191,7 @@ func (us *UserService) UserEnable(id int) (*railway.User, error) {
 	WHERE id=$1 
 	RETURNING %s
 `, userAllColumns)
-	err = tx.QueryRow(query, id).Scan(enabledUser.Scan())
+	err = tx.QueryRow(query, id).Scan(enabledUser.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -210,7 +214,7 @@ func (us *UserService) UserByEmail(email string) (*railway.User, error) {
 		FROM users
 		WHERE email=$1
 `, userAllColumns)
-	err := us.db.QueryRow(query, email).Scan(user.Scan())
+	err := us.db.QueryRow(query, email).Scan(user.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 		// We return nil here since no returned rows are a good thing!
@@ -231,7 +235,7 @@ func (us *UserService) UserByID(id int) (*railway.User, error) {
 		FROM users
 		WHERE id=$1
 `, userAllColumns)
-	err := us.db.QueryRow(query, id).Scan(user.Scan())
+	err := us.db.QueryRow(query, id).Scan(user.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -257,7 +261,7 @@ func (us *UserService) UserSetToken(id int, sessionToken string) (*railway.User,
 	WHERE id=$2
 	RETURNING %s
 `, userAllColumns)
-	err = tx.QueryRow(query, sessionToken, id).Scan(updatedUser.Scan())
+	err = tx.QueryRow(query, sessionToken, id).Scan(updatedUser.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -288,7 +292,12 @@ func (us *UserService) UserUpdate(user *railway.User) (*railway.User, error) {
 `, userAllColumns)
 
 	updatedUser := &railway.User{}
-	err = tx.QueryRow(query, user.FirstName, user.LastName, user.Email, user.Password, user.ID).Scan(updatedUser.Scan())
+	err = tx.QueryRow(query,
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.Password,
+		user.ID).Scan(updatedUser.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -342,7 +351,7 @@ func (us *UserService) UserSetPassword(id int, hashedPassword string) (*railway.
 	RETURNING %s
 `, userAllColumns)
 
-	err = tx.QueryRow(query, hashedPassword, id).Scan(updatedUser.Scan())
+	err = tx.QueryRow(query, hashedPassword, id).Scan(updatedUser.Scan()...)
 	if err != nil {
 		return nil, errors.Wrap(err, details.Name)
 	}
@@ -369,7 +378,7 @@ func (us *UserService) UsersByClient(clientID int) (map[int]*railway.User, error
 	result := map[int]*railway.User{}
 	for rows.Next() {
 		tempUser := &railway.User{}
-		rows.Scan(tempUser.Scan())
+		rows.Scan(tempUser.Scan()...)
 		result[tempUser.ID] = tempUser
 	}
 	rows.Close()

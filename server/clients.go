@@ -29,7 +29,7 @@ func NewClientController(mw railway.MiddlewareService, cs railway.ClientService,
 	result.Mux.GET("/clients/:id/users/all", mw.AdminChain(result.UserAll))
 	result.Mux.POST("/clients/:id/update", mw.AdminChain(result.ClientUpdate))
 	result.Mux.POST("/clients/:id/archive", mw.AdminChain(result.ClientArchive))
-	result.Mux.POST("/clients/create", mw.InsecureChain(result.ClientCreate))
+	result.Mux.POST("/clients/create", mw.AdminChain(result.ClientCreate))
 
 	return result
 }
