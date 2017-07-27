@@ -9,7 +9,6 @@ import (
 	"github.com/blockninja/ninjarouter"
 	"github.com/jgunnink/railway"
 	"github.com/jgunnink/railway/helpers"
-	"github.com/pkg/errors"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
@@ -266,13 +265,7 @@ your password. You can do that by clicking the following link:</p>
 	request := sendgrid.GetRequest(sendgridAPIKey, "/v3/mail/send", "https://api.sendgrid.com")
 	request.Method = "POST"
 	request.Body = mail.GetRequestBody(m)
-	_, err = sendgrid.API(request)
-	if err != nil {
-		log.Println(err)
-		log.Println(errors.Wrap(err, "Could not send password reset email"))
-	} else {
-		log.Println("Password reset email sent to", user.Email)
-	}
+	go sendgrid.API(request)
 }
 
 // UserPasswordReset will reset a password given a token
