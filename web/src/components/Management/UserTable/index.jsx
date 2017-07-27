@@ -63,11 +63,11 @@ const UserTable = props => {
 										<DisableUser userID={record.key} {...props} />
 									</span>
 								</Tooltip>
-								{/* <Tooltip placement="top" title={<span>Send password reset email</span>}>
-										<span>
-											<ResetUserPassword userID={record.key} {...props} />
-										</span>
-									</Tooltip> */}
+								<Tooltip placement="top" title={<span>Send password reset email</span>}>
+									<span>
+										<ResetUserPassword userID={record.key} {...props} />
+									</span>
+								</Tooltip>
 								<Tooltip placement="top" title={<span>Archive this user</span>}>
 									<span>
 										<ArchiveUser userID={record.key} {...props} />
@@ -147,6 +147,28 @@ const EnableUser = ({ users, userID, enableUser, record }) => {
 		})
 	}
 	return <Button shape="circle" icon="unlock" onClick={showConfirm} />
+}
+
+const ResetUserPassword = props => {
+	const { users, userID, sendPasswordReset } = props
+	const user = users.get("users").get(userID.toString())
+	let disabled = false
+	if (user.get("role") === "airscope") {
+		disabled = true
+	}
+	if (disabled) return <div />
+	function showConfirm() {
+		confirm({
+			title: "Send password reset email?",
+			content: `The user will receive password reset instructions in an
+			email, explaining how to set a new password.`,
+			onOk() {
+				sendPasswordReset(user)
+			},
+			onCancel() {}
+		})
+	}
+	return <Button shape="circle" icon="key" onClick={showConfirm} />
 }
 
 export default UserTable

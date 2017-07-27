@@ -7,6 +7,7 @@ import ClientUpdateForm from "railway/containers/Clients/Form/Update"
 import ClientCreateForm from "railway/containers/Clients/Form/Create"
 import UserEditForm from "railway/containers/Users/Update"
 import LoginForm from "railway/containers/Forms/LoginForm"
+import PasswordResetForm from "railway/containers/Forms/PasswordReset"
 import Register from "railway/containers/Forms/Register"
 import HorizontalMenuContainer from "railway/containers/Menus/Horizontal"
 import { Route } from "react-router-dom"
@@ -16,12 +17,11 @@ import Home from "railway/components/Home"
 const AppLayout = props => {
 	const { user, loggedIn } = props
 
-	// TODO
 	// Render the password reset form if url is accessed.
 	// If route doesn't start with prefix, then render the rest of the app.
-	// if (props.location.pathname.startsWith("/users/passwordreset/")) {
-	// 	return <Route path="/users/passwordreset/:uuid" component={PasswordResetForm} />
-	// }
+	if (props.location.pathname.startsWith("/users/passwordreset/")) {
+		return <Route path="/users/passwordreset/:uuid" component={PasswordResetForm} />
+	}
 	if (!loggedIn) {
 		return (
 			<Layout style={{ padding: 70, height: "100vh" }}>
