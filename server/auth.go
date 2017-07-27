@@ -78,7 +78,7 @@ func (ac *AuthController) SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newCookie := &railway.Cookie{
-		SessionToken: NewSessionToken(),
+		SessionToken: userFromDB.SessionToken,
 		Role:         string(userFromDB.Role),
 		UserID:       userFromDB.ID,
 	}
@@ -141,7 +141,7 @@ func (ac *AuthController) Check(w http.ResponseWriter, r *http.Request) {
 	log.Println("HANDLER: " + details.Handler)
 	cookie, err := LoadCookie(r, cookieStore)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusUnauthorized)
 		log.Println(err)
 		return
 	}
@@ -150,11 +150,6 @@ func (ac *AuthController) Check(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
-		return
-	}
-
-	if user.SessionToken == "" {
-		HandleErrorAndRespond(w, ErrorEmailNotInSession, http.StatusUnauthorized)
 		return
 	}
 

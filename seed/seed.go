@@ -54,14 +54,15 @@ func (s *Seeder) Seed() error {
 	// Create the admin
 	email := "admin@example.com"
 	s.dbclient.UserService().UserCreate(&railway.User{
-		FirstName: s.faker.FirstName(),
-		LastName:  s.faker.LastName(),
-		Email:     email,
-		Password:  helpers.HashPassword("password"),
-		Role:      railway.RoleAdmin,
-		Archived:  false,
-		Disabled:  false,
-		ClientID:  orangeClient.ID,
+		FirstName:    s.faker.FirstName(),
+		LastName:     s.faker.LastName(),
+		SessionToken: helpers.NewSessionToken(),
+		Email:        email,
+		Password:     helpers.HashPassword("password"),
+		Role:         railway.RoleAdmin,
+		Archived:     false,
+		Disabled:     false,
+		ClientID:     orangeClient.ID,
 		Data: &railway.UserData{
 			Avatar: avatar.Avatar(email),
 		},

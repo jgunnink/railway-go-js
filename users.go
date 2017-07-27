@@ -31,10 +31,10 @@ type User struct {
 	SessionToken       string     `json:"sessionToken" db:"session_token"`
 	Data               *UserData  `json:"data" db:"data"`
 	ClientID           int        `json:"client_id" db:"client_id"`
-	Archived           bool       `json:"archived" db:"archived"`
-	ArchivedOn         *time.Time `json:"archived_on" db:"archived_on"`
 	Disabled           bool       `json:"disabled" db:"disabled"`
 	DisabledOn         *time.Time `json:"disabled_on" db:"disabled_on"`
+	Archived           bool       `json:"archived" db:"archived"`
+	ArchivedOn         *time.Time `json:"archived_on" db:"archived_on"`
 	CreatedAt          time.Time  `json:"created_at" db:"created_at"`
 	PasswordResetToken string     `json:"password_reset_token" db:"password_reset_token"`
 }
@@ -51,10 +51,10 @@ func (u *User) Scan() []interface{} {
 		&u.SessionToken,
 		&u.Data,
 		&u.ClientID,
-		&u.Archived,
-		&u.ArchivedOn,
 		&u.Disabled,
 		&u.DisabledOn,
+		&u.Archived,
+		&u.ArchivedOn,
 		&u.CreatedAt,
 		&u.PasswordResetToken,
 	}

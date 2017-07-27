@@ -1,4 +1,4 @@
-import { get, post, del } from "railway/utils/agent"
+import { get, post } from "railway/utils/agent"
 import { notification } from "antd"
 import history from "railway/history"
 
@@ -43,18 +43,27 @@ export const loginError = err => {
 	return { type: AUTH_FAIL }
 }
 
+// From https://stackoverflow.com/questions/2144386/how-to-delete-a-cookie
+const create_cookie = (name, value, days) => {
+	var expires = ""
+	if (days) {
+		var date = new Date()
+		date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
+		expires = "; expires=" + date.toGMTString()
+	}
+
+	document.cookie = name + "=" + value + expires + "; path=/"
+}
+
 export function logout() {
-	return dispatch => {
-		dispatch(sendingRequest(true))
-		del("/auth/sign_out").then(res => {
-			dispatch(sendingRequest(false))
-			dispatch(receiveLogout())
-			history.push("/")
-			notification["success"]({
-				message: "Logged out successfully.",
-				duration: 3
-			})
+	return (dispatch, getState) => {
+		create_cookie("_railway_session", "", -10)
+		dispatch(receiveLogout())
+		notification["success"]({
+			message: "You have successfully logged out.",
+			duration: 3
 		})
+		dispatch(checkAuthentication())
 	}
 }
 
@@ -88,6 +97,7 @@ export function checkAuthentication(cb) {
 			.then(res => {
 				dispatch(checkingAuthentication())
 				dispatch(sendingRequest(false))
+				dispatch(setUser(res.data))
 				cb()
 			})
 			.catch(err => {

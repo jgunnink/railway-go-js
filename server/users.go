@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/blockninja/monocular"
 	"github.com/blockninja/ninjarouter"
 	"github.com/jgunnink/railway"
 	"github.com/jgunnink/railway/helpers"
@@ -61,7 +60,7 @@ func (uc *UserController) UserCreate(w http.ResponseWriter, r *http.Request) {
 		Email:        userCreateRequest.Email,
 		Password:     HashPassword(userCreateRequest.Password),
 		Role:         userCreateRequest.Role,
-		SessionToken: "",
+		SessionToken: helpers.NewSessionToken(),
 		Data:         userCreateRequest.Data,
 		ClientID:     userCreateRequest.ClientID,
 		Disabled:     false,
@@ -279,7 +278,7 @@ func (uc *UserController) UserPasswordReset(w http.ResponseWriter, r *http.Reque
 	}
 	log.Println("Run handler:", details.Handler)
 
-	request := &monocular.UserPasswordReset{}
+	request := &railway.UserPasswordReset{}
 	mustDecodeJSON(r, request)
 
 	user, err := uc.UserService.UserByEmail(request.Email)

@@ -48,6 +48,7 @@ const UserTable = props => {
 			key: "action",
 			render: (text, record) => {
 				const user = props.users.get("users").get(record.key.toString())
+				console.log(user.toJS().disabled)
 				if (user.toJS().disabled) return <EnableUser userID={record.key} {...props} />
 				else
 					return (
@@ -57,23 +58,21 @@ const UserTable = props => {
 									<EditUser userID={record.key} {...props} />
 								</span>
 							</Tooltip>
-							<span>
-								<Tooltip placement="top" title={<span>Disable this user</span>}>
-									<span>
-										<DisableUser userID={record.key} {...props} />
-									</span>
-								</Tooltip>
-								<Tooltip placement="top" title={<span>Send password reset email</span>}>
-									<span>
-										<ResetUserPassword userID={record.key} {...props} />
-									</span>
-								</Tooltip>
-								<Tooltip placement="top" title={<span>Archive this user</span>}>
-									<span>
-										<ArchiveUser userID={record.key} {...props} />
-									</span>
-								</Tooltip>
-							</span>
+							<Tooltip placement="top" title={<span>Disable this user</span>}>
+								<span>
+									<DisableUser userID={record.key} {...props} />
+								</span>
+							</Tooltip>
+							<Tooltip placement="top" title={<span>Send password reset email</span>}>
+								<span>
+									<ResetUserPassword userID={record.key} {...props} />
+								</span>
+							</Tooltip>
+							<Tooltip placement="top" title={<span>Archive this user</span>}>
+								<span>
+									<ArchiveUser userID={record.key} {...props} />
+								</span>
+							</Tooltip>
 						</span>
 					)
 			}
@@ -90,7 +89,7 @@ const UserTable = props => {
 
 const ArchiveUser = ({ archiveUser, currentUser, record, users, userID }) => {
 	const user = users.get("users").get(userID.toString())
-	if (currentUser.id === user.toJS().id) {
+	if (currentUser.user_id === user.toJS().id) {
 		return <div />
 	}
 
@@ -109,7 +108,7 @@ const ArchiveUser = ({ archiveUser, currentUser, record, users, userID }) => {
 
 const DisableUser = ({ currentUser, disableUser, record, users, userID }) => {
 	const user = users.get("users").get(userID.toString())
-	if (currentUser.id === user.toJS().id) {
+	if (currentUser.user_id === user.toJS().id) {
 		return <div />
 	}
 
@@ -149,14 +148,10 @@ const EnableUser = ({ users, userID, enableUser, record }) => {
 	return <Button shape="circle" icon="unlock" onClick={showConfirm} />
 }
 
-const ResetUserPassword = props => {
-	const { users, userID, sendPasswordReset } = props
+const ResetUserPassword = ({ currentUser, users, userID, sendPasswordReset }) => {
 	const user = users.get("users").get(userID.toString())
-	let disabled = false
-	if (user.get("role") === "airscope") {
-		disabled = true
-	}
-	if (disabled) return <div />
+	if (currentUser.user_id === user.toJS().id) return <div />
+
 	function showConfirm() {
 		confirm({
 			title: "Send password reset email?",
