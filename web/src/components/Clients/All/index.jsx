@@ -6,21 +6,15 @@ import "railway/components/Clients/All/style.css"
 
 const confirm = antModal.confirm
 
-const Clients = (props) => {
+const Clients = props => {
 	const role = props.role
-	const manageClients = ((role === "manager") || (role === "staff") || (role === "admin"))
+	const manageClients = role === "manager" || role === "staff" || role === "admin"
 	const loaded = props.clients.get("loaded")
 	if (!loaded) {
 		return (
 			<Row type="flex" justify="start" align="top">
 				<Col span={6}>
-					<Card
-						loading
-						bordered={true}
-						className="clients-card"
-						bodyStyle={{ padding: 0 }}
-					>
-					</Card>
+					<Card loading bordered={true} className="clients-card" bodyStyle={{ padding: 0 }} />
 				</Col>
 			</Row>
 		)
@@ -29,30 +23,32 @@ const Clients = (props) => {
 	return (
 		<div style={{ background: "#ECECEC" }}>
 			<Row type="flex" justify="start" align="top">
-				{clients.map((client, i) => {
+				{clients.valueSeq().map(client => {
+					const itemKey = client.get("id")
 					return (
-						<Col span={6}>
-							<Card
-								key={client.get("id")}
-								bordered={true}
-								className="clients-card"
-								bodyStyle={{ padding: 0 }}
-							>
+						<Col span={6} key={itemKey}>
+							<Card bordered={true} className="clients-card" bodyStyle={{ padding: 0 }}>
 								<img
 									className="clients-card-body-image"
 									src={client.get("data").get("avatar")}
 									alt="Company logo"
-									onClick={() => { history.push(`/client/${client.get("id")}`) }}
+									onClick={() => {
+										history.push(`/client/${itemKey}`)
+									}}
 								/>
 								<div
 									className="clients-card-body-text"
-									onClick={() => { history.push(`/client/${client.get("id")}`) }}
-								>
-									<h3>{client.get("name")}</h3>
-									<p>{client.get("description")}</p>
+									onClick={() => {
+										history.push(`/client/${itemKey}`)
+									}}>
+									<h3>
+										{client.get("name")}
+									</h3>
+									<p>
+										{client.get("description")}
+									</p>
 								</div>
-								{
-									manageClients &&
+								{manageClients &&
 									<div>
 										<p style={{ textAlign: "center" }}>
 											<EditLink client={client} />
@@ -60,8 +56,7 @@ const Clients = (props) => {
 											<ArchiveLink client={client} {...props} />
 										</p>
 										<br />
-									</div>
-								}
+									</div>}
 							</Card>
 						</Col>
 					)
@@ -75,17 +70,19 @@ const Clients = (props) => {
 	)
 }
 
-
 const ArchiveLink = ({ client, archiveClient }) => {
 	function showConfirm() {
 		confirm({
 			title: "Are you sure you want to archive this client?",
-			content: "This will archive the client removing them from view. This cannot be undone. Please be certain.",
-			onOk() { archiveClient(client) },
-			onCancel() { },
+			content:
+				"This will archive the client removing them from view. This cannot be undone. Please be certain.",
+			onOk() {
+				archiveClient(client)
+			},
+			onCancel() {}
 		})
 	}
-	return (<Button shape="circle" type="danger" icon="delete" onClick={showConfirm} />)
+	return <Button shape="circle" type="danger" icon="delete" onClick={showConfirm} />
 }
 
 const EditLink = ({ client }) => {
@@ -104,7 +101,7 @@ const CreateLink = () => {
 	)
 }
 
-const ClientTable = (props) => {
+const ClientTable = props => {
 	return (
 		<div>
 			<Clients {...props} />
@@ -113,4 +110,3 @@ const ClientTable = (props) => {
 }
 
 export default ClientTable
-
