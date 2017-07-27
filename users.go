@@ -82,12 +82,19 @@ type UserUpdateRequest struct {
 	ClientID  int       `json:"client_id" db:"client_id"`
 }
 
+// UserPasswordReset is used by the client to reset a users password
+type UserPasswordReset struct {
+	Email              string `json:"email"`
+	Password           string `json:"password"`
+	PasswordResetToken string `json:"password_reset_token"`
+}
+
 // UserData is the JSON data for Users
 type UserData struct {
 	Avatar string `json:"avatar" db:"avatar"`
 }
 
-// UserService is the collection of methods available for users
+// UserService is the collection of database methods available for users
 type UserService interface {
 	UserAll() (map[int]*User, error)
 	UserArchive(id int) (*User, error)
@@ -99,4 +106,6 @@ type UserService interface {
 	UserByID(id int) (*User, error)
 	UserByEmail(email string) (*User, error)
 	UsersByClient(clientID int) (map[int]*User, error)
+	UserSetResetToken(id int) (string, error)
+	UserSetPassword(id int, password string) (*User, error)
 }

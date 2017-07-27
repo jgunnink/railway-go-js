@@ -18,6 +18,12 @@ var (
 		Code: 4001,
 		Desc: "That email already exists in the system",
 	}
+	// ErrorPasswordResetTokenMismatch will result from a mismatch of password
+	// reset tokens
+	ErrorPasswordResetTokenMismatch = &ErrorCode{
+		Code: 4010,
+		Desc: "Password reset token mismatch",
+	}
 	// ErrorPasswordMismatch will result from a mismatch of passwords
 	ErrorPasswordMismatch = &ErrorCode{
 		Code: 4011,

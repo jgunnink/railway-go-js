@@ -40,7 +40,6 @@ func (cs *ClientService) ClientCreate(client *railway.Client) (*railway.Client, 
 	VALUES ($1, $2, $3, NULL)
 	RETURNING %s
 `, clientAllColumns)
-	log.Println("CLIENT DB")
 	err := cs.db.QueryRow(query,
 		client.Name,
 		client.Description,

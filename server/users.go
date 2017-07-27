@@ -5,8 +5,13 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/blockninja/monocular"
 	"github.com/blockninja/ninjarouter"
 	"github.com/jgunnink/railway"
+	"github.com/jgunnink/railway/helpers"
+	"github.com/pkg/errors"
+	"github.com/sendgrid/sendgrid-go"
+	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
 // UserController contains the handlers needed for User actions
@@ -31,6 +36,8 @@ func NewUserController(mw railway.MiddlewareService, us railway.UserService) *Us
 	result.Mux.POST("/users/:id/unarchive", mw.AdminChain(result.UserUnarchive))
 	result.Mux.POST("/users/:id/disable", mw.AdminChain(result.UserDisable))
 	result.Mux.POST("/users/:id/enable", mw.AdminChain(result.UserEnable))
+	result.Mux.POST("/users/:id/passwordreset", mw.AdminChain(result.UserSetResetToken))
+	result.Mux.POST("/users/passwordreset", mw.InsecureChain(result.UserPasswordReset))
 
 	return result
 }
@@ -214,6 +221,88 @@ func (uc *UserController) UserEnable(w http.ResponseWriter, r *http.Request) {
 	log.Println("Run handler:", details.Handler)
 
 	result, err := uc.UserService.UserEnable(mustGetID(r, "id"))
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	marshalAndRespond(w, result)
+}
+
+// UserSetResetToken will send a password reset email to the user given an ID
+// Method = "POST"
+// Path = "http://localhost:8080/users/:id/passwordreset"
+// Description = "Sends a password reset email a user based on an ID"
+func (uc *UserController) UserSetResetToken(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserSetResetToken",
+		Description: "UserSetResetToken is the handler for UserSetResetToken",
+	}
+	log.Println("Run handler:", details.Handler)
+
+	user, err := uc.UserService.UserByID(mustGetID(r, "id"))
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	token, err := uc.UserService.UserSetResetToken(user.ID)
+	host := r.Host // Eg: localhost:8080
+	resetLink := "https://" + host + "/users/passwordreset/" + token
+
+	log.Println("Sending password reset email to", user.Email)
+	from := mail.NewEmail("Railway Admin", "noreply@railwayapp.com")
+	subject := "Reset your Railway password"
+	to := mail.NewEmail(user.FirstName+user.LastName, user.Email)
+	content := mail.NewContent("text/html", `
+
+<p>Hello!</p>
+
+<p>You or your administrator has sent through a request to reset
+your password. You can do that by clicking the following link:</p>
+	
+<p>`+resetLink+`</p>
+
+<p>Regards from Railway admin team</p>`)
+	m := mail.NewV3MailInit(from, subject, to, content)
+	request := sendgrid.GetRequest(sendgridAPIKey, "/v3/mail/send", "https://api.sendgrid.com")
+	request.Method = "POST"
+	request.Body = mail.GetRequestBody(m)
+	_, err = sendgrid.API(request)
+	if err != nil {
+		log.Println(err)
+		log.Println(errors.Wrap(err, "Could not send password reset email"))
+	} else {
+		log.Println("Password reset email sent to", user.Email)
+	}
+}
+
+// UserPasswordReset will reset a password given a token
+// Method = "POST"
+// Path = "http://localhost:8080/users/passwordreset/"
+// Description = "Resets a users password given a token"
+func (uc *UserController) UserPasswordReset(w http.ResponseWriter, r *http.Request) {
+	details := &funcDetails{
+		Handler:     "UserPasswordReset",
+		Description: "UserPasswordReset is the handler for UserPasswordReset",
+	}
+	log.Println("Run handler:", details.Handler)
+
+	request := &monocular.UserPasswordReset{}
+	mustDecodeJSON(r, request)
+
+	user, err := uc.UserService.UserByEmail(request.Email)
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	existingToken := user.PasswordResetToken
+	hashedPassword := helpers.HashPassword(request.Password)
+
+	if existingToken != request.PasswordResetToken {
+		HandleErrorAndRespond(w, ErrorPasswordResetTokenMismatch, http.StatusUnauthorized)
+		return
+	}
+
+	result, err := uc.UserService.UserSetPassword(user.ID, hashedPassword)
 	if err != nil {
 		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
 		return
