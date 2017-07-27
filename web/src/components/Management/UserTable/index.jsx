@@ -1,12 +1,11 @@
 import React from "react"
-import { Table, Button, Modal as antModal } from "antd"
+import { Button, Modal, Table, Tooltip } from "antd"
 import { userFullName, capitalizeFirstLetter } from "railway/helpers/strings"
 import { Link } from "react-router-dom"
 
-const confirm = antModal.confirm
+const confirm = Modal.confirm
 
 const UserTable = props => {
-	const currentUser = props.currentUser
 	let userMap
 	let userData = []
 	try {
@@ -53,15 +52,28 @@ const UserTable = props => {
 				else
 					return (
 						<span>
-							{/*Hover text would do well here to illustrate what the buttons do?*/}
-							<EditUser userID={record.key} {...props} />
-							{currentUser.id !== record.key &&
+							<Tooltip placement="top" title={<span>Edit User</span>}>
 								<span>
-									<span className="ant-divider" />
-									<DisableUser userID={record.key} {...props} />
-									<span className="ant-divider" />
-									<ArchiveUser userID={record.key} {...props} />
-								</span>}
+									<EditUser userID={record.key} {...props} />
+								</span>
+							</Tooltip>
+							<span>
+								<Tooltip placement="top" title={<span>Disable this user</span>}>
+									<span>
+										<DisableUser userID={record.key} {...props} />
+									</span>
+								</Tooltip>
+								<Tooltip placement="top" title={<span>Send password reset email</span>}>
+									<span>
+										<ResetUserPassword userID={record.key} {...props} />
+									</span>
+								</Tooltip>
+								<Tooltip placement="top" title={<span>Archive this user</span>}>
+									<span>
+										<ArchiveUser userID={record.key} {...props} />
+									</span>
+								</Tooltip>
+							</span>
 						</span>
 					)
 			}
@@ -76,8 +88,12 @@ const UserTable = props => {
 	)
 }
 
-const ArchiveUser = ({ users, userID, archiveUser, record }) => {
+const ArchiveUser = ({ archiveUser, currentUser, record, users, userID }) => {
 	const user = users.get("users").get(userID.toString())
+	if (currentUser.id === user.toJS().id) {
+		return <div />
+	}
+
 	function showConfirm() {
 		confirm({
 			title: "Are you sure you want to archive this user?",
@@ -91,8 +107,12 @@ const ArchiveUser = ({ users, userID, archiveUser, record }) => {
 	return <Button shape="circle" type="danger" icon="delete" onClick={showConfirm} />
 }
 
-const DisableUser = ({ users, userID, disableUser, record }) => {
+const DisableUser = ({ currentUser, disableUser, record, users, userID }) => {
 	const user = users.get("users").get(userID.toString())
+	if (currentUser.id === user.toJS().id) {
+		return <div />
+	}
+
 	function showConfirm() {
 		confirm({
 			title: "Are you sure you want to disable this user?",
@@ -127,6 +147,28 @@ const EnableUser = ({ users, userID, enableUser, record }) => {
 		})
 	}
 	return <Button shape="circle" icon="unlock" onClick={showConfirm} />
+}
+
+const ResetUserPassword = props => {
+	const { users, userID, sendPasswordReset } = props
+	const user = users.get("users").get(userID.toString())
+	let disabled = false
+	if (user.get("role") === "airscope") {
+		disabled = true
+	}
+	if (disabled) return <div />
+	function showConfirm() {
+		confirm({
+			title: "Send password reset email?",
+			content: `The user will receive password reset instructions in an
+			email, explaining how to set a new password.`,
+			onOk() {
+				sendPasswordReset(user)
+			},
+			onCancel() {}
+		})
+	}
+	return <Button shape="circle" icon="key" onClick={showConfirm} />
 }
 
 export default UserTable

@@ -48,7 +48,12 @@ func (mw *Middleware) withClientAdmin(next http.Handler) http.Handler {
 			return
 		}
 
-		userFromDB := mw.UserService.UserByID(cookie.UserID)
+		userFromDB, err := mw.UserService.UserByID(cookie.UserID)
+		if err != nil {
+			log.Println(err)
+			HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+			return
+		}
 		isAdmin := userFromDB.Role != railway.RoleAdmin
 		isManager := userFromDB.Role != railway.RoleManager
 		if !isAdmin || !isManager {
@@ -69,7 +74,12 @@ func (mw *Middleware) withAdmin(next http.Handler) http.Handler {
 			return
 		}
 
-		userFromDB := mw.UserService.UserByID(cookie.UserID)
+		userFromDB, err := mw.UserService.UserByID(cookie.UserID)
+		if err != nil {
+			log.Println(err)
+			HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+			return
+		}
 
 		if userFromDB.Role != railway.RoleAdmin {
 			HandleErrorAndRespond(w, ErrorAdminStatusRequired, http.StatusForbidden)
@@ -115,7 +125,12 @@ func (mw *Middleware) withToken(next http.Handler) http.Handler {
 			return
 		}
 
-		userFromDB := mw.UserService.UserByID(cookie.UserID)
+		userFromDB, err := mw.UserService.UserByID(cookie.UserID)
+		if err != nil {
+			log.Println(err)
+			HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+			return
+		}
 
 		if userFromDB.SessionToken != cookie.SessionToken {
 			HandleErrorAndRespond(w, ErrorEmailTokenMismatch, http.StatusUnauthorized)

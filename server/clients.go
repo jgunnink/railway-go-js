@@ -45,8 +45,13 @@ func (cc *ClientController) ClientByID(w http.ResponseWriter, r *http.Request) {
 		Handler:     "ClientByID",
 		Description: "ClientByID is the handler for ClientByID",
 	}
+	result, err := cc.ClientService.ClientByID(mustGetID(r, "id"))
+	if err != nil {
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 	log.Println("Run handler:", details.Handler)
-	marshalAndRespond(w, cc.ClientService.ClientByID(mustGetID(r, "id")))
+	marshalAndRespond(w, result)
 }
 
 // UserAll will return all non-archived users for a client
@@ -59,8 +64,13 @@ func (cc *ClientController) UserAll(w http.ResponseWriter, r *http.Request) {
 		Description: "UserAll is the handler for UserAll",
 	}
 	log.Println("Run handler:", details.Handler)
-
-	marshalAndRespond(w, cc.UserService.UsersByClient(mustGetID(r, "id")))
+	result, err := cc.UserService.UsersByClient(mustGetID(r, "id"))
+	if err != nil {
+		log.Println(err)
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	marshalAndRespond(w, result)
 }
 
 // ClientAll will return all non-archived clients
@@ -75,7 +85,13 @@ func (cc *ClientController) ClientAll(w http.ResponseWriter, r *http.Request) {
 		Description: "ClientAll is the handler for ClientAll",
 	}
 	log.Println("Run handler:", details.Handler)
-	marshalAndRespond(w, cc.ClientService.ClientAll())
+	result, err := cc.ClientService.ClientAll()
+	if err != nil {
+		log.Println(err)
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	marshalAndRespond(w, result)
 
 }
 
@@ -93,11 +109,21 @@ func (cc *ClientController) ClientUpdate(w http.ResponseWriter, r *http.Request)
 	log.Println("Run handler:", details.Handler)
 
 	clientID := mustGetID(r, "id")
-	client := cc.ClientService.ClientByID(clientID)
+	client, err := cc.ClientService.ClientByID(clientID)
+	if err != nil {
+		log.Println(err)
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 
 	mustDecodeJSON(r, client)
 
-	result := cc.ClientService.ClientUpdate(client)
+	result, err := cc.ClientService.ClientUpdate(client)
+	if err != nil {
+		log.Println(err)
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 	marshalAndRespond(w, result)
 }
 
@@ -113,7 +139,13 @@ func (cc *ClientController) ClientArchive(w http.ResponseWriter, r *http.Request
 		Description: "ClientArchive is the handler for ClientArchive",
 	}
 	log.Println("Run handler:", details.Handler)
-	marshalAndRespond(w, cc.ClientService.ClientArchive(mustGetID(r, "id")))
+	result, err := cc.ClientService.ClientArchive(mustGetID(r, "id"))
+	if err != nil {
+		log.Println(err)
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
+	marshalAndRespond(w, result)
 }
 
 // ClientCreate will create a new client
@@ -139,6 +171,11 @@ func (cc *ClientController) ClientCreate(w http.ResponseWriter, r *http.Request)
 		ArchivedOn:  nil,
 		CreatedAt:   time.Now(),
 	}
-	resp := cc.ClientService.ClientCreate(client)
+	resp, err := cc.ClientService.ClientCreate(client)
+	if err != nil {
+		log.Println(err)
+		HandleErrorAndRespond(w, ErrorDatabaseQuery, http.StatusInternalServerError)
+		return
+	}
 	marshalAndRespond(w, resp)
 }

@@ -1,47 +1,63 @@
 package db
 
 import (
-	"fmt"
 	"log"
+	"time"
 
+	"github.com/jackc/pgx"
 	"github.com/jgunnink/railway"
-	"github.com/jmoiron/sqlx"
-
-	// Postgres driver
-	_ "github.com/lib/pq"
+	"github.com/pkg/errors"
 )
+
+// MethodInfo is used for logging metadata of DB methods
+type MethodInfo struct {
+	Name        string
+	Description string
+}
 
 // DB contains the database connection
 type DB struct {
-	client        *sqlx.DB
+	client        *pgx.ConnPool
 	authService   *AuthService
 	clientService *ClientService
 	userService   *UserService
 }
 
 // New returns a new instance of DB
-func New(dbname, username, password, host, port string) *DB {
+func New(dbname, username, password, host string, port uint) *DB {
+	connConfig := &pgx.ConnConfig{
+		Database:  dbname,
+		Host:      host,
+		Port:      uint16(port),
+		User:      username,
+		Password:  password,
+		TLSConfig: nil,
+	}
 
-	connString := fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%s sslmode=disable", dbname, username, password, host, port)
-	db, err := sqlx.Connect("postgres", connString)
+	connPool, err := pgx.NewConnPool(pgx.ConnPoolConfig{
+		ConnConfig:     *connConfig,
+		AfterConnect:   nil,
+		MaxConnections: 20,
+		AcquireTimeout: 30 * time.Second,
+	})
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	as := &AuthService{
-		db: db,
+		db: connPool,
 	}
 
 	cs := &ClientService{
-		db: db,
+		db: connPool,
 	}
 
 	us := &UserService{
-		db: db,
+		db: connPool,
 	}
 
 	return &DB{
-		client:        db,
+		client:        connPool,
 		authService:   as,
 		clientService: cs,
 		userService:   us,
@@ -49,8 +65,8 @@ func New(dbname, username, password, host, port string) *DB {
 }
 
 // Close will close the connection to the DB
-func (db *DB) Close() error {
-	return db.client.Close()
+func (db *DB) Close() {
+	db.client.Close()
 }
 
 // AuthService returns the dial service associated with the client.
@@ -71,7 +87,10 @@ func (db *DB) UserService() railway.UserService {
 // Migrate will begin the database migration
 func (db *DB) Migrate() {
 	log.Println("Begin DB migration")
-	db.client.MustExec(migrateSQL)
+	_, err := db.client.Exec(migrateSQL)
+	if err != nil {
+		panic(errors.Wrap(err, "Could not migrate"))
+	}
 }
 
 // Drop will drop the entire DB

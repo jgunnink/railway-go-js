@@ -18,6 +18,12 @@ var (
 		Code: 4001,
 		Desc: "That email already exists in the system",
 	}
+	// ErrorPasswordResetTokenMismatch will result from a mismatch of password
+	// reset tokens
+	ErrorPasswordResetTokenMismatch = &ErrorCode{
+		Code: 4010,
+		Desc: "Password reset token mismatch",
+	}
 	// ErrorPasswordMismatch will result from a mismatch of passwords
 	ErrorPasswordMismatch = &ErrorCode{
 		Code: 4011,
@@ -67,6 +73,11 @@ var (
 	ErrorClientAdminStatusRequired = &ErrorCode{
 		Code: 4032,
 		Desc: "Client Admin status required",
+	}
+	// ErrorDatabaseQuery indicates there was a problem with the database
+	ErrorDatabaseQuery = &ErrorCode{
+		Code: 5001,
+		Desc: "Database query did not execute properly.",
 	}
 )
 

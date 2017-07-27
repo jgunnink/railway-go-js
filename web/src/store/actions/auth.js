@@ -99,3 +99,30 @@ export function checkAuthentication(cb) {
 			})
 	}
 }
+
+export function passwordReset(email, password, password_reset_token) {
+	return (dispatch, getState) => {
+		dispatch(sendingRequest(true))
+		post("/users/passwordreset", { email, password, password_reset_token })
+			.then(res => {
+				dispatch(sendingRequest(false))
+				history.push("/")
+				notification["success"]({
+					message: "Successfully reset password.",
+					description: `You have successfully set a new password.
+					You may now log into the system with your email address and
+					new password.`
+				})
+			})
+			.catch(err => {
+				dispatch(sendingRequest(false))
+				dispatch(loginError(err))
+				notification["error"]({
+					message: "Sorry, could not reset your password.",
+					description: `The link you have used to reset your password
+					may have expired, or the unique link does not match your
+					email address. Please check the link and try again.`
+				})
+			})
+	}
+}

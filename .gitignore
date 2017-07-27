@@ -2,7 +2,6 @@
 *.o
 *.a
 *.so
-railway
 
 # Folders
 _obj
@@ -43,3 +42,6 @@ _testmain.go
 /web/npm-debug.log*
 /web/yarn-debug.log*
 /web/yarn-error.log*
+
+# keys
+/server/keys.go

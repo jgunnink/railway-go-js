@@ -8,10 +8,11 @@ const Horizontal = props => {
 		<Menu
 			theme="dark"
 			mode="horizontal"
+			defaultSelectedKeys={["home"]}
 			onClick={({ key }) => {
 				setActiveScreen(key)
 			}}>
-			<Menu.Item key="">
+			<Menu.Item key="home">
 				<Link to="/">
 					<Icon type="home" />
 					Home

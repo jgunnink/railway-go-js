@@ -11,7 +11,6 @@ import (
 	"github.com/jgunnink/railway/avatar"
 	"github.com/jgunnink/railway/db"
 	"github.com/jgunnink/railway/helpers"
-	"github.com/jmoiron/sqlx/types"
 	"github.com/manveru/faker"
 )
 
@@ -42,9 +41,15 @@ func (s *Seeder) Seed() error {
 	newClient := &railway.Client{
 		Name:        name,
 		Description: s.faker.Paragraph(2, true),
-		Data:        types.JSONText(fmt.Sprintf(`{"avatar":"%s"}`, avatar.Avatar(name))),
+		Data: &railway.ClientData{
+			Avatar: avatar.Avatar(name),
+		},
 	}
-	orangeClient := s.dbclient.ClientService().ClientCreate(newClient)
+	orangeClient, err := s.dbclient.ClientService().ClientCreate(newClient)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
 
 	// Create the admin
 	email := "admin@example.com"
@@ -57,7 +62,9 @@ func (s *Seeder) Seed() error {
 		Archived:  false,
 		Disabled:  false,
 		ClientID:  orangeClient.ID,
-		Data:      types.JSONText(fmt.Sprintf(`{"avatar":"%s"}`, avatar.Avatar(email))),
+		Data: &railway.UserData{
+			Avatar: avatar.Avatar(email),
+		},
 	})
 	return s.Run()
 }
@@ -99,7 +106,9 @@ func (s *Seeder) SeedClients() error {
 			newClient := &railway.ClientCreateRequest{
 				Name:        name,
 				Description: s.faker.Paragraph(2, true),
-				Data:        types.JSONText(fmt.Sprintf(`{"avatar":"%s"}`, avatar.Avatar(name))),
+				Data: &railway.ClientData{
+					Avatar: avatar.Avatar(name),
+				},
 			}
 			err := s.HTTPService.ClientCreate(newClient)
 			if err != nil {
@@ -130,7 +139,9 @@ func (s *Seeder) SeedUsers() error {
 				Email:     email,
 				Password:  "password",
 				Role:      railway.RoleStaff,
-				Data:      types.JSONText(fmt.Sprintf(`{"avatar":"%s"}`, avatar.Avatar(email))),
+				Data: &railway.UserData{
+					Avatar: avatar.Avatar(email),
+				},
 			}
 			err := s.HTTPService.UserCreate(newUser)
 			if err != nil {
@@ -158,7 +169,9 @@ func (s *Seeder) SeedUsers() error {
 				Password:  "password",
 				Role:      railway.RoleClient,
 				ClientID:  clientID,
-				Data:      types.JSONText(fmt.Sprintf(`{"avatar":"%s"}`, avatar.Avatar(email))),
+				Data: &railway.UserData{
+					Avatar: avatar.Avatar(email),
+				},
 			}
 			err := s.HTTPService.UserCreate(newUser)
 			if err != nil {

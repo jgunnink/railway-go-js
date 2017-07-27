@@ -1,7 +1,7 @@
 import React from "react"
 import ManagementDashboard from "railway/components/Management/Dashboard"
 import { connect } from "react-redux"
-import { archiveUser, disableUser, enableUser, fetchUsers } from "railway/store/actions/users"
+import { archiveUser, disableUser, enableUser, fetchUsers, sendPasswordReset } from "railway/store/actions/users"
 import Needs from "railway/hoc/needs"
 
 const ManagementDashboardModalWithNeeds = Needs({ optimize: true }, [
@@ -35,6 +35,9 @@ const mapDispatchToProps = dispatch => {
 		},
 		enableUser: user => {
 			dispatch(enableUser(user))
+		},
+		sendPasswordReset: user => {
+			dispatch(sendPasswordReset(user))
 		}
 	}
 }

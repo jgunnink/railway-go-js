@@ -7,6 +7,6 @@ type UserSignInRequest struct {
 }
 
 type AuthService interface {
-	UserSetToken(id int, sessionToken string) *User
-	SignOut(id int)
+	UserSetToken(id int, sessionToken string) (*User, error)
+	SignOut(id int) error
 }
