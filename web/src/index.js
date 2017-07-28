@@ -25,12 +25,6 @@ const App = () =>
 
 store.dispatch(
 	checkAuthentication(() => {
-		try {
-			let loading = document.getElementById("loading")
-			loading.parentNode.removeChild(loading)
-		} catch (err) {
-			console.log(err)
-		}
 		ReactDOM.render(
 			<LocaleProvider locale={enUS}>
 				<App />

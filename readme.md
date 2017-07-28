@@ -7,6 +7,19 @@ of the delivery of a product over the life of a project.
 
 [JK Gunnink](mailto:jgunnink@gmail.com)
 
+## What's included
+
+- Users can signup for an account
+- Roles are assigned to users (Admin, Manager, Staff, Client, Guest)
+- Admin and manager roles can manage users via an admin interface panel
+- Admin users can send password reset emails to users - a sendgrid API key is required (specify this in the go server package)
+- Users can reset their passwords with a unique password reset link which is emailed to them
+- Admin and managers can disable user accounts, preventing them from logging in.
+- Cookies are destroyed on the front-end, not the back end:
+  - When a user signs in, they are provided a cookie based on the session token in their account
+  - When a user signs out the cookie is reset on the front end
+- Notifications on user actions are included for most actions, such as creating an account, disabling a user, etc.
+
 ## Getting Started
 
 ### First clone and install the ninja-forms dependency, then link it:
@@ -47,7 +60,7 @@ glide install
 1. Start the go server with `realize run`
 1. Seed the database with `go run cmd/railway/*.go db:setup`
 1. Start the react web server: `cd web/` then `npm start`
-1. In a browser, navigate to `http://localhost:8000`
+1. In a browser, navigate to `http://localhost:8080`
 
 ## Dependencies
 
