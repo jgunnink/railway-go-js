@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ninja-software/ninjarouter"
 	"github.com/jgunnink/railway"
+	"github.com/ninja-software/ninjarouter"
 	"golang.org/x/crypto/bcrypt"
 )
 

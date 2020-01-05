@@ -1,22 +1,17 @@
 package: github.com/jgunnink/railway
 import:
-- package: github.com/ninja-software/ninjarouter
-- package: github.com/gorilla/sessions
-  version: ~1.1.0
-- package: github.com/pkg/errors
-  version: ~0.8.0
-- package: github.com/gorilla/securecookie
-  version: ~1.1.0
-- package: github.com/jmoiron/sqlx
-- package: github.com/lib/pq
-- package: github.com/manveru/faker
-- package: github.com/vulcand/oxy
-  subpackages:
-  - forward
-  - testutils
-- package: github.com/Sirupsen/logrus
-  version: ~1.0.0
-- package: github.com/jackc/pgx
-- package: github.com/satori/go.uuid
-- package: github.com/sendgrid/sendgrid-go
-  version: ^3.5.0
+  - package: github.com/gorilla/sessions
+  - package: github.com/pkg/errors
+  - package: github.com/gorilla/securecookie
+  - package: github.com/jmoiron/sqlx
+  - package: github.com/lib/pq
+  - package: github.com/manveru/faker
+  - package: github.com/ninja-software/ninjarouter
+  - package: github.com/vulcand/oxy
+    subpackages:
+      - forward
+      - testutils
+  - package: github.com/Sirupsen/logrus
+  - package: github.com/jackc/pgx
+  - package: github.com/satori/go.uuid
+  - package: github.com/sendgrid/sendgrid-go

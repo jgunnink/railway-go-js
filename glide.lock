@@ -1,5 +1,5 @@
-hash: 6f7b25c66b4e574a8e328495ac64e9eb2f82ef620be6838f5dc8691bd9b78544
-updated: 2020-01-05T10:59:57.402679+08:00
+hash: f5617d8d9d34265ebe42b4096cf46bdd85f9438edb154388f00662e886d435e3
+updated: 2020-01-05T13:12:59.385129+08:00
 imports:
 - name: github.com/gorilla/context
   version: 1ea25387ff6f684839d82767c1733ff4d4d15d0a
@@ -40,6 +40,7 @@ imports:
   subpackages:
   - bcrypt
   - blowfish
+  - ssh/terminal
 - name: golang.org/x/sys
   version: 075e574b89e4c2d22f2286a7e2b919519c6f3547
   subpackages:
