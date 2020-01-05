@@ -10,7 +10,7 @@ import (
 
 	"github.com/gorilla/sessions"
 
-	"github.com/blockninja/ninjarouter"
+	"github.com/ninja-software/ninjarouter"
 	"github.com/jgunnink/railway"
 	"golang.org/x/crypto/bcrypt"
 )

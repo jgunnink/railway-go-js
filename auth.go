@@ -6,6 +6,7 @@ type UserSignInRequest struct {
 	Password string `json:"password" db:"password"`
 }
 
+// AuthService is used by the client to set tokens and signout the user
 type AuthService interface {
 	UserSetToken(id int, sessionToken string) (*User, error)
 	SignOut(id int) error

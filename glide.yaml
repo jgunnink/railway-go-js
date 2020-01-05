@@ -1,6 +1,6 @@
 package: github.com/jgunnink/railway
 import:
-- package: github.com/blockninja/ninjarouter
+- package: github.com/ninja-software/ninjarouter
 - package: github.com/gorilla/sessions
   version: ~1.1.0
 - package: github.com/pkg/errors
@@ -18,3 +18,5 @@ import:
   version: ~1.0.0
 - package: github.com/jackc/pgx
 - package: github.com/satori/go.uuid
+- package: github.com/sendgrid/sendgrid-go
+  version: ^3.5.0

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/blockninja/ninjarouter"
+	"github.com/ninja-software/ninjarouter"
 	"github.com/jgunnink/railway"
 )
 

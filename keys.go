@@ -14,3 +14,6 @@ var DBuser = "develop"
 
 // DBpass is the user password to connect with
 var DBpass = "develop"
+
+// SendgridAPIKey is the key for Sendgrid
+var SendgridAPIKey = "hello"

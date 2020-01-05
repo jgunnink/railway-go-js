@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/blockninja/ninjarouter"
 	"github.com/jgunnink/railway"
 	"github.com/jgunnink/railway/helpers"
+	"github.com/ninja-software/ninjarouter"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
@@ -256,12 +256,12 @@ func (uc *UserController) UserSetResetToken(w http.ResponseWriter, r *http.Reque
 
 <p>You or your administrator has sent through a request to reset
 your password. You can do that by clicking the following link:</p>
-	
+
 <p>`+resetLink+`</p>
 
 <p>Regards from Railway admin team</p>`)
 	m := mail.NewV3MailInit(from, subject, to, content)
-	request := sendgrid.GetRequest(sendgridAPIKey, "/v3/mail/send", "https://api.sendgrid.com")
+	request := sendgrid.GetRequest(railway.SendgridAPIKey, "/v3/mail/send", "https://api.sendgrid.com")
 	request.Method = "POST"
 	request.Body = mail.GetRequestBody(m)
 	go sendgrid.API(request)

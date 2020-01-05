@@ -1,0 +1,21 @@
+settings:
+  legacy:
+    force: false
+    interval: 0s
+schema:
+  - name: railway
+    path: ./cmd/railway
+    params:
+      - serve
+    commands:
+      install:
+        status: true
+      run: true
+    watcher:
+      extensions:
+        - go
+      paths:
+        - ../../
+      ignored_paths:
+        - .git
+        - vendor

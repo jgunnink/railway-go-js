@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/blockninja/ninjarouter"
+	"github.com/ninja-software/ninjarouter"
 	"github.com/jgunnink/railway"
 	"golang.org/x/crypto/bcrypt"
 )
